@@ -6,10 +6,12 @@ var bcrypt       = require('bcrypt');
 var jwt          = require('json-web-token');
 var cookieParser = require('cookie-parser');
 var User         = require('./model/User');
+
 mongoose.connect('mongodb://localhost/userDB');
+
+//Middleware + View Engine
 app.set('view engine', 'ejs');
 app.use(cookieParser());
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -24,6 +26,14 @@ app.get('/new', function(req, res){
 app.get('/logout', function(req, res){
 	res.clearCookie('username');
 	res.redirect('/');
+});
+
+app.post('/login', function(req, res){
+	console.log(req.body);
+	User.findOne(req.body, function(err, user){
+		res.cookie('username', user.username);
+		res.redirect('/');
+	});
 });
 
 app.post('/create', function(req, res){
