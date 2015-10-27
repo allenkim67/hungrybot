@@ -1,0 +1,22 @@
+{
+  "name": "hungrybot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "json-web-token": "^1.5.3",
+    "jsonwebtoken": "^5.4.0",
+    "mongoose": "^4.2.2"
+  }
+}

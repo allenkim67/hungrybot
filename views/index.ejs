@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+  <% if(username){ %>
+    <h1>Hello <%=username%></h1>
+    <a href="/logout">Log Out</a>
+  <% } else { %>
+    <h1>Log in here.</h1>
+    <form action='/login' method='post'>
+      <strong>Username:</strong>
+      <br />
+      <input type='text' name='username'>
+      <br />
+      <strong>Password:</strong>
+      <br />
+      <input type='text' name='password'>
+      <br />
+      <button>Login</button>
+    </form>
+    <br />
+    <a href="/new">Create an Account Here</a> 
+  <% } %>
+</body>
+</html>
