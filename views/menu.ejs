@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+
+  <h1>Menu:</h1>
+
+  <p>
+    <% items.forEach(function(item) { %>
+      Name: 
+      <%= item.name %>
+      <br />
+      Description: 
+      <%= item.description %>
+      <br />
+      Price:   
+      <%= item.price/100 %>
+      <br />
+      <br />
+    <% }) %>
+  </p>
+  <br /><br />
+  <a href="/create">Create a menu item here.</a>
+  <% include createmenu %>
+
+
+</body>
+</html>

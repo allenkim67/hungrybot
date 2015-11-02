@@ -5,11 +5,11 @@
 <body>
   <% if(username){ %>
     <h1>Hello <%=username%></h1>
-    <a href="/logout">Log Out</a>
+    <a href="/session/logout">Log Out</a>
   <% } else { %>
     <% include login %>
     <br />
-    <a href="/new">Create an Account Here</a> 
+    <a href="/user/new">Create an Account Here</a> 
   <% } %>
 </body>
 </html>
