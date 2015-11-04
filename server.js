@@ -4,6 +4,8 @@ var bodyParser   = require('body-parser');
 var mongoose     = require('mongoose');
 var jwt          = require('json-web-token');
 var cookieParser = require('cookie-parser');
+var twilio       = require('twilio');
+var fs           = require('fs');
 //Routes
 var menu         = require('./routes/menu');
 var user         = require('./routes/user');
@@ -26,7 +28,14 @@ app.get('/', function(req, res){
 	res.render('index', {username: req.cookies.username});
 });
 
-
+//SMS - Account Creation
+app.post('/phone', function(req, res) {
+  var twiml = new twilio.TwimlResponse();
+  
+  twiml.message(req.body.Body);
+  res.set('Content-Type', 'text/xml');
+  res.send(twiml.toString());
+});
 
 
 
