@@ -11,7 +11,7 @@ var menu         = require('./routes/menu');
 var user         = require('./routes/user');
 var session      = require('./routes/session');
 
-mongoose.connect('mongodb://localhost/userDB');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
 
 //Middleware + View Engine
 app.set('view engine', 'ejs');
