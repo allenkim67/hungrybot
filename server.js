@@ -10,6 +10,8 @@ var fs           = require('fs');
 var menu         = require('./routes/menu');
 var user         = require('./routes/user');
 var session      = require('./routes/session');
+//Model
+var User         = require('./model/User');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
 
@@ -37,7 +39,14 @@ app.post('/phone', function(req, res) {
   res.send(twiml.toString());
 });
 
-
+app.get('/stripe', function(req, res){
+  User.findOne({username: req.cookies.username}, function(err, user){
+    user.stripeCode = req.query.code;
+    user.save(function(){
+      res.redirect('/');
+    });
+  });
+});
 
 
 app.listen(process.env.PORT || 3000);

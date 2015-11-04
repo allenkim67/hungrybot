@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
   username: String,
-  password: String
+  password: String,
+  stripeCode: String
 });
 
 // userSchema.set('toJSON', {
