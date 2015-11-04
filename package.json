@@ -17,6 +17,7 @@
     "express": "^4.13.3",
     "json-web-token": "^1.5.3",
     "jsonwebtoken": "^5.4.0",
-    "mongoose": "^4.2.2"
+    "mongoose": "^4.2.2",
+    "twilio": "^2.5.2"
   }
 }
