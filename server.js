@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var twilio       = require('twilio');
 var fs           = require('fs');
 var request      = require('superagent');
+var bot          = require('./bot');
 //Routes
 var menu         = require('./routes/menu');
 var user         = require('./routes/user');
@@ -33,11 +34,12 @@ app.get('/', function(req, res){
 
 //SMS - Account Creation
 app.post('/phone', function(req, res) {
-  var twiml = new twilio.TwimlResponse();
-  
-  twiml.message(req.body.Body);
-  res.set('Content-Type', 'text/xml');
-  res.send(twiml.toString());
+  bot(req.body.Body, function(aiResponse){
+    var twiml = new twilio.TwimlResponse();
+    twiml.message(aiResponse);
+    res.set('Content-Type', 'text/xml');
+    res.send(twiml.toString());
+  });
 });
 
 app.get('/stripe', function(req, res){
