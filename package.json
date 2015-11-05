@@ -18,6 +18,7 @@
     "json-web-token": "^1.5.3",
     "jsonwebtoken": "^5.4.0",
     "mongoose": "^4.2.2",
+    "superagent": "^1.4.0",
     "twilio": "^2.5.2"
   }
 }
