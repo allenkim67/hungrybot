@@ -46,6 +46,7 @@ app.get('/stripe', function(req, res){
       .post('https://connect.stripe.com/oauth/token')
       .send({client_secret: 'sk_test_6T5wjvqShyQeMPhuaSNNZaKv', code: req.query.code, grant_type: 'authorization_code'})
       .end(function(err, stripeUser) {
+        console.log(stripeUser);
         user.stripeAccount = stripeUser.stripe_user_id;
         user.save(function(){
           res.redirect('/');
