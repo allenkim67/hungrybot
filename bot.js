@@ -4,7 +4,6 @@ var app = apiai(process.env.AI_ACCESS_TOKEN, process.env.AI_SUBSCRIPTION_KEY);
 function botResponse(message, callback) {
   var request = app.textRequest(message);
   request.on('response', function(data) {
-    console.log(data);
     callback(buildResponse(data));
   });
   request.end();
