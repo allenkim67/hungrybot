@@ -35,12 +35,13 @@ app.get('/', function(req, res){
 
 //SMS - Account Creation
 app.post('/phone', function(req, res) {
-  Customer.findOrCreate({phone: req.body.From}, function() {});
-  bot(req.body.Body, function(aiResponse){
-    var twiml = new twilio.TwimlResponse();
-    twiml.message(aiResponse);
-    res.set('Content-Type', 'text/xml');
-    res.send(twiml.toString());
+  Customer.findOrCreate({phone: req.body.From}, function(err, customer) {
+    bot({message: req.body.Body, customer: customer}, function(aiResponse){
+      var twiml = new twilio.TwimlResponse();
+      twiml.message(aiResponse);
+      res.set('Content-Type', 'text/xml');
+      res.send(twiml.toString());
+    });
   });
 });
 
