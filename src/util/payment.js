@@ -1,4 +1,4 @@
-var stripe = require("stripe")("sk_test_6T5wjvqShyQeMPhuaSNNZaKv");
+var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 module.exports.createCustomerId = function(params, mongoCustomer, callback) {
   var card = {

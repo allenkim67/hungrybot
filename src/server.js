@@ -51,7 +51,7 @@ app.get('/stripe', function(req, res){
   User.findOne({username: req.cookies.username}, function(err, user){
     request
       .post('https://connect.stripe.com/oauth/token')
-      .send({client_secret: 'sk_test_6T5wjvqShyQeMPhuaSNNZaKv', code: req.query.code, grant_type: 'authorization_code'})
+      .send({client_secret: process.env.STRIPE_SECRET_KEY, code: req.query.code, grant_type: 'authorization_code'})
       .end(function(err, response) {
         user.stripeAccount = response.body.stripe_user_id;
         user.save(function(){
