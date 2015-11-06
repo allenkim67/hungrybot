@@ -16,12 +16,12 @@
     "cookie-parser": "^1.4.0",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
+    "isomorphic-fetch": "^2.2.0",
     "json-web-token": "^1.5.3",
     "jsonwebtoken": "^5.4.0",
     "mongoose": "^4.2.2",
     "mongoose-findorcreate": "^0.1.2",
     "stripe": "^4.0.0",
-    "superagent": "^1.4.0",
     "twilio": "^2.5.2"
   }
 }

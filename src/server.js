@@ -6,7 +6,7 @@ var jwt          = require('json-web-token');
 var cookieParser = require('cookie-parser');
 var twilio       = require('twilio');
 var fs           = require('fs');
-var request      = require('superagent');
+var fetch        = require('isomorphic-fetch');
 var bot          = require('./util/bot');
 //Routes
 var menu         = require('./routes/menu');
@@ -49,15 +49,19 @@ app.post('/phone', function(req, res) {
 
 app.get('/stripe', function(req, res){
   User.findOne({username: req.cookies.username}, function(err, user){
-    request
-      .post('https://connect.stripe.com/oauth/token')
-      .send({client_secret: process.env.STRIPE_SECRET_KEY, code: req.query.code, grant_type: 'authorization_code'})
-      .end(function(err, response) {
-        user.stripeAccount = response.body.stripe_user_id;
-        user.save(function(){
-          res.redirect('/');
-        });
+    fetch('https://connect.stripe.com/oauth/token', {
+      method: 'post',
+      headers: {
+        client_secret: process.env.STRIPE_SECRET_KEY,
+        code: req.query.code,
+        grant_type: 'authorization_code'
+      }
+    }).then(function(err, response) {
+      user.stripeAccount = response.json().stripe_user_id;
+      user.save(function(){
+        res.redirect('/');
       });
+    });
   });
 });
 
