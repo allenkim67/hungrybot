@@ -1,9 +1,9 @@
 var apiai    = require('apiai');
 var app      = apiai(process.env.AI_ACCESS_TOKEN, process.env.AI_SUBSCRIPTION_KEY);
 var payment  = require('./payment');
-var User     = require('./model/User');
-var Customer = require('./model/Customer');
-var Order    = require('./model/Order');
+var User     = require('../model/User');
+var Customer = require('../model/Customer');
+var Order    = require('../model/Order');
 
 function botResponse(opts, callback) {
   var message  = opts.message;

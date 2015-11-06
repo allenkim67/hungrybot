@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var twilio       = require('twilio');
 var fs           = require('fs');
 var request      = require('superagent');
-var bot          = require('./bot');
+var bot          = require('./util/bot');
 //Routes
 var menu         = require('./routes/menu');
 var user         = require('./routes/user');
