@@ -14,6 +14,7 @@ var user         = require('./routes/user');
 var session      = require('./routes/session');
 //Model
 var User         = require('./model/User');
+var Customer     = require('./model/Customer');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
 
@@ -34,6 +35,7 @@ app.get('/', function(req, res){
 
 //SMS - Account Creation
 app.post('/phone', function(req, res) {
+  Customer.findOrCreate({phone: req.body.From}, function() {});
   bot(req.body.Body, function(aiResponse){
     var twiml = new twilio.TwimlResponse();
     twiml.message(aiResponse);
