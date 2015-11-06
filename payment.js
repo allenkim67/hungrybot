@@ -1,4 +1,4 @@
-var stripe = require('stripe');
+var stripe = require("stripe")("sk_test_6T5wjvqShyQeMPhuaSNNZaKv");
 
 module.exports.createCustomerId = function(params, mongoCustomer, callback) {
   var card = {
