@@ -3,7 +3,7 @@ var findOrCreate = require('mongoose-findorcreate');
 
 var customerSchema = mongoose.Schema({
   phone: String,
-  creditcard: String,
+  stripeId: String,
   address: {
     street: String,
     city: String,

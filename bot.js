@@ -1,5 +1,6 @@
 var apiai    = require('apiai');
 var app      = apiai(process.env.AI_ACCESS_TOKEN, process.env.AI_SUBSCRIPTION_KEY);
+var payment  = require('./payment');
 var User     = require('./model/User');
 var Customer = require('./model/Customer');
 var Order    = require('./model/Order');
@@ -32,6 +33,9 @@ function buildResponse(data, customer) {
       customer.updateAddressWithAiParams(params);
       return "Okay great who's credit card information we should bill it too?";
     case 'get_cc':
+      payment.createCustomerId(params, customer, function(stripeCustomerId) {
+        payment.makePaymentWithCardInfo(1000, stripeCustomerId, 'acct_172wV6Gc6iyrUSnW');
+      });
       return "Alright we're on our way!";
     default:
       return 'Sorry speak louder please.';
