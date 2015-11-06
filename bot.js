@@ -6,17 +6,18 @@ var Customer = require('./model/Customer');
 var Order    = require('./model/Order');
 
 function botResponse(opts, callback) {
-  var message = opts.message;
+  var message  = opts.message;
   var customer = opts.customer;
+  var user     = opts.user;
 
   var request = app.textRequest(message);
   request.on('response', function(data) {
-    callback(buildResponse(data, customer));
+    callback(buildResponse(data, customer, user));
   });
   request.end();
 }
 
-function buildResponse(data, customer) {
+function buildResponse(data, customer, user) {
   var action = data.result.action;
   var params = data.result.parameters;
   switch(action) {
@@ -34,7 +35,7 @@ function buildResponse(data, customer) {
       return "Okay great who's credit card information we should bill it too?";
     case 'get_cc':
       payment.createCustomerId(params, customer, function(stripeCustomerId) {
-        payment.makePaymentWithCardInfo(1000, stripeCustomerId, 'acct_172wV6Gc6iyrUSnW');
+        payment.makePaymentWithCardInfo(1000, stripeCustomerId, user.stripeAccount);
       });
       return "Alright we're on our way!";
     default:
