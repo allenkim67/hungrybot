@@ -4,8 +4,9 @@
 </head>
 <body>
 
-  <h1>Menu:</h1>
 
+  <% include createmenu %>
+  <h1>Menu:</h1>
   <p>
     <% items.forEach(function(item) { %>
       Name: 
@@ -20,9 +21,7 @@
       <br />
     <% }) %>
   </p>
-  <br /><br />
-  <a href="/create">Create a menu item here.</a>
-  <% include createmenu %>
+
 
 
 </body>
