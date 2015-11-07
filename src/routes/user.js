@@ -14,4 +14,8 @@ router.get('/new', function(req, res){
   res.render('new');
 });
 
+router.get('/upgrade', function(req, res) {
+  res.render('upgrade');
+})
+
 module.exports = router;

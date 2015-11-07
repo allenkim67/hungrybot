@@ -5,7 +5,8 @@
 <body>
   <% if(username){ %>
     <h1>Hello <%=username%></h1>
-    <a href="/menu">Create a menu</a>
+    <a href="/menu">Your Menu</a>
+    <a href="/upgrade">Upgrade Account</a>
     <a href="/session/logout">Log Out</a>
   <% } else { %>
     <% include login %>
