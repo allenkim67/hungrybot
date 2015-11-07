@@ -8,6 +8,9 @@
   <% include createmenu %>
   <h1>Menu:</h1>
   <p>
+    <% if (!items.length) { %>
+      (You have no menu items yet.)
+    <% } %>
     <% items.forEach(function(item) { %>
       Name: 
       <%= item.name %>
