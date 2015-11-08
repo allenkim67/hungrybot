@@ -11,11 +11,11 @@ router.post('/create', function(req, res){
 });
 
 router.get('/new', function(req, res){
-  res.render('new');
+  res.render('user/new');
 });
 
 router.get('/upgrade', function(req, res) {
-  res.render('upgrade');
-})
+  res.render('user/upgrade');
+});
 
 module.exports = router;

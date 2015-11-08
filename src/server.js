@@ -19,7 +19,7 @@ var Customer     = require('./model/Customer');
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
 
 //Middleware + View Engine
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 app.set('views', './src/views');
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));

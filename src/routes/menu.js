@@ -3,8 +3,8 @@ var router  = express.Router();
 var Menu    = require('../model/Menu');
 
 router.get('/', function(req, res) {
-  Menu.find(function (err, items) {
-    res.render('../views/menu', {items: items});
+  Menu.find(function (err, menuItems) {
+    res.render('menu/menu', {menuItems: menuItems});
   })
 });
 

@@ -1,0 +1,10 @@
+include ./new.jade
+h2 Menu:
+if !menuItems.length
+  | (You have no menu items yet.)
+else
+  each menuItem in menuItems
+    ul
+      li= 'Name: ' + menuItem.name
+      li= 'Description: ' + menuItem.description
+      li= 'Price: ' + menuItem.price / 100
