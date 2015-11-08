@@ -2,7 +2,6 @@ var express      = require('express');
 var app          = express();
 var bodyParser   = require('body-parser');
 var mongoose     = require('mongoose');
-var jwt          = require('json-web-token');
 var cookieParser = require('cookie-parser');
 var twilio       = require('twilio');
 var fs           = require('fs');
@@ -60,7 +59,7 @@ app.get('/stripe', function(req, res){
     }).then(function(err, response) {
       user.stripeAccount = response.json().stripe_user_id;
       user.save(function(){
-        res.redirect('/');
+        res.redirect('/user/upgrade');
       });
     });
   });
