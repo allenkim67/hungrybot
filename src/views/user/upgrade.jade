@@ -1,15 +1,17 @@
 h2 Upgrade Your Account
-h3 Step 1 - Connect a stripe account
-- var stripeUrl = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_7HWG5j8ikAyqQT1LuuZSuGHDHLMuhgcT&scope=read_write';
-a(href=stripeUrl) OAuth Stripe
-h3 Step 2 - Select a phone number
-label Area Code:
-input
-div.js-sample-phones
-h3 Step 3 - Billing Info
-label Credit Card Info:
-input
-br
-button Upgrade Account
+form  
+  h3 Step 1 - Connect a stripe account
+  - var stripeUrl = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_7HWG5j8ikAyqQT1LuuZSuGHDHLMuhgcT&scope=read_write';
+  a(href=stripeUrl) OAuth Stripe
+  h3 Step 2 - Select a phone number
+  label Area Code:
+  input.js-areacode
+  button.js-find-phones Search
+  div.js-sample-phones
+  h3 Step 3 - Billing Info
+  label Credit Card Info:
+  input
+  br
+  button Upgrade Account
 
-script(src='/js/phone.js')
+script(src='/js/phoneSelect.js')

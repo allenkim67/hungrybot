@@ -3,7 +3,6 @@ var app          = express();
 var bodyParser   = require('body-parser');
 var mongoose     = require('mongoose');
 var cookieParser = require('cookie-parser');
-var twilio       = require('twilio');
 var fs           = require('fs');
 var fetch        = require('isomorphic-fetch');
 var bot          = require('./util/bot');
@@ -11,6 +10,7 @@ var bot          = require('./util/bot');
 var menu         = require('./routes/menu');
 var user         = require('./routes/user');
 var session      = require('./routes/session');
+var phone        = require('./routes/phone');
 //Model
 var User         = require('./model/User');
 var Customer     = require('./model/Customer');
@@ -28,25 +28,13 @@ app.use(bodyParser.json());
 //Routes
 app.use('/menu', menu);
 app.use('/user', user);
+app.use('/phone', phone);
 app.use('/session', session);
 
 app.get('/', function(req, res){
 	res.render('index', {username: req.cookies.username});
 });
 
-//SMS - Account Creation
-app.post('/phone', function(req, res) {
-  Customer.findOrCreate({phone: req.body.From}, function(err, customer) {
-    User.findOne({phone: req.body.To}, function(err, user) {
-      bot({message: req.body.Body, customer: customer, user: user}, function (aiResponse) {
-        var twiml = new twilio.TwimlResponse();
-        twiml.message(aiResponse);
-        res.set('Content-Type', 'text/xml');
-        res.send(twiml.toString());
-      });
-    });
-  });
-});
 
 app.get('/stripe', function(req, res){
   User.findOne({username: req.cookies.username}, function(err, user){
