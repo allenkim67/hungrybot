@@ -24,6 +24,13 @@ app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  if(['/', '/user/new', '/session/login'].indexOf(req.path) > -1 || req.cookies.username) {
+    next();
+  } else {
+    res.redirect('/');
+  } 
+});
 
 //Routes
 app.use('/menu', menu);

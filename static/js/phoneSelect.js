@@ -7,11 +7,16 @@ var renderPhones = function(numbers){
 };
 
 var getAvailablePhones = function(areacode) { 
-  fetch('/phone/available/' + areacode)
+  fetch('/phone/available/' + areacode, {
+    credentials: 'same-origin'
+  })
     .then(function(response){
       return response.json();
     })
-    .then(renderPhones);
+    .then(renderPhones)
+    .catch(function(err){
+      console.log(err, err.stack);
+    });
 };
 
 document.querySelector('.js-find-phones').onclick = function(event) {
