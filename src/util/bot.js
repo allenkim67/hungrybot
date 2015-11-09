@@ -35,7 +35,7 @@ function buildResponse(data, customer, user) {
       return "Okay great who's credit card information we should bill it too?";
     case 'get_cc':
       payment.createCustomerId(params, customer, function(stripeCustomerId) {
-        payment.makePaymentWithCardInfo(1000, stripeCustomerId, user.stripeAccount);
+        payment.makePaymentWithCardInfo(1000, stripeCustomerId, user);
       });
       return "Alright we're on our way!";
     default:

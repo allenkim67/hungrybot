@@ -17,8 +17,13 @@ module.exports.createCustomerId = function(params, mongoCustomer, callback) {
   });
 };
 
-module.exports.makePaymentWithCardInfo = function(amount, customerId, stripeAccount) {
-  stripe.tokens.create({customer: customerId}, {stripe_account: stripeAccount}, function(err, token) {
-    stripe.charges.create({ amount: amount, currency: "usd", source: token.id }, {stripe_account: stripeAccount});
+module.exports.makePaymentWithCardInfo = function(amount, customerId, user) {
+  stripe.tokens.create({customer: customerId}, {stripe_account: user.stripeAccount}, function(err, token) {
+    stripe.charges.create({
+      amount: amount,
+      currency: "usd",
+      source: token.id,
+      application_fee: Math.ceil(amount * user.appFee)
+    }, {stripe_account: stripeAccount});
   });
 };
