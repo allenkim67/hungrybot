@@ -46,7 +46,7 @@ app.get('/stripe', function(req, res){
         code: req.query.code,
         grant_type: 'authorization_code'
       }
-    }).then(function(err, response) {
+    }).then(function(response) {
       business.stripeAccount = response.json().stripe_user_id;
       business.save(function(){
         res.redirect('/user/upgrade');
@@ -54,6 +54,5 @@ app.get('/stripe', function(req, res){
     });
   });
 });
-
 
 app.listen(process.env.PORT || 3000);
