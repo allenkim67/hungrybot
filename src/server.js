@@ -37,8 +37,8 @@ app.get('/', function(req, res){
 	res.render('index', {name: session.name});
 });
 
-app.get('/stripe', function(req, res){
-  Business.findOne({name: req.cookies.name}, function(err, business){
+app.get('/stripe', authMiddleware, function(req, res){
+  Business.findById(req.cookies.session._id, function(err, business){
     fetch('https://connect.stripe.com/oauth/token', {
       method: 'post',
       headers: {
