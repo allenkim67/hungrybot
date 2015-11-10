@@ -25,6 +25,6 @@ module.exports.makePaymentWithCardInfo = function(amount, customerId, user) {
       currency: "usd",
       source: token.id,
       application_fee: Math.ceil(amount * user.appFee)
-    }, {stripe_account: user.stripeAccount});
-  }, function(err, charge) { console.log(err, charge); });
+    }, {stripe_account: user.stripeAccount}, function(err, charge) { console.log(err, charge); });
+  });
 };
