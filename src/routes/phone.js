@@ -1,8 +1,8 @@
-var express = require('express');
-var router  = express.Router();
-var twilio  = require('twilio');
-var client  = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-
+var express  = require('express');
+var router   = express.Router();
+var twilio   = require('twilio');
+var Customer = require('../model/Customer');
+var client   = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 router.post('/', function(req, res) {
   Customer.findOrCreate({phone: req.body.From}, function(err, customer) {
