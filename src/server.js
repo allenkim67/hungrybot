@@ -9,7 +9,7 @@ var bot            = require('./util/bot');
 var authMiddleware = require('./authMiddleware');
 //Routes
 var menu           = require('./routes/menu');
-var business           = require('./routes/business');
+var business       = require('./routes/business');
 var session        = require('./routes/session');
 var phone          = require('./routes/phone');
 //Model
