@@ -3,8 +3,8 @@ var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 module.exports.createCustomerId = function(params, mongoCustomer, callback) {
   var card = {
     "number": params.ccNumber,
-    "exp_month": params.ccExpMonth,
-    "exp_year": params.ccExpYear,
+    "exp_month": parseInt(params.ccExpMonth),
+    "exp_year": parseInt(params.ccExpYear),
     "cvc": params.ccCvc
   };
 
