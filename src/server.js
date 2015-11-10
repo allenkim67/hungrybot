@@ -9,14 +9,14 @@ var bot            = require('./util/bot');
 var authMiddleware = require('./authMiddleware');
 //Routes
 var menu           = require('./routes/menu');
-var user           = require('./routes/user');
+var business           = require('./routes/business');
 var session        = require('./routes/session');
 var phone          = require('./routes/phone');
 //Model
-var User           = require('./model/User');
+var Business       = require('./model/Business');
 var Customer       = require('./model/Customer');
 
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
 //Middleware + View Engine
 app.set('view engine', 'jade');
@@ -28,17 +28,17 @@ app.use(bodyParser.json());
 
 //Routes
 app.use('/menu', authMiddleware, menu);
-app.use('/user', user);
+app.use('/user', business);
 app.use('/phone', phone);
 app.use('/session', session);
 
 app.get('/', function(req, res){
-	res.render('index', {username: req.cookies.username});
+	res.render('index', {name: req.cookies.name});
 });
 
 
 app.get('/stripe', function(req, res){
-  User.findOne({username: req.cookies.username}, function(err, user){
+  Business.findOne({name: req.cookies.name}, function(err, business){
     fetch('https://connect.stripe.com/oauth/token', {
       method: 'post',
       headers: {
@@ -47,9 +47,9 @@ app.get('/stripe', function(req, res){
         grant_type: 'authorization_code'
       }
     }).then(function(err, response) {
-      user.stripeAccount = response.json().stripe_user_id;
-      user.save(function(){
-        res.redirect('/user/upgrade');
+      business.stripeAccount = response.json().stripe_user_id;
+      business.save(function(){
+        res.redirect('/business/upgrade');
       });
     });
   });

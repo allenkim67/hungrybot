@@ -1,8 +1,8 @@
 extends ./layout.jade
 
 block main
-  h1= 'Hello ' + (username || 'Guest')
-  if !username
+  h1= 'Hello ' + (name || 'Guest')
+  if !name
     include ./session/login.jade
     a(href='/user/new') Create An Account
   else
