@@ -47,7 +47,10 @@ app.get('/stripe', function(req, res){
         grant_type: 'authorization_code'
       }
     }).then(function(response) {
-      business.stripeAccount = response.json().stripe_user_id;
+      return response.json();
+    }).then(function(response) {
+      console.log(response);
+      business.stripeAccount = response.body.stripe_user_id;
       business.save(function(){
         res.redirect('/user/upgrade');
       });
