@@ -38,9 +38,8 @@ app.get('/', function(req, res){
 });
 
 app.get('/stripe', authMiddleware, function(req, res){
-  console.log('a', req.cookies.session);
+  console.log(req.query.code);
   Business.findById(req.cookies.session._id, function(err, business){
-    console.log('b', business, err);
     fetch('https://connect.stripe.com/oauth/token', {
       method: 'post',
       headers: {
@@ -49,11 +48,8 @@ app.get('/stripe', authMiddleware, function(req, res){
         grant_type: 'authorization_code'
       }
     }).then(function(err, response) {
-      console.log('c', err, business);      
       business.stripeAccount = response.json().stripe_user_id;
-      console.log('d', business.stripeAccount);
-      business.save(function(err){
-        console.log('e', err);
+      business.save(function(){
         res.redirect('/user/upgrade');
       });
     });
