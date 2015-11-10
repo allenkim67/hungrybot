@@ -49,7 +49,7 @@ app.get('/stripe', function(req, res){
     }).then(function(err, response) {
       business.stripeAccount = response.json().stripe_user_id;
       business.save(function(){
-        res.redirect('/business/upgrade');
+        res.redirect('/user/upgrade');
       });
     });
   });
