@@ -4,7 +4,7 @@ var bodyParser     = require('body-parser');
 var mongoose       = require('mongoose');
 var cookieParser   = require('cookie-parser');
 var fs             = require('fs');
-var fetch          = require('isomorphic-fetch');
+var axios          = require('axios');
 var bot            = require('./util/bot');
 var authMiddleware = require('./authMiddleware');
 //Routes
@@ -39,16 +39,10 @@ app.get('/', function(req, res){
 
 app.get('/stripe', function(req, res){
   Business.findById(req.cookies.session._id, function(err, business){
-    fetch('https://connect.stripe.com/oauth/token', {
-      method: 'post',
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        client_secret: process.env.STRIPE_SECRET_KEY,
-        code: req.query.code,
-        grant_type: 'authorization_code'
-      })
-    }).then(function(response) {
-      return response.json();
+    axios.post('https://connect.stripe.com/oauth/token', {
+      client_secret: process.env.STRIPE_SECRET_KEY,
+      code: req.query.code,
+      grant_type: 'authorization_code'
     }).then(function(response) {
       business.stripeAccount = response.stripe_user_id;
       business.save(function(){
