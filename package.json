@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js"
   },
+  "babel": {
+    "plugins": ["transform-es2015-template-literals"]
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,5 +26,10 @@
     "mongoose-findorcreate": "^0.1.2",
     "stripe": "^4.0.0",
     "twilio": "^2.5.2"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-es2015-template-literals": "^6.0.14",
+    "install": "^0.2.6",
+    "npm": "^3.3.12"
   }
 }
