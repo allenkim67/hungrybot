@@ -41,16 +41,16 @@ app.get('/stripe', function(req, res){
   Business.findById(req.cookies.session._id, function(err, business){
     fetch('https://connect.stripe.com/oauth/token', {
       method: 'post',
-      headers: {
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      body: JSON.stringify({
         client_secret: process.env.STRIPE_SECRET_KEY,
         code: req.query.code,
         grant_type: 'authorization_code'
-      }
+      })
     }).then(function(response) {
       return response.json();
     }).then(function(response) {
-      console.log(response);
-      business.stripeAccount = response.body.stripe_user_id;
+      business.stripeAccount = response.stripe_user_id;
       business.save(function(){
         res.redirect('/user/upgrade');
       });
