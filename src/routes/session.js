@@ -4,7 +4,7 @@ var Business       = require('../model/Business');
 var bcrypt         = require('bcrypt');
 var authMiddleware = require('../authMiddleware');
 
-router.get('/logout', authMiddleware, function(req, res){
+router.get('/logout', function(req, res){
   res.clearCookie('session');
   res.redirect('/');
 });

@@ -17,11 +17,11 @@ router.get('/new', function(req, res) {
   res.render('user/new');
 });
 
-router.get('/upgrade', authMiddleware, function(req, res) {
+router.get('/upgrade', function(req, res) {
   res.render('user/upgrade');
 });
 
-router.post('/addphone', authMiddleware, function (req, res) {
+router.post('/addphone', function (req, res) {
   client.incomingPhoneNumbers.create({
     phoneNumber: req.body.phone
   }, function(err, purchasedNumber) {

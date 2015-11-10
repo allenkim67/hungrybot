@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Routes
-app.use('/menu', authMiddleware, menu);
+app.use('/menu', menu);
 app.use('/user', business);
 app.use('/phone', phone);
 app.use('/session', session);
@@ -37,8 +37,7 @@ app.get('/', function(req, res){
 	res.render('index', {name: session.name});
 });
 
-app.get('/stripe', authMiddleware, function(req, res){
-  console.log(req.query.code);
+app.get('/stripe', function(req, res){
   Business.findById(req.cookies.session._id, function(err, business){
     fetch('https://connect.stripe.com/oauth/token', {
       method: 'post',
