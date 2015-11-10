@@ -8,11 +8,11 @@ var businessSchema = mongoose.Schema({
   appFee: {type: Number, default: 0.135}
 });
 
-// businessSchema.set('toJSON', {
-//   transform: function(doc, ret) {
-//     delete.ret.password;
-//     return ret;
-//   }
-// });
+businessSchema.set('toJSON', {
+  transform: function(doc, ret) {
+    delete ret.password;
+    return ret;
+  }
+});
 
 module.exports = mongoose.model('Business', businessSchema);

@@ -33,9 +33,9 @@ app.use('/phone', phone);
 app.use('/session', session);
 
 app.get('/', function(req, res){
-	res.render('index', {name: req.cookies.name});
+  var session = req.cookies.session || {};
+	res.render('index', {name: session.name});
 });
-
 
 app.get('/stripe', function(req, res){
   Business.findOne({name: req.cookies.name}, function(err, business){

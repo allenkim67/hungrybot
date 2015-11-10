@@ -5,7 +5,7 @@ var bcrypt         = require('bcrypt');
 var authMiddleware = require('../authMiddleware');
 
 router.get('/logout', authMiddleware, function(req, res){
-  res.clearCookie('name');
+  res.clearCookie('session');
   res.redirect('/');
 });
 
@@ -14,7 +14,7 @@ router.post('/login', function(req, res){
 
   Business.findOne(userData, function(err, business){
     if(bcrypt.compareSync(req.body.password, business.password)){
-      res.cookie('name', business.name);
+      res.cookie('session', business);
       res.redirect('/');
     }
   });
