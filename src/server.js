@@ -1,19 +1,20 @@
-var express      = require('express');
-var app          = express();
-var bodyParser   = require('body-parser');
-var mongoose     = require('mongoose');
-var cookieParser = require('cookie-parser');
-var fs           = require('fs');
-var fetch        = require('isomorphic-fetch');
-var bot          = require('./util/bot');
+var express        = require('express');
+var app            = express();
+var bodyParser     = require('body-parser');
+var mongoose       = require('mongoose');
+var cookieParser   = require('cookie-parser');
+var fs             = require('fs');
+var fetch          = require('isomorphic-fetch');
+var bot            = require('./util/bot');
+var authMiddleware = require('./authMiddleware');
 //Routes
-var menu         = require('./routes/menu');
-var user         = require('./routes/user');
-var session      = require('./routes/session');
-var phone        = require('./routes/phone');
+var menu           = require('./routes/menu');
+var user           = require('./routes/user');
+var session        = require('./routes/session');
+var phone          = require('./routes/phone');
 //Model
-var User         = require('./model/User');
-var Customer     = require('./model/Customer');
+var User           = require('./model/User');
+var Customer       = require('./model/Customer');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/userDB');
 
@@ -24,17 +25,9 @@ app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(function(req, res, next) {
-  var noAuth = ['/', '/user/new', '/session/login', '/user/create'];
-  if(noAuth.indexOf(req.path) > -1 || req.cookies.username) {
-    next();
-  } else {
-    res.redirect('/');
-  } 
-});
 
 //Routes
-app.use('/menu', menu);
+app.use('/menu', authMiddleware, menu);
 app.use('/user', user);
 app.use('/phone', phone);
 app.use('/session', session);

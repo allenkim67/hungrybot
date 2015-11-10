@@ -1,9 +1,10 @@
-var express = require('express');
-var router  = express.Router();
-var User    = require('../model/User');
-var bcrypt  = require('bcrypt');
+var express        = require('express');
+var router         = express.Router();
+var User           = require('../model/User');
+var bcrypt         = require('bcrypt');
+var authMiddleware = require('../authMiddleware');
 
-router.get('/logout', function(req, res){
+router.get('/logout', authMiddleware, function(req, res){
   res.clearCookie('username');
   res.redirect('/');
 });

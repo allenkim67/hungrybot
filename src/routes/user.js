@@ -1,9 +1,10 @@
-var express = require('express');
-var router  = express.Router();
-var User    = require('../model/User');
-var bcrypt  = require('bcrypt');
-var twilio  = require('twilio');
-var client  = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var express        = require('express');
+var router         = express.Router();
+var User           = require('../model/User');
+var authMiddleware = require('../authMiddleware');
+var bcrypt         = require('bcrypt');
+var twilio         = require('twilio');
+var client         = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 router.post('/create', function(req, res){
   User.create({username: req.body.username, password: bcrypt.hashSync(req.body.password, 8)}, function(err, user){
@@ -16,11 +17,11 @@ router.get('/new', function(req, res) {
   res.render('user/new');
 });
 
-router.get('/upgrade', function(req, res) {
+router.get('/upgrade', authMiddleware, function(req, res) {
   res.render('user/upgrade');
 });
 
-router.post('/addphone', function (req, res) {
+router.post('/addphone', authMiddleware, function (req, res) {
   client.incomingPhoneNumbers.create({
     phoneNumber: req.body.phone
   }, function(err, purchasedNumber) {
