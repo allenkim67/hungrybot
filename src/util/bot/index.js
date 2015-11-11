@@ -10,7 +10,7 @@ module.exports = function(phoneData, callback) {
   aiRequest.on('response', function(aiResponse) {
     var botResponse = getBotResponse(aiResponse);
     var models = {
-      customer: Customer.findOrCreate({phone: phoneData.From}),
+      customer: Customer.findOne({phone: phoneData.From}),
       business: Business.findOne({phone: phoneData.To})
     };
     botEffects(botResponse.effects, models);

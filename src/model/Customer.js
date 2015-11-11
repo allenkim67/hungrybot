@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var findOrCreate = require('mongoose-findorcreate');
 
 var customerSchema = mongoose.Schema({
   phone: String,
@@ -11,6 +10,8 @@ var customerSchema = mongoose.Schema({
   }
 });
 
-customerSchema.plugin(findOrCreate);
+customerSchema.statics.createByPhoneIfNotExist = function(phone, callback) {
+  this.update({phone: phone}, {$setOnInsert: {phone: phone}}, {upsert: true}, callback);
+};
 
 module.exports = mongoose.model('Customer', customerSchema);

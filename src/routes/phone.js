@@ -1,15 +1,18 @@
 var router   = require('express').Router();
 var twilio   = require('twilio');
 var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var Customer = require('../model/Customer');
 var bot      = require('../util/bot');
 
 router.post('/', function(req, res) {
-  bot(req.body, function (botResponse) {
-    var twiml = new twilio.TwimlResponse();
-    twiml.message(botResponse);
+  Customer.createByPhoneIfNotExist(req.body.From, function() {
+    bot(req.body, function (botResponse) {
+      var twiml = new twilio.TwimlResponse();
+      twiml.message(botResponse);
 
-    res.set('Content-Type', 'text/xml');
-    res.send(twiml.toString());
+      res.set('Content-Type', 'text/xml');
+      res.send(twiml.toString());
+    });
   });
 });
 
