@@ -5,16 +5,19 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js"
+    "start": "node babel.server.js"
   },
   "babel": {
-    "plugins": ["transform-es2015-template-literals"]
+    "plugins": [
+      "transform-es2015-template-literals"
+    ]
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apiai": "^1.0.1",
     "axios": "^0.7.0",
+    "babel-core": "^6.1.2",
     "bcrypt": "^0.8.5",
     "body-parser": "^1.14.1",
     "cookie-parser": "^1.4.0",

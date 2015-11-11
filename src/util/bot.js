@@ -24,8 +24,8 @@ function buildResponse(data, customer, user) {
     case 'show_menu':
       return "Here's the menu...";
     case 'place_order':
-      var order1 = params.number1 ? ' and ' + params.number1 + " " + params.food1 : '';
-      return "So you would like " + params.number + " " + params.food + order1 + ". Does that complete your order?";
+      var order1 = params.number1 ? ` and ${params.number1} ${params.food1}` : "";
+      return `So you would like ${params.number} ${params.food} ${order1}. Does that complete your order?`;
     case 'confirm_order':
       return "Okay sounds great!  Where should we send it too?";
     case 'get_address':
