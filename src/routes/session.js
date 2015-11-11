@@ -2,6 +2,7 @@ var express        = require('express');
 var router         = express.Router();
 var Business       = require('../model/Business');
 var bcrypt         = require('bcrypt');
+var jwt            = require('jsonwebtoken');
 var authMiddleware = require('../authMiddleware');
 
 router.get('/logout', function(req, res){
@@ -14,7 +15,7 @@ router.post('/login', function(req, res){
 
   Business.findOne(userData, function(err, business){
     if(bcrypt.compareSync(req.body.password, business.password)){
-      res.cookie('session', business);
+      res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
       res.redirect('/');
     }
   });
