@@ -13,13 +13,4 @@ var customerSchema = mongoose.Schema({
 
 customerSchema.plugin(findOrCreate);
 
-customerSchema.methods.updateAddressWithAiParams = function(params) {
-  this.address = {
-    street: params.address,
-    state: params['geo-state-us'],
-    city: params['geo-city-us']
-  };
-  this.save();
-};
-
 module.exports = mongoose.model('Customer', customerSchema);
