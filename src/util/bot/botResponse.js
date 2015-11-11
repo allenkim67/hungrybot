@@ -17,8 +17,9 @@ module.exports = function(aiData) {
       return {message: "Okay sounds great!  Where should we send it too?"};
 
     case 'get_address':
+      var address = {street: params.address, state: params['geo-state-us'], city: params['geo-city-us']};
       return {
-        effects: [{type: 'update', model: 'customer', conditions: {address: params}}],
+        effects: [{type: 'update', model: 'customer', conditions: {address: address}}],
         message: "Okay great who's credit card information we should bill it too?"
       };
 
