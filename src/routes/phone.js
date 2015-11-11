@@ -1,21 +1,15 @@
-var express  = require('express');
-var router   = express.Router();
+var router   = require('express').Router();
 var twilio   = require('twilio');
-var Customer = require('../model/Customer');
-var Business = require('../model/Business');
+var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 var bot      = require('../util/bot');
-var client   = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 router.post('/', function(req, res) {
-  Customer.findOrCreate({phone: req.body.From}, function(err, customer) {
-    Business.findOne({phone: req.body.To}, function(err, business) {
-      bot({message: req.body.Body, customer: customer, business: business}, function (aiResponse) {
-        var twiml = new twilio.TwimlResponse();
-        twiml.message(aiResponse);
-        res.set('Content-Type', 'text/xml');
-        res.send(twiml.toString());
-      });
-    });
+  bot(req.body, function (botResponse) {
+    var twiml = new twilio.TwimlResponse();
+    twiml.message(botResponse);
+
+    res.set('Content-Type', 'text/xml');
+    res.send(twiml.toString());
   });
 });
 
