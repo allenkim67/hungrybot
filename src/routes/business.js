@@ -9,7 +9,7 @@ var client         = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKE
 
 router.post('/create', function(req, res){
   Business.create({name: req.body.name, password: bcrypt.hashSync(req.body.password, 8)}, function(err, business){
-    res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY)); //send response to browser and tell browser to store a cookie called username
+    res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
     res.redirect('/');
   });
 });

@@ -29,5 +29,8 @@
     "mongoose": "^4.2.2",
     "stripe": "^4.0.0",
     "twilio": "^2.5.2"
+  },
+  "devDependencies": {
+    "readline-sync": "^1.2.21"
   }
 }
