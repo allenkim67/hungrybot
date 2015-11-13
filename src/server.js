@@ -7,6 +7,7 @@ var fs             = require('fs');
 var axios          = require('axios');
 var bot            = require('./util/bot');
 var authMiddleware = require('./authMiddleware');
+var jwt            = require('jsonwebtoken');
 //Routes
 var menu           = require('./routes/menu');
 var business       = require('./routes/business');
