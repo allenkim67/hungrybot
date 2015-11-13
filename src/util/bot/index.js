@@ -1,4 +1,4 @@
-var ai             = require('../util/ai');
+var ai             = require('../ai');
 var getBotResponse = require('./botResponse');
 var payment        = require('../payment');
 var Customer       = require('../../model/Customer');
