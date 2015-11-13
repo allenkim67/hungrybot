@@ -5,18 +5,15 @@ var Customer       = require('../../model/Customer');
 var Business       = require('../../model/Business');
 
 module.exports = function(phoneData, callback) {
-  console.log(phoneData);
   Business.findOne({phone: phoneData.To}, function(err, business){
     ai.query(phoneData.Body, business._id).then(function(aiResponse){
-      aiRequest.on('response', function(aiResponse) {
-        var botResponse = getBotResponse(aiResponse);
-        var models = {
-          customer: Customer.findOne({phone: phoneData.From}),
-          business: Business.findOne({phone: phoneData.To})
-        };
-        botEffects(botResponse.effects, models);
-        callback(botResponse.message);
-      });
+      var botResponse = getBotResponse(aiResponse);
+      var models = {
+        customer: Customer.findOne({phone: phoneData.From}),
+        business: Business.findOne({phone: phoneData.To})
+      };
+      botEffects(botResponse.effects, models);
+      callback(botResponse.message);
     });
   });
 };
