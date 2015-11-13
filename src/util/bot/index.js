@@ -1,23 +1,23 @@
-var apiai          = require('apiai')(process.env.AI_ACCESS_TOKEN, process.env.AI_SUBSCRIPTION_KEY);
+var ai             = require('../util/ai');
 var getBotResponse = require('./botResponse');
 var payment        = require('../payment');
 var Customer       = require('../../model/Customer');
 var Business       = require('../../model/Business');
 
 module.exports = function(phoneData, callback) {
-  var aiRequest = apiai.textRequest(phoneData.Body);
-
-  aiRequest.on('response', function(aiResponse) {
-    var botResponse = getBotResponse(aiResponse);
-    var models = {
-      customer: Customer.findOne({phone: phoneData.From}),
-      business: Business.findOne({phone: phoneData.To})
-    };
-    botEffects(botResponse.effects, models);
-    callback(botResponse.message);
+  Business.findOne({phone: phoneData.To}, function(err, business){
+    ai.query(phoneData.Body, business._id).then(function(aiResponse){
+      aiRequest.on('response', function(aiResponse) {
+        var botResponse = getBotResponse(aiResponse);
+        var models = {
+          customer: Customer.findOne({phone: phoneData.From}),
+          business: Business.findOne({phone: phoneData.To})
+        };
+        botEffects(botResponse.effects, models);
+        callback(botResponse.message);
+      });
+    });
   });
-
-  aiRequest.end();
 };
 
 function botEffects(effects, models) {
