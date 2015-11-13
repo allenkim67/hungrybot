@@ -33,7 +33,7 @@ app.use('/phone', phone);
 app.use('/session', session);
 
 app.get('/', function(req, res){
-  var session = req.cookies.session || {};
+  var session = jwt.verify(req.cookies.session, process.env.JWT_SECRET_KEY) || {};
 	res.render('index', {name: session.name});
 });
 
