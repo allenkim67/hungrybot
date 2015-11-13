@@ -23,7 +23,6 @@ router.post('/create', authMiddleware, function(req, res){
       }]
     };
     ai.createUserEntity(userEntity).then(function(){
-      console.log(arguments);
       res.redirect(req.baseUrl);
     }).catch(function(err){console.log(err);});
   });
