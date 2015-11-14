@@ -10,22 +10,20 @@ router.get('/', authMiddleware, function(req, res) {
   })
 });
 
-router.post('/create', authMiddleware, function(req, res){
-  var setPrice = req.body.menuPriceDollars.toString().concat(req.body.menuPriceCents.toString());
-  Menu.create({businessId: req.session._id, name: req.body.name, description: req.body.description, price: setPrice}, function(err, menu){
-    var userEntity = {
-      sessionId: menu.businessId,
-      name: "food",
-      extend: false,
-      entries:[{
-        value: menu.name,
-        synonyms:[menu.name]
-      }]
-    };
-    ai.createUserEntity(userEntity).then(function(){
-      res.redirect(req.baseUrl);
-    }).catch(function(err){console.log(err);});
-  });
+router.post('/create', authMiddleware, async function(req, res){
+  var price = req.body.menuPriceDollars.toString().concat(req.body.menuPriceCents.toString());
+  var menuItem = await Menu.create({businessId: req.session._id, name: req.body.name, description: req.body.description, price: price});
+  var userEntity = {
+    sessionId: menuItem.businessId,
+    name: "food",
+    extend: false,
+    entries:[{
+      value: menuItem.name,
+      synonyms:[menuItem.name]
+    }]
+  };
+  await ai.createUserEntity(userEntity);
+  res.redirect(req.baseUrl);
 });
 
 module.exports = router;
