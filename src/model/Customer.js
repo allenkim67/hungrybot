@@ -10,8 +10,8 @@ var customerSchema = mongoose.Schema({
   }
 });
 
-customerSchema.statics.createByPhoneIfNotExist = function(phone, callback) {
-  this.update({phone: phone}, {$setOnInsert: {phone: phone}}, {upsert: true}, callback);
+customerSchema.statics.createByPhoneIfNotExist = function(phone) {
+  return this.update({phone: phone}, {$setOnInsert: {phone: phone}}, {upsert: true});
 };
 
 module.exports = mongoose.model('Customer', customerSchema);
