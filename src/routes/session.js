@@ -10,6 +10,10 @@ router.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+router.get('/login', function(req, res) {
+  res.render('session/login');
+});
+
 router.post('/login', function(req, res){
   var userData = {name: req.body.name};
 

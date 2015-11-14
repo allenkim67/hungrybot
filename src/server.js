@@ -33,9 +33,8 @@ app.use('/user', business);
 app.use('/phone', phone);
 app.use('/session', session);
 
-app.get('/', function(req, res){
-  var session = req.cookies.session ? jwt.verify(req.cookies.session, process.env.JWT_SECRET_KEY) : {};
-	res.render('index', {name: session.name});
+app.get('/', authMiddleware, function(req, res){
+	res.render('index', {name: req.session.name});
 });
 
 app.get('/stripe', function(req, res){

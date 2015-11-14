@@ -2,9 +2,5 @@ extends ./layout.jade
 
 block main
   h1= 'Hello ' + (name || 'Guest')
-  if !name
-    include ./session/login.jade
-    a(href='/user/new') Create An Account
-  else
-    a(href='/session/logout') Log Out
-    include ./nav.jade
+  a(href='/session/logout') Log Out
+  include ./nav.jade

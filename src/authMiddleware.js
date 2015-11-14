@@ -6,10 +6,10 @@ module.exports = function(req, res, next) {
       req.session = jwt.verify(req.cookies.session, process.env.JWT_SECRET_KEY);
     } catch (err) {
       res.clearCookie('session');
-      res.redirect('/');
+      res.redirect('/login');
     }
     next();
   } else {
-    res.redirect('/');
+    res.redirect('/session/login');
   }
 };
