@@ -57,26 +57,22 @@ if (!module.parent) {
 
   var DEMO_NUMBER = '+12136636123';
 
-  var modelsPromise = Promise.all([
-    Business.findOne({phone: process.argv[2]}).exec(),
-    Customer.findOne({phone: DEMO_NUMBER}).exec()
-  ]);
+  async function runBotDemo() {
+    var [business, customer] = await Promise.all([
+      Business.findOne({phone: process.argv[2]}).exec(),
+      Customer.findOne({phone: DEMO_NUMBER}).exec()
+    ]);
 
-  modelsPromise.then(function(business, customer) {
+    console.log(business, customer);
     var models = {business: business, customer: customer};
     var query = readLineSync.question('Say something to wake the bot: \n');
-    var aiResponsePromise = ai.query(query);
 
-    aiResponsePromise.then(function(aiResponse) {
-      getBotResponse(aiResponse, models).then(callback);
-    });
-
-    function callback(botResponse) {
+    while(true) {
+      var aiResponse = await ai.query(query);
+      var botResponse = await getBotResponse(aiResponse, models);
       query = readLineSync.question(botResponse + '\n');
-      var aiResponsePromise = ai.query(query);
-      aiResponsePromise.then(function(aiResponse) {
-        getBotResponse(aiResponse, models).then(callback);
-      });
     }
-  });
+  }
+
+  runBotDemo();
 }
