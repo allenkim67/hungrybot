@@ -38,6 +38,4 @@ router.post('/addphone', authMiddleware, function (req, res) {
   });
 });
 
-
-
 module.exports = router;

@@ -3,18 +3,13 @@ var twilio   = require('twilio');
 var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 var bot      = require('../util/bot');
 
-router.post('/', function(req, res) {
-  bot(req.body, function (botResponse) {
-    sendTwimlRes(botResponse);
-  });
+router.post('/', async function(req, res) {
+  var botResponse = await bot(req.body);
+  var twiml = new twilio.TwimlResponse();
+  twiml.message(botResponse);
 
-  function sendTwimlRes(botResponse) {
-    var twiml = new twilio.TwimlResponse();
-    twiml.message(botResponse);
-
-    res.set('Content-Type', 'text/xml');
-    res.send(twiml.toString());
-  }
+  res.set('Content-Type', 'text/xml');
+  res.send(twiml.toString());
 });
 
 router.get('/available/:areacode', function(req, res) {

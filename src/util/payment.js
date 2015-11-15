@@ -1,28 +1,34 @@
-var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+var stripe    = require("stripe")(process.env.STRIPE_SECRET_KEY);
+var promisify = require("es6-promisify");
 
-module.exports.createCustomerId = function(params, mongoCustomer, callback) {
+var createStripeToken    = promisify(stripe.tokens.create);
+var createStripeCustomer = promisify(stripe.customers.create);
+var createStripeCharge   = promisify(stripe.charges.create);
+
+module.exports.createCustomerId = async function(params, mongoCustomer) {
   var card = {
     "number": params.ccNumber,
     "exp_month": params.ccExpMonth,
     "exp_year": params.ccExpYear,
     "cvc": params.ccCvc
   };
-  stripe.tokens.create({card: card}, function(err, token) {
-    stripe.customers.create({source: token.id}, function(err, stripeCustomer) {
-      mongoCustomer.stripeId = stripeCustomer.id;
-      mongoCustomer.save();
-      callback(stripeCustomer.id);
-    });
-  });
+  var token = await createStripeToken({card: card});
+  var stripeCustomer = await createStripeCustomer({source: token.id});
+
+  mongoCustomer.stripeId = stripeCustomer.id;
+  mongoCustomer.save();
+
+  return stripeCustomer.id;
 };
 
-module.exports.makePaymentWithCardInfo = function(amount, customerId, user, callback) {
-  stripe.tokens.create({customer: customerId}, {stripe_account: user.stripeAccount}, function(err, token) {
-    stripe.charges.create({
+module.exports.makePaymentWithCardInfo = async function(amount, customerId, user) {
+  var token = await createStripeToken({customer: customerId}, {stripe_account: user.stripeAccount});
+  return await createStripeCharge({
       amount: amount,
       currency: "usd",
       source: token.id,
       application_fee: Math.ceil(amount * user.appFee)
-    }, {stripe_account: user.stripeAccount}, callback);
-  });
+    }, {
+      stripe_account: user.stripeAccount
+    });
 };
