@@ -53,7 +53,7 @@ module.exports = async function(phoneData) {
 if (!module.parent) {
   var readLineSync = require('readline-sync');
   var mongoose     = require('mongoose');
-  mongoose.connect('mongodb://localhost/hungrybot');
+  mongoose.connect(process.env.MONGOLAB_URI);
 
   var DEMO_NUMBER = '+12136636123';
 
