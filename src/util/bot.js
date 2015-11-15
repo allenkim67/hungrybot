@@ -63,13 +63,14 @@ if (!module.parent) {
       Customer.findOne({phone: DEMO_NUMBER}).exec()
     ]);
 
-    console.log(business, customer);
     var models = {business: business, customer: customer};
     var query = readLineSync.question('Say something to wake the bot: \n');
 
     while(true) {
       var aiResponse = await ai.query(query);
+      console.log(aiReponse);
       var botResponse = await getBotResponse(aiResponse, models);
+      console.log(botResponse);
       query = readLineSync.question(botResponse + '\n');
     }
   }
