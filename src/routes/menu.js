@@ -12,19 +12,27 @@ router.get('/', authMiddleware, function(req, res) {
 
 router.post('/create', authMiddleware, async function(req, res){
   var price = req.body.menuPriceDollars.toString().concat(req.body.menuPriceCents.toString());
-  var menuItem = await Menu.create({businessId: req.session._id, name: req.body.name, description: req.body.description, price: price});
+  await Menu.create({
+    businessId: req.session._id,
+    name: req.body.name,
+    description: req.body.description,
+    price: price
+  });
+
+  var menu = await Menu.find({businessId: req.session._id}).exec();
   var userEntity = {
-    sessionId: menuItem.businessId,
+    sessionId: req.session._id,
     name: "food",
     extend: false,
-    entries:[{
-      value: menuItem.name,
-      synonyms:[menuItem.name]
-    }]
+    entries: menu.map(function(menuItem) {
+      return {
+        value: menuItem.name,
+        synonyms: [menuItem.name]
+      }
+    })
   };
   await ai.createUserEntity(userEntity);
   res.redirect(req.baseUrl);
 });
 
 module.exports = router;
-

@@ -1,13 +1,21 @@
 var axios = require('axios');
 
-module.exports.createUserEntity = function(data){
+module.exports.createUserEntity = async function(data){
   var config = {
     headers: {
       "Authorization": "Bearer " + process.env.AI_DEV_ACCESS_TOKEN,
       "ocp-apim-subscription-key": process.env.AI_SUBSCRIPTION_KEY
+    },
+    params: {
+      sessionId: data.sessionId
     }
   };
-  return axios.post("https://api.api.ai/v1/userEntities?v=20150910", data, config);
+  var userEntities = await axios.get(`https://api.api.ai/v1/userEntities/${data.name}?v=20150910`, config);
+  if (userEntities.data.status && userEntities.data.status.errorType === 'not_found') {
+    return await axios.post("https://api.api.ai/v1/userEntities?v=20150910", data, config);
+  } else {
+    return await axios.put(`https://api.api.ai/v1/userEntities/${data.name}?v=20150910`, data, config);
+  }
 };
 
 module.exports.query = function(message, sessionId){
