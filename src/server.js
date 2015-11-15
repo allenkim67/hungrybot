@@ -5,7 +5,6 @@ var mongoose       = require('mongoose');
 var cookieParser   = require('cookie-parser');
 var fs             = require('fs');
 var axios          = require('axios');
-var bot            = require('./util/bot');
 var authMiddleware = require('./authMiddleware');
 var jwt            = require('jsonwebtoken');
 //Routes
@@ -13,6 +12,7 @@ var menu           = require('./routes/menu');
 var business       = require('./routes/business');
 var session        = require('./routes/session');
 var phone          = require('./routes/phone');
+var bot            = require('./routes/bot');
 //Model
 var Business       = require('./model/Business');
 var Customer       = require('./model/Customer');
@@ -32,6 +32,7 @@ app.use('/menu', menu);
 app.use('/user', business);
 app.use('/phone', phone);
 app.use('/session', session);
+app.use('/bot', bot);
 
 app.get('/', authMiddleware, function(req, res){
 	res.render('index', {name: req.session.name});

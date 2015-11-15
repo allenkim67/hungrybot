@@ -3,7 +3,7 @@ var Customer = require('../model/Customer');
 var Business = require('../model/Business');
 var Menu     = require('../model/Menu');
 
-async function getBotResponse(aiData, models) {
+var getBotResponse = module.exports.getBotResponse = async function(aiData, models) {
   var action = aiData.result.action;
   var params = aiData.result.parameters;
 
@@ -34,13 +34,13 @@ async function getBotResponse(aiData, models) {
       return "Alright we're on our way!";
 
     default:
-      return {message: 'Sorry speak louder please.'};
+      return 'Sorry speak louder please.';
   }
-}
+};
 
-module.exports = async function(phoneData) {
+module.exports.bot = async function(phoneData) {
   var [customer, business] = await Promise.all([
-    Customer.createByPhoneIfNotExist(phoneData.From).exec(),
+    Customer.findOne({phone: phoneData.From}).exec(),
     Business.findOne({phone: phoneData.To}).exec()
   ]);
 

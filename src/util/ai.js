@@ -22,7 +22,9 @@ module.exports.query = function(message, sessionId){
       lang: "en"
     }
   };
-  return axios.get("https://api.api.ai/v1/query?v=20150910", config).then(function(response){
-    return response.data
-  });
+  return axios.get("https://api.api.ai/v1/query?v=20150910", config)
+    .then(function(response){
+      return response.data
+    })
+    .catch(function(err) { console.log(err); });
 };

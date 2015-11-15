@@ -1,4 +1,3 @@
-
 var renderPhones = function(numbers){
   var div = document.querySelector('.js-sample-phones');
   div.innerHTML = '';
