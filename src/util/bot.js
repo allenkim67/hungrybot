@@ -47,33 +47,3 @@ module.exports = async function(phoneData) {
   var aiResponse = await ai.query(phoneData.Body, business._id.toString());
   return await getBotResponse(aiResponse, {customer: customer, business: business});
 };
-
-// This is for running the bot in terminal for demo purposes.
-// Must use babel-node.
-if (!module.parent) {
-  var readLineSync = require('readline-sync');
-  var mongoose     = require('mongoose');
-  mongoose.connect(process.env.MONGOLAB_URI);
-
-  var DEMO_NUMBER = '+12136636123';
-
-  async function runBotDemo() {
-    var [business, customer] = await Promise.all([
-      Business.findOne({phone: process.argv[2]}).exec(),
-      Customer.findOne({phone: DEMO_NUMBER}).exec()
-    ]);
-
-    var models = {business: business, customer: customer};
-    var query = readLineSync.question('Say something to wake the bot: \n');
-
-    while(true) {
-      var aiResponse = await ai.query(query);
-      console.log(aiReponse);
-      var botResponse = await getBotResponse(aiResponse, models);
-      console.log(botResponse);
-      query = readLineSync.question(botResponse + '\n');
-    }
-  }
-
-  runBotDemo();
-}
