@@ -32,6 +32,7 @@
     "jsonwebtoken": "^5.4.1",
     "mongoose": "^4.2.2",
     "stripe": "^4.0.0",
-    "twilio": "^2.5.2"
+    "twilio": "^2.5.2",
+    "underscore": "^1.8.3"
   }
 }

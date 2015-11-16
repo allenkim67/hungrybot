@@ -27,7 +27,17 @@ app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(expressValidator());
+app.use(expressValidator({
+  customValidators: {
+    isUniqueUsername: function(username) {
+      return new Promise(function(resolve, reject) {
+        User.findOne({name: name}, function (err, user) {
+          user ? reject() : resolve();
+        });        
+      });
+    }
+  }
+}));
 
 //Routes
 app.use('/menu', menu);
