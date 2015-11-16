@@ -6,7 +6,7 @@ var cookieParser     = require('cookie-parser');
 var fs               = require('fs');
 var axios            = require('axios');
 var authMiddleware   = require('./authMiddleware');
-var jwt              = require('jsonwebtoken');
+var customValidators = require('./validators').customValidators;
 var expressValidator = require('express-validator');
 //Routes
 var menu             = require('./routes/menu');
@@ -28,24 +28,7 @@ app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(expressValidator({
-  customValidators: {
-    isUniqueBusinessName: function(name) {
-      return new Promise(function(resolve, reject) {
-        Business.findOne({name: name}, function (err, business) {
-          business ? reject() : resolve();
-        });        
-      })
-    },
-    isUniqueMenuName: function(name) {
-     return new Promise(function(resolve, reject) {
-        Menu.findOne({name: name}, function (err, menuItem) {
-          menuItem ? reject() : resolve();
-        });        
-      });
-    }
-  }
-}));
+app.use(expressValidator({customValidators: customValidators}));
 
 //Routes
 app.use('/menu', menu);
