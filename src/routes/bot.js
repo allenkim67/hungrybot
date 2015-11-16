@@ -17,7 +17,7 @@ router.get('/', authMiddleware, async function(req, res) {
     Customer.findOne({phone: DEMO_PHONE}).exec()
   ]);
   var aiResponse = await ai.query(req.query.message, business._id.toString());
-  res.send(await getBotResponse(aiResponse, {customer: customer, business: business}));
+  res.send(await getBotResponse(aiResponse, {customer: customer, business: business}, {newLineDelim: '<br/>'}));
 });
 
 module.exports = router;

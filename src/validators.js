@@ -1,5 +1,6 @@
-var _    = require('underscore');
-var Menu = require('./model/Menu');
+var _        = require('underscore');
+var Menu     = require('./model/Menu');
+var Business = require('./model/Business');
 
 module.exports.customValidators = {
   isUniqueBusinessName: function(name) {
@@ -53,6 +54,7 @@ module.exports.createBusiness = async function(req) {
   try {
     await req.asyncValidationErrors(true);
   } catch (errors) {
+    console.log(errors);
     throw {
       errors: _.values(errors),
       name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name,

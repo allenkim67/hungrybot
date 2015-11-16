@@ -13,17 +13,21 @@ module.exports = async function(phoneData) {
   return await getBotResponse(aiResponse, {customer: customer, business: business});
 };
 
-var getBotResponse = module.exports.getBotResponse = async function(aiData, models) {
+var getBotResponse = module.exports.getBotResponse = async function(aiData, {business, customer}, opts={newLineDelim: '\n'}) {
   var action = aiData.result.action;
   var params = aiData.result.parameters;
+  var br     = opts.newLineDelim;
 
   switch(action) {
     case 'greet':
       return "Hey how's it going?";
 
     case 'show_menu':
-      var menuItems = await Menu.find({businessId: models.business._id}).exec();
-      return "Here's the menu: " + menuItems.map(menuItem => menuItem.name).join(' ');
+      var menuItems = await Menu.find({businessId: business._id}).exec();
+      var menuListing = menuItems.map(function(menuItem, i) {
+        return `${i + 1}. ${menuItem.name} -- $${(menuItem.price/100).toFixed(2)}${br}${menuItem.description}`;
+      }).join(br);
+      return `Here's the menu: ${br}` + menuListing;
 
     case 'place_order':
       var order1 = params.number1 ? ` and ${params.number1} ${params.food1}` : '';
@@ -34,13 +38,13 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, mode
 
     case 'get_address':
       var address = {street: params.address, state: params['geo-state-us'], city: params['geo-city-us']};
-      models.customer.address = address;
-      models.customer.save();
+      customer.address = address;
+      customer.save();
       return "Okay great who's credit card information we should bill it to?";
 
     case 'get_cc':
-      var stripeCustomerId = await payment.createCustomerId(params, models.customer);
-      await payment.makePaymentWithCardInfo(1000, stripeCustomerId, models.business);
+      var stripeCustomerId = await payment.createCustomerId(params, customer);
+      await payment.makePaymentWithCardInfo(1000, stripeCustomerId, business);
       return "Alright we're on our way!";
 
     default:
