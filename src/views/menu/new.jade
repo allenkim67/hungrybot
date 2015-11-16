@@ -1,18 +1,19 @@
 h2 Create a new menu item.
+if locals.errors
+  ul 
+    each error in errors
+      li=error.msg
 form(action='/menu/create' method='post')
   label Name:
   br
-  input(type='text' name='name')
+  input(name='name' value=locals.name)
   br
   label Description:
   br
-  input(type='text' name='description')
+  input(name='description' value=locals.description)
   br
   label Price:
   br
-  | $
-  input(type='number' name='menuPriceDollars' placeholder='Dollars')
-  | .
-  input(type='number' name='menuPriceCents' placeholder='Cents')
+  input(name='menuPrice' placeholder='0.00' value=locals.menuPrice)
   br
   button Create
