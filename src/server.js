@@ -1,21 +1,22 @@
-var express        = require('express');
-var app            = express();
-var bodyParser     = require('body-parser');
-var mongoose       = require('mongoose');
-var cookieParser   = require('cookie-parser');
-var fs             = require('fs');
-var axios          = require('axios');
-var authMiddleware = require('./authMiddleware');
-var jwt            = require('jsonwebtoken');
+var express          = require('express');
+var app              = express();
+var bodyParser       = require('body-parser');
+var mongoose         = require('mongoose');
+var cookieParser     = require('cookie-parser');
+var fs               = require('fs');
+var axios            = require('axios');
+var authMiddleware   = require('./authMiddleware');
+var jwt              = require('jsonwebtoken');
+var expressValidator = require('express-validator');
 //Routes
-var menu           = require('./routes/menu');
-var business       = require('./routes/business');
-var session        = require('./routes/session');
-var phone          = require('./routes/phone');
-var bot            = require('./routes/bot');
+var menu             = require('./routes/menu');
+var business         = require('./routes/business');
+var session          = require('./routes/session');
+var phone            = require('./routes/phone');
+var bot              = require('./routes/bot');
 //Model
-var Business       = require('./model/Business');
-var Customer       = require('./model/Customer');
+var Business         = require('./model/Business');
+var Customer         = require('./model/Customer');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
@@ -26,6 +27,17 @@ app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(expressValidator({
+  customValidators: {
+    isUniqueUsername: function(username) {
+      return new Promise(function(resolve, reject) {
+        User.findOne({name: name}, function (err, user) {
+          user ? reject() : resolve();
+        });        
+      });
+    }
+  }
+}));
 
 //Routes
 app.use('/menu', menu);
