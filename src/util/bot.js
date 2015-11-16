@@ -3,6 +3,16 @@ var Customer = require('../model/Customer');
 var Business = require('../model/Business');
 var Menu     = require('../model/Menu');
 
+module.exports = async function(phoneData) {
+  var [customer, business] = await Promise.all([
+    Customer.findOne({phone: phoneData.From}).exec(),
+    Business.findOne({phone: phoneData.To}).exec()
+  ]);
+
+  var aiResponse = await ai.query(phoneData.Body, business._id.toString());
+  return await getBotResponse(aiResponse, {customer: customer, business: business});
+};
+
 var getBotResponse = module.exports.getBotResponse = async function(aiData, models) {
   var action = aiData.result.action;
   var params = aiData.result.parameters;
@@ -36,14 +46,4 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, mode
     default:
       return 'Sorry speak louder please.';
   }
-};
-
-module.exports.bot = async function(phoneData) {
-  var [customer, business] = await Promise.all([
-    Customer.findOne({phone: phoneData.From}).exec(),
-    Business.findOne({phone: phoneData.To}).exec()
-  ]);
-
-  var aiResponse = await ai.query(phoneData.Body, business._id.toString());
-  return await getBotResponse(aiResponse, {customer: customer, business: business});
 };

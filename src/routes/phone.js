@@ -1,7 +1,7 @@
 var router   = require('express').Router();
 var twilio   = require('twilio');
 var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-var bot      = require('../util/bot').bot;
+var bot      = require('../util/bot');
 var Customer = require('../model/Customer');
 
 router.post('/', async function(req, res) {
