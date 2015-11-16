@@ -11,19 +11,21 @@ var _                = require('underscore');
 var expressValidator = require('express-validator');
 
 router.post('/create', function(req, res){
+  req.sanitize('name').trim();
+  req.sanitize('email').trim();
   req.checkBody('name', 'Username cannot be blank').notEmpty();
-  req.checkBody('username', 'Username is already taken').isUniqueUsername();
+  req.checkBody('name', 'Username is already taken').isUniqueBusinessName();
   req.checkBody('email', 'Email cannot be blank').notEmpty();
   req.checkBody('email', 'Email is incorrectly formatted').isEmail();
   req.checkBody('password', 'Password cannot be blank').notEmpty();
-  req.checkBody('password', 'Password do not match').matches(req.body.verifyPassword);    
+  req.checkBody('password', 'Password do not match').matches(req.body.verifyPassword);
   
   req.asyncValidationErrors()
     .then(function() {
       Business.create({name: req.body.name, password: bcrypt.hashSync(req.body.password, 8)}, function(err, business){
         res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
         res.redirect('/');
-      });      
+      });
     })
     .catch(function(errors) {
       res.render('user/new', {

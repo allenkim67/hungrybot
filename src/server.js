@@ -17,6 +17,7 @@ var bot              = require('./routes/bot');
 //Model
 var Business         = require('./model/Business');
 var Customer         = require('./model/Customer');
+var Menu             = require('./model/Menu');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
@@ -29,10 +30,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(expressValidator({
   customValidators: {
-    isUniqueUsername: function(username) {
+    isUniqueBusinessName: function(name) {
       return new Promise(function(resolve, reject) {
-        User.findOne({name: name}, function (err, user) {
+        Business.findOne({name: name}, function (err, user) {
           user ? reject() : resolve();
+        });        
+      })
+    },
+    isUniqueMenuName: function(name) {
+     return new Promise(function(resolve, reject) {
+        Menu.findOne({name: name}, function (err, menuItem) {
+          menuItem ? reject() : resolve();
         });        
       });
     }
