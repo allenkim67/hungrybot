@@ -1,4 +1,6 @@
-var axios = require('axios');
+var axios    = require('axios');
+var throttle = require('./throttle');
+var Menu     = require('../model/Menu');
 
 module.exports.createUserEntity = async function(data){
   var config = {
@@ -18,7 +20,9 @@ module.exports.createUserEntity = async function(data){
   }
 };
 
-module.exports.query = function(message, sessionId){
+module.exports.query = function(message, sessionId, {refresh = true}){
+  if (refresh) refreshMenuEntitiesThrottled(sessionId);
+
   var config = {
     headers: {
       "Authorization": "Bearer " + process.env.AI_CLIENT_ACCESS_TOKEN,
@@ -30,9 +34,28 @@ module.exports.query = function(message, sessionId){
       lang: "en"
     }
   };
+
   return axios.get("https://api.api.ai/v1/query?v=20150910", config)
     .then(function(response){
       return response.data
     })
     .catch(function(err) { console.log(err); });
 };
+
+var refreshMenuEntities = async function(businessId) {
+  var menu = await Menu.find({businessId: businessId}).exec();
+  var userEntity = {
+    sessionId: businessId.toString(),
+    name: "food",
+    extend: false,
+    entries: menu.map(function(menuItem) {
+      return {
+        value: menuItem.name,
+        synonyms: [menuItem.name]
+      }
+    })
+  };
+  return await ai.createUserEntity(userEntity);
+};
+
+var refreshMenuEntitiesThrottled = throttle(refreshMenuEntities, 1800000);

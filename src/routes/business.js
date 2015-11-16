@@ -1,14 +1,11 @@
-var express          = require('express');
-var app              = express();
-var router           = express.Router();
-var Business         = require('../model/Business');
-var authMiddleware   = require('../authMiddleware');
-var bcrypt           = require('bcrypt');
-var twilio           = require('twilio');
-var jwt              = require('jsonwebtoken');
-var client           = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-var _                = require('underscore');
-var expressValidator = require('express-validator');
+var router         = require('express').Router();
+var Business       = require('../model/Business');
+var authMiddleware = require('../authMiddleware');
+var bcrypt         = require('bcrypt');
+var twilio         = require('twilio');
+var jwt            = require('jsonwebtoken');
+var client         = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var _              = require('underscore');
 
 router.post('/create', function(req, res){
   req.sanitize('name').trim();

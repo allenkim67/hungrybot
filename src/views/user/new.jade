@@ -3,14 +3,15 @@ if locals.errors
   ul 
     each error in errors
       li=error.msg
+
 form(action='/user/create' method='post')
   label Username:
   br
-  input(type='text' name='name' value= locals.name)
+  input(type='text' name='name' value=locals.name)
   br
   label Email:
   br
-  input(type='text' name='email' value= locals.email)
+  input(type='text' name='email' value=locals.email)
   br
   label Password:
   br

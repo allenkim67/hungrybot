@@ -5,12 +5,10 @@ var bot      = require('../util/bot');
 var Customer = require('../model/Customer');
 
 router.post('/', async function(req, res) {
-  try {
-    await Customer.createByPhoneIfNotExist(req.body.From);
-    var botResponse = await bot(req.body);
-    var twiml = new twilio.TwimlResponse();
-    twiml.message(botResponse);
-  } catch (err) {console.log(err.stack);}
+  await Customer.createByPhoneIfNotExist(req.body.From);
+  var botResponse = await bot(req.body);
+  var twiml = new twilio.TwimlResponse();
+  twiml.message(botResponse);
 
   res.set('Content-Type', 'text/xml');
   res.send(twiml.toString());

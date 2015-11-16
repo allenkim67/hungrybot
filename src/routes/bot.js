@@ -16,7 +16,6 @@ router.get('/', authMiddleware, async function(req, res) {
     Business.findById(req.session._id).exec(),
     Customer.findOne({phone: DEMO_PHONE}).exec()
   ]);
-  await Business.refreshMenuEntities(business);
   var aiResponse = await ai.query(req.query.message, business._id.toString());
   res.send(await getBotResponse(aiResponse, {customer: customer, business: business}));
 });

@@ -21,14 +21,14 @@ module.exports.createCustomerId = async function(params, mongoCustomer) {
   return stripeCustomer.id;
 };
 
-module.exports.makePaymentWithCardInfo = async function(amount, customerId, user) {
-  var token = await createStripeToken({customer: customerId}, {stripe_account: user.stripeAccount});
+module.exports.makePaymentWithCardInfo = async function(amount, customerId, business) {
+  var token = await createStripeToken({customer: customerId}, {stripe_account: business.stripeAccount});
   return await createStripeCharge({
-      amount: amount,
-      currency: "usd",
-      source: token.id,
-      application_fee: Math.ceil(amount * user.appFee)
-    }, {
-      stripe_account: user.stripeAccount
-    });
+    amount: amount,
+    currency: "usd",
+    source: token.id,
+    application_fee: Math.ceil(amount * business.appFee)
+  }, {
+    stripe_account: business.stripeAccount
+  });
 };
