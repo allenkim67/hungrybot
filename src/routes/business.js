@@ -1,17 +1,30 @@
-var express        = require('express');
-var router         = express.Router();
-var Business       = require('../model/Business');
-var authMiddleware = require('../authMiddleware');
-var bcrypt         = require('bcrypt');
-var twilio         = require('twilio');
-var jwt            = require('jsonwebtoken');
-var client         = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var express          = require('express');
+var app              = express();
+var router           = express.Router();
+var Business         = require('../model/Business');
+var authMiddleware   = require('../authMiddleware');
+var bcrypt           = require('bcrypt');
+var twilio           = require('twilio');
+var jwt              = require('jsonwebtoken');
+var client           = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var expressValidator = require('express-validator');
 
 router.post('/create', function(req, res){
-  Business.create({name: req.body.name, password: bcrypt.hashSync(req.body.password, 8)}, function(err, business){
-    res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
-    res.redirect('/');
-  });
+  req.checkBody('name', 'Username cannot be blank').notEmpty();
+  req.checkBody('email', 'Email cannot be blank').notEmpty();
+  req.checkBody('password', 'Password cannot be blank').notEmpty();
+  req.checkBody('verifyPassword', 'Password cannot be blank').notEmpty();    
+  
+  var errors = req.validationErrors();
+
+  if (errors) {
+    res.render('user/new', {errors: errors});
+  } else {
+    Business.create({name: req.body.name, password: bcrypt.hashSync(req.body.password, 8)}, function(err, business){
+      res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
+      res.redirect('/');
+    });
+  }
 });
 
 router.get('/new', function(req, res) {
