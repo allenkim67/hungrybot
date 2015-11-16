@@ -32,8 +32,8 @@ app.use(expressValidator({
   customValidators: {
     isUniqueBusinessName: function(name) {
       return new Promise(function(resolve, reject) {
-        Business.findOne({name: name}, function (err, user) {
-          user ? reject() : resolve();
+        Business.findOne({name: name}, function (err, business) {
+          business ? reject() : resolve();
         });        
       })
     },

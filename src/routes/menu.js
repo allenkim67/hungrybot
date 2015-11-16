@@ -20,7 +20,8 @@ router.post('/create', authMiddleware, async function(req, res){
   req.checkBody('description', 'Description cannot be blank').notEmpty();
   req.checkBody('menuPrice', 'Please enter a valid amount').isCurrency({allow_negatives: false});
 
-  try{await req.asyncValidationErrors()
+  try {
+    await req.asyncValidationErrors()
     var price = req.body.menuPrice * 100;
     await Menu.create({
       businessId: req.session._id,
@@ -31,7 +32,7 @@ router.post('/create', authMiddleware, async function(req, res){
     await Business.refreshMenuEntities(req.session);
     res.redirect(req.baseUrl);
   }
-  catch(errors) {
+  catch (errors){
     var menuItems = await Menu.find({businessId: req.session._id}).exec();
     res.render('menu/menu', {
       menuItems: menuItems,
