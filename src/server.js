@@ -56,4 +56,10 @@ app.get('/stripe', function(req, res){
   });
 });
 
-app.listen(process.env.PORT || 3000);
+(async function() {
+  try {
+    app.listen(process.env.PORT || 3000);
+  } catch (err) {
+    console.log(err.stack);
+  }
+}());
