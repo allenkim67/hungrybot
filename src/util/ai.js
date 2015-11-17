@@ -58,4 +58,4 @@ var refreshMenuEntities = async function(businessId) {
   return await createUserEntity(userEntity);
 };
 
-var refreshMenuEntitiesThrottled = module.exports.refreshMenuEntities = throttle(refreshMenuEntities, 1800000);
+var refreshMenuEntitiesThrottled = module.exports.refreshMenuEntities = throttle(refreshMenuEntities, 1740000);
