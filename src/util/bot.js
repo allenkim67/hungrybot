@@ -2,6 +2,7 @@ var ai       = require('./ai');
 var Customer = require('../model/Customer');
 var Business = require('../model/Business');
 var Menu     = require('../model/Menu');
+var Order    = require('../model/Order');
 
 module.exports = async function(phoneData) {
   var [customer, business] = await Promise.all([
@@ -30,8 +31,15 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       return `Here's the menu: ${br}` + menuListing;
 
     case 'place_order':
+      var menu = await Menu.findOne({businessId: business._id, name: params.food}).exec();
+      var order = await Order.addOrder(business._id, customer._id, params, menu);
+
+      var total = '$' + (order.total/100).toFixed(2);
+      var totalOrder = order.orders.reduce(function(string, order) {
+        return string + br + order.quantity + ' ' + order.item;
+      }, '');
       var order1 = params.number1 ? ` and ${params.number1} ${params.food1}` : '';
-      return `So you would like ${params.number} ${params.food}${order1}. Does that complete your order?`;
+      return `So you would like: ${totalOrder} ${br} The total will be ${total}. Does that complete your order?`;
 
     case 'confirm_order':
       return "Okay sounds great!  Where should we send it too?";
@@ -44,7 +52,7 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
 
     case 'get_cc':
       var stripeCustomerId = await payment.createCustomerId(params, customer);
-      await payment.makePaymentWithCardInfo(1000, stripeCustomerId, business);
+      await payment.makePaymentWithCardInfo(orderPrice, stripeCustomerId, business);
       return "Alright we're on our way!";
 
     default:
