@@ -31,6 +31,7 @@
     "json-web-token": "^1.5.3",
     "jsonwebtoken": "^5.4.1",
     "mongoose": "^4.2.2",
+    "mongoose-findorcreate": "^0.1.2",
     "stripe": "^4.0.0",
     "twilio": "^2.5.2",
     "underscore": "^1.8.3"
