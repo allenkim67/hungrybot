@@ -33,7 +33,6 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
     case 'place_order':
       var menu = await Menu.findOne({businessId: business._id, name: params.food}).exec();
       var order = await Order.addOrder(business._id, customer._id, params, menu);
-
       var total = '$' + (order.total/100).toFixed(2);
       var totalOrder = order.orders.reduce(function(string, order) {
         return string + br + order.quantity + ' ' + order.item;
@@ -51,8 +50,9 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       return "Okay great who's credit card information we should bill it to?";
 
     case 'get_cc':
+      var order = await Order.findOne({businessId: business._id, customerId: customer._id, status: 'pending'});
       var stripeCustomerId = await payment.createCustomerId(params, customer);
-      await payment.makePaymentWithCardInfo(orderPrice, stripeCustomerId, business);
+      await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, business);
       return "Alright we're on our way!";
 
     default:
