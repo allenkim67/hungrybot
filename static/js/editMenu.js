@@ -35,14 +35,14 @@
       menuData.inputs.$price.val(res.price);
     };
 
-    var success = function() {
+    var success = function(res) {
+      menuData.texts.$name.text(res.name);
+      menuData.texts.$description.text(res.description);
+      menuData.texts.$price.text((res.price/100).toFixed(2));
+
       menuData.$errors.html('');
       menuData.$listing.show();
       menuData.$edit.hide();
-
-      menuData.texts.$name.text(menuData.inputs.$name.val());
-      menuData.texts.$description.text(menuData.inputs.$description.val());
-      menuData.texts.$price.text(menuData.inputs.$price.val());
     };
 
     var config = {

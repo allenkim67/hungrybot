@@ -37,7 +37,7 @@ router.put('/update/:id', authMiddleware, async function(req, res){
       price: req.body.price * 100
     };
     await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, updateData).exec();
-    res.status(200).end();
+    res.send(updateData);
   } catch (errors) {
     res.status(400).send(errors);
   }
