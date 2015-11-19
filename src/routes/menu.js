@@ -27,4 +27,14 @@ router.post('/create', authMiddleware, async function(req, res){
   }
 });
 
+router.put('/update/:id', authMiddleware, async function(req, res){
+  await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, req.body).exec();
+  res.status(200).end();
+});
+
+router.delete('/delete/:id', authMiddleware, async function(req, res){
+  await Menu.findOneAndRemove({_id: req.params.id, businessId: req.session._id}).exec();
+  res.status(200).end();
+});
+
 module.exports = router;
