@@ -13,12 +13,12 @@ router.get('/', authMiddleware, function(req, res) {
 
 router.post('/create', authMiddleware, async function(req, res){
   try {
-    await validators.createMenu(req);
+    await validators.menu(req);
     await Menu.create({
       businessId: req.session._id,
       name: req.body.name,
       description: req.body.description,
-      price: req.body.menuPrice * 100
+      price: req.body.price * 100
     });
     await refreshMenuEntities(req.session._id);
     res.redirect(req.baseUrl);
@@ -28,8 +28,19 @@ router.post('/create', authMiddleware, async function(req, res){
 });
 
 router.put('/update/:id', authMiddleware, async function(req, res){
-  await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, req.body).exec();
-  res.status(200).end();
+  try {
+    await validators.menu(req);
+
+    var updateData = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price * 100
+    };
+    await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, updateData).exec();
+    res.status(200).end();
+  } catch (errors) {
+    res.status(400).send(errors);
+  }
 });
 
 router.delete('/delete/:id', authMiddleware, async function(req, res){

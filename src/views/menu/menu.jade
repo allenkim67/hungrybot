@@ -8,7 +8,8 @@ block content
   else
     each menuItem in menuItems
       div.js-menu-container(data-id=menuItem._id.toString())
-        div.js-menu
+        ul.js-menu-errors
+        div.js-menu-listing
           ul
             li Name:
               span.js-menu-name-text= menuItem.name
@@ -18,7 +19,7 @@ block content
               span.js-menu-price-text= (menuItem.price / 100).toFixed(2)
           button.js-menu-btn-edit Edit 
           button.js-menu-btn-delete Delete
-        div.js-menu-edit(style='display: none')
+        form.js-menu-edit(style='display: none')
           ul
             li
               | Name:

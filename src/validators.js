@@ -11,10 +11,10 @@ module.exports.customValidators = {
       });
     })
   },
-  isUniqueMenuName: function(name, sessionId) {
+  isUniqueMenuName: function(name, sessionId, menuId) {
     return new Promise(function(resolve, reject) {
       Menu.findOne({name: name, businessId: sessionId}, function (err, menuItem) {
-        menuItem ? reject() : resolve();
+        !menuItem || menuItem._id.toString() === menuId ? resolve() : reject();
       });
     });
   },
@@ -23,14 +23,14 @@ module.exports.customValidators = {
   }
 };
 
-module.exports.createMenu = async function(req) {
+module.exports.menu = async function(req) {
   req.sanitize('name').trim();
   req.sanitize('description').trim();
-  req.sanitize('menuPrice').ltrim('$');
+  req.sanitize('price').ltrim('$');
   req.checkBody('name', 'Menu name cannot be blank').notEmpty();
-  req.checkBody('name', 'Menu name is already taken').isUniqueMenuName(req.session._id);
+  req.checkBody('name', 'Menu name is already taken').isUniqueMenuName(req.session._id, req.params.id);
   req.checkBody('description', 'Description cannot be blank').notEmpty();
-  req.checkBody('menuPrice', 'Please enter a valid amount').isCurrency({allow_negatives: false});
+  req.checkBody('price', 'Please enter a valid amount').isCurrency({allow_negatives: false});
 
   try {
     await req.asyncValidationErrors(true);
@@ -41,7 +41,7 @@ module.exports.createMenu = async function(req) {
       errors: _.values(errors),
       name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name,
       description: _.any(errors, function(error) {return error.param === 'description'}) ? '' : req.body.description,
-      menuPrice: _.any(errors, function(error) {return error.param === 'menuPrice'}) ? '' : req.body.menuPrice
+      price: _.any(errors, function(error) {return error.param === 'price'}) ? '' : req.body.price
     };
   }
 };
