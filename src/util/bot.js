@@ -3,6 +3,7 @@ var Customer = require('../model/Customer');
 var Business = require('../model/Business');
 var Menu     = require('../model/Menu');
 var Order    = require('../model/Order');
+var payment  = require('./payment');
 
 module.exports = async function(phoneData) {
   var [customer, business] = await Promise.all([
@@ -50,10 +51,12 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       return "Okay great who's credit card information we should bill it to?";
 
     case 'get_cc':
-      var order = await Order.findOne({businessId: business._id, customerId: customer._id, status: 'pending'});
-      var stripeCustomerId = await payment.createCustomerId(params, customer);
-      await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, business);
-      return "Alright we're on our way!";
+      try {
+        var order = await Order.findOne({businessId: business._id, customerId: customer._id, status: 'pending'});
+        var stripeCustomerId = await payment.createCustomerId(params, customer);
+        await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, business);
+        return "Alright we're on our way!";
+      } catch (err) { console.log(err.stack); }
 
     default:
       return 'Sorry speak louder please.';

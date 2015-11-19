@@ -52,7 +52,7 @@ app.get('/stripe', function(req, res){
       business.save(function(){
         res.redirect('/user/upgrade');
       });
-    });
+    }).catch(function(err) {console.log(err.stack)});
   });
 });
 
