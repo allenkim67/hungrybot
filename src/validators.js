@@ -11,9 +11,9 @@ module.exports.customValidators = {
       });
     })
   },
-  isUniqueMenuName: function(name) {
+  isUniqueMenuName: function(name, sessionId) {
     return new Promise(function(resolve, reject) {
-      Menu.findOne({name: name}, function (err, menuItem) {
+      Menu.findOne({name: name, businessId: sessionId}, function (err, menuItem) {
         menuItem ? reject() : resolve();
       });
     });
@@ -28,7 +28,7 @@ module.exports.createMenu = async function(req) {
   req.sanitize('description').trim();
   req.sanitize('menuPrice').ltrim('$');
   req.checkBody('name', 'Menu name cannot be blank').notEmpty();
-  req.checkBody('name', 'Menu name is already taken').isUniqueMenuName();
+  req.checkBody('name', 'Menu name is already taken').isUniqueMenuName(req.session._id);
   req.checkBody('description', 'Description cannot be blank').notEmpty();
   req.checkBody('menuPrice', 'Please enter a valid amount').isCurrency({allow_negatives: false});
 
