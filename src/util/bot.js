@@ -51,12 +51,10 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       return "Okay great who's credit card information we should bill it to?";
 
     case 'get_cc':
-      try {
-        var order = await Order.findOne({businessId: business._id, customerId: customer._id, status: 'pending'});
-        var stripeCustomerId = await payment.createCustomerId(params, customer);
-        await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, business);
-        return "Alright we're on our way!";
-      } catch (err) { console.log(err.stack); }
+      var order = await Order.findOne({businessId: business._id, customerId: customer._id, status: 'pending'});
+      var stripeCustomerId = await payment.createCustomerId(params, customer);
+      await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, business);
+      return "Alright we're on our way!";
 
     default:
       return 'Sorry speak louder please.';
