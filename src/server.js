@@ -37,7 +37,7 @@ app.use('/phone', phone);
 app.use('/session', session);
 app.use('/bot', bot);
 
-app.get('/', authMiddleware, function(req, res){
+app.get('/', authMiddleware, function(req, res) {
 	res.render('index', {name: req.session.name});
 });
 

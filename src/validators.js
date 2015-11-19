@@ -1,6 +1,7 @@
 var _        = require('underscore');
 var Menu     = require('./model/Menu');
 var Business = require('./model/Business');
+var bcrypt   = require('bcrypt');
 
 module.exports.customValidators = {
   isUniqueBusinessName: function(name) {
@@ -16,6 +17,9 @@ module.exports.customValidators = {
         menuItem ? reject() : resolve();
       });
     });
+  },
+  isCorrectCreds: function(rawPass, business) {
+    return !!business && bcrypt.compareSync(rawPass, business.password);
   }
 };
 
@@ -54,11 +58,24 @@ module.exports.createBusiness = async function(req) {
   try {
     await req.asyncValidationErrors(true);
   } catch (errors) {
-    console.log(errors);
     throw {
       errors: _.values(errors),
       name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name,
       email: _.any(errors, function(error) {return error.param === 'email'}) ? '' : req.body.email
     }
   }
+};
+
+module.exports.login = function(req, business) {
+  req.sanitize('name').trim();
+  req.checkBody('name', 'Username cannot be blank').notEmpty();
+  req.checkBody('password', 'Username or password is incorrect').isCorrectCreds(business);
+  req.checkBody('password', 'Password cannot be blank').notEmpty();
+
+  var errors = req.validationErrors(true);
+
+  return errors ? {
+    errors: _.values(errors),
+    name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name
+  } : null;
 };
