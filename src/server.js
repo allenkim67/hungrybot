@@ -41,8 +41,8 @@ app.get('/', authMiddleware, function(req, res){
 	res.render('index', {name: req.session.name});
 });
 
-app.get('/stripe', function(req, res){
-  Business.findById(req.cookies.session._id, function(err, business){
+app.get('/stripe', authMiddleware, function(req, res){
+  Business.findById(req.session._id, function(err, business){
     axios.post('https://connect.stripe.com/oauth/token', {
       client_secret: process.env.STRIPE_SECRET_KEY,
       code: req.query.code,
