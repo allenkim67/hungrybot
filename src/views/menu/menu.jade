@@ -7,25 +7,28 @@ block content
     | (You have no menu items yet.)
   else
     each menuItem in menuItems
-      div
+      div.js-menu-container(data-id=menuItem._id.toString())
         div.js-menu
-          ul.js-menu-id(data-id=menuItem._id.toString())
-            li= 'Name: ' + menuItem.name
-            li= 'Description: ' + menuItem.description
-            li= 'Price: ' + (menuItem.price / 100).toFixed(2)
+          ul
+            li Name:
+              span.js-menu-name-text= menuItem.name
+            li Description:
+              span.js-menu-description-text= menuItem.description
+            li Price:
+              span.js-menu-price-text= (menuItem.price / 100).toFixed(2)
           button.js-menu-btn-edit Edit 
           button.js-menu-btn-delete Delete
         div.js-menu-edit(style='display: none')
-          ul.js-menu-item
-            li.js-menu-name(data-name=menuItem.name) 
+          ul
+            li
               | Name:
-              input(value=menuItem.name)
-            li.js-menu-description(data-description=menuItem.description) 
+              input.js-menu-name-input
+            li
               | Description:
-              input(value=menuItem.description)
-            li.js-menu-price(data-price=menuItem.price) 
+              input.js-menu-description-input
+            li
               | Price:
-              input(value=menuItem.price) 
+              input.js-menu-price-input
           button.js-menu-btn-save Save 
           button.js-menu-btn-cancel Cancel
 
