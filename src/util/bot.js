@@ -22,7 +22,7 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
 
   switch(action) {
     case 'greet':
-      return "Hey how's it going?";
+      return "Hello this is [name], feel free to order from the menu or type 'show menu'.";
 
     case 'show_menu':
       var menuItems = await Menu.find({businessId: business._id}).exec();
@@ -42,7 +42,11 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       return `So you would like: ${totalOrder} ${br} The total will be ${total}. Does that complete your order?`;
 
     case 'confirm_order':
-      return "Okay sounds great!  Where should we send it too?";
+      if(customer.address) {
+        return `Send to: ${br} [Address] ${br} Bill to: ${br} [Person] {$br} Is this correct?`;
+      } else {
+        return "Okay sounds great!  Where should we send it too?";
+      }
 
     case 'get_address':
       var address = {street: params.address, state: params['geo-state-us'], city: params['geo-city-us']};
