@@ -16,6 +16,7 @@ module.exports.createCustomerId = async function(params, mongoCustomer) {
   var stripeCustomer = await createStripeCustomer({source: token.id});
 
   mongoCustomer.stripeId = stripeCustomer.id;
+  mongoCustomer.cc = params.ccNumber.slice(-4);
   mongoCustomer.save();
 
   return stripeCustomer.id;

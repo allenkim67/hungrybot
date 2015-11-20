@@ -7,7 +7,8 @@ var customerSchema = mongoose.Schema({
     street: String,
     city: String,
     state: String
-  }
+  },
+  cc: Number
 });
 
 customerSchema.statics.createByPhoneIfNotExist = function(phone) {

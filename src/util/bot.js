@@ -38,12 +38,15 @@ var getBotResponse = module.exports.getBotResponse = async function(aiData, {bus
       var totalOrder = order.orders.reduce(function(string, order) {
         return string + br + order.quantity + ' ' + order.item;
       }, '');
-      var order1 = params.number1 ? ` and ${params.number1} ${params.food1}` : '';
       return `So you would like: ${totalOrder} ${br} The total will be ${total}. Does that complete your order?`;
 
     case 'confirm_order':
-      if(customer.address) {
-        return `Send to: ${br} [Address] ${br} Bill to: ${br} [Person] {$br} Is this correct?`;
+      var ca = customer.address;
+      var address = `${ca.street}${br}${ca.city}, ${ca.state}`;
+      if(customer.address && customer.cc) {
+        return `Send to: ${br} ${address} ${br} Bill to: ${br} **** **** **** ${customer.cc} ${br} Is this correct?`;
+      } else if (customer.address) {
+        return
       } else {
         return "Okay sounds great!  Where should we send it too?";
       }
