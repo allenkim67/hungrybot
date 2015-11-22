@@ -1,7 +1,7 @@
 var router   = require('express').Router();
 var twilio   = require('twilio');
 var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-var bot      = require('../util/bot');
+var bot      = require('../util/bot').phoneBot;
 var Customer = require('../model/Customer');
 
 router.post('/', async function(req, res) {
@@ -12,7 +12,6 @@ router.post('/', async function(req, res) {
 
   res.set('Content-Type', 'text/xml');
   res.send(twiml.toString());
-
 });
 
 router.get('/available/:areacode', function(req, res) {
