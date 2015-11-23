@@ -86,9 +86,9 @@ var transitionTable = [
   {
     inState: {},
     transitions: [
-      {input: 'greet',         output: greet,               outState: {}},
-      {input: 'show_menu',     output: showMenu,            outState: {}},
-      {input: '_error', output: generalErrorMessage, outState: {}}
+      {input: 'greet',     output: greet,               outState: {}},
+      {input: 'show_menu', output: showMenu,            outState: {}},
+      {input: '_error',    output: generalErrorMessage, outState: {}}
     ]
   },
   {

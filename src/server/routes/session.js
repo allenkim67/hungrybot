@@ -1,7 +1,6 @@
 var router         = require('express').Router();
 var bcrypt         = require('bcrypt');
 var jwt            = require('jsonwebtoken');
-var _              = require('underscore');
 var Business       = require('../model/Business');
 var authMiddleware = require('../authMiddleware');
 var validators     = require('../validators');
@@ -12,7 +11,7 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/login', function(req, res) {
-  res.render('session/login');
+  res.render('login');
 });
 
 router.post('/login', async function(req, res){

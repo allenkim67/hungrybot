@@ -35,14 +35,7 @@ module.exports.menu = async function(req) {
   try {
     await req.asyncValidationErrors(true);
   } catch (errors) {
-    var menuItems = await Menu.find({businessId: req.session._id}).exec();
-    throw {
-      menuItems: menuItems,
-      errors: _.values(errors),
-      name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name,
-      description: _.any(errors, function(error) {return error.param === 'description'}) ? '' : req.body.description,
-      price: _.any(errors, function(error) {return error.param === 'price'}) ? '' : req.body.price
-    };
+    throw _.values(errors);
   }
 };
 

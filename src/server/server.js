@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
 //Middleware + View Engine
 app.set('view engine', 'jade');
-app.set('views', './src/views');
+app.set('views', './src/server/views');
 app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,7 +38,7 @@ app.use('/session', session);
 app.use('/bot', bot);
 
 app.get('/', authMiddleware, function(req, res) {
-	res.render('index', {name: req.session.name});
+	res.render('index');
 });
 
 app.get('/stripe', authMiddleware, function(req, res){

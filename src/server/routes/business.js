@@ -15,16 +15,12 @@ router.post('/create', async function(req, res){
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
     res.redirect('/');
   } catch (errors) {
-    res.render('user/new', errors);
+    res.render(errors);
   }
 });
 
-router.get('/new', function(req, res) {
-  res.render('user/new');
-});
-
-router.get('/upgrade', authMiddleware, function(req, res) {
-  res.render('user/upgrade');
+router.get('/signup', function(req, res) {
+  res.render('signup');
 });
 
 router.post('/addphone', authMiddleware, function (req, res) {
