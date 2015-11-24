@@ -1,0 +1,48 @@
+h2 {
+position: relative;
+top: -5px;
+color: white;
+}
+
+input {
+  position: relative;
+}
+
+p {
+  font-size: 16px;
+  font-weight: thin;
+  color: white;
+}
+
+.form-control {
+  top: -5px;
+  height: 28px;
+}
+
+.signup-form {
+  position: relative;
+  width: 240px;
+  height: 430px;
+  top: 200px;
+  border-radius: 15px;
+  background-color: #0B93F6;
+}
+
+.create-btn {
+  position: relative;
+  width: 210px;
+  height: 34px;
+  top: 13px;
+  font-size: 16px;
+  font-family: "Helvetica";
+}
+
+.return-text {
+  position: relative;
+  top: 25px;
+  color: white;
+  left: 2px;
+  font-size: 18px;
+  font-family: "Helvetica";
+  left: 18px;
+}
