@@ -1,10 +1,13 @@
 var express          = require('express');
 var app              = express();
+var server           = require('http').Server(app);
 var bodyParser       = require('body-parser');
 var mongoose         = require('mongoose');
 var cookieParser     = require('cookie-parser');
 var fs               = require('fs');
+var jwt              = require('jsonwebtoken');
 var axios            = require('axios');
+var socket           = require('./util/socket');
 var authMiddleware   = require('./authMiddleware');
 var customValidators = require('./validators').customValidators;
 var expressValidator = require('express-validator');
@@ -15,11 +18,13 @@ var session          = require('./routes/session');
 var phone            = require('./routes/phone');
 var bot              = require('./routes/bot');
 var subscriber       = require('./routes/subscriber');
+var orders           = require('./routes/orders');
 //Model
 var Business         = require('./model/Business');
 var Customer         = require('./model/Customer');
 var Menu             = require('./model/Menu');
 
+socket.init(server);
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
 //Middleware + View Engine
@@ -38,6 +43,7 @@ app.use('/phone', phone);
 app.use('/session', session);
 app.use('/bot', bot);
 app.use('/subscriber', subscriber);
+app.use('/orders', orders);
 
 app.get('/', authMiddleware, function(req, res) {
 	res.render('index');
@@ -58,9 +64,20 @@ app.get('/stripe', authMiddleware, function(req, res){
   });
 });
 
+socket.io.on('connection', function(socket) {
+  socket.on('sessionToken', function(sessionToken) {
+    var sessionId = jwt.verify(sessionToken, process.env.JWT_SECRET_KEY)._id;
+    socket.join(sessionId);
+  })
+});
+
+process.on('unhandledRejection', function(reason, p) {
+  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
+});
+
 (async function() {
   try {
-    app.listen(process.env.PORT || 3000);
+    server.listen(process.env.PORT || 3000);
   } catch (err) {
     console.log(err.stack);
   }

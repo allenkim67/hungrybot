@@ -1,11 +1,12 @@
+var _             = require('underscore');
 var ai            = require('./ai');
+var payment       = require('./payment');
+var socket        = require('./socket');
 var Menu          = require('../model/Menu');
 var Order         = require('../model/Order');
 var Business      = require('../model/Business');
 var Customer      = require('../model/Customer');
-var payment       = require('./payment');
 var Combinatorics = require('js-combinatorics');
-var _             = require('underscore');
 
 var bot = module.exports = async function(input) {
   var currState = input.models.customer.convoState;
@@ -131,13 +132,13 @@ var transitionTable = [
   {
     inState: {status: 'gettingPaymentInfo'},
     transitions: [
-      {input: 'get_cc', output: [makePayment, closeOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
+      {input: 'get_cc', output: [makePayment, closeOrder, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
     ]
   },
   {
     inState: {status: 'confirmingSavedInfo'},
     transitions: [
-      {input: 'confirm', output: [makePayment, closeOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
+      {input: 'confirm', output: [makePayment, closeOrder, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
     ]
   }
 ];
@@ -200,7 +201,7 @@ async function addOrder(input) {
 }
 
 async function saveAddress(input) {
-  input.customer.address = {
+  input.models.customer.address = {
     street: input.aiData.result.parameters.address,
     city: input.aiData.result.parameters['geo-city-us'],
     state: input.aiData.result.parameters['geo-state-us']
@@ -221,11 +222,17 @@ async function makePayment(input) {
 }
 
 async function closeOrder(input) {
-  await Order.findOneAndUpdate({
+  var order = await Order.findOneAndUpdate({
     businessId: input.models.business._id,
     customerId: input.models.customer._id,
     status: 'pending'
-  }, {status: 'complete'});
+  }, {status: 'paid'}, {new: true});
 
+  input.models.order = order;
+  return input;
+}
+
+function trackOrder(input) {
+  socket.io.to(input.models.business._id.toString()).emit('newOrder', input.models.order);
   return input;
 }
