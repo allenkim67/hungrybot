@@ -189,11 +189,19 @@ input[type='text'] {
   font-size: 20px;
   font-family: "Helvetica";
   outline: none;
-  left: -220px;
+  left: -221px;
   margin-top: 5px;
 }
 
-#subscribe-box {
+#subscribe-box-name {
+  margin-top: 5px;
+  position: relative;
+  left: 306px;
+  height: 41px;
+  width: 522px;
+}
+
+#subscribe-box-email {
   margin-top: 5px;
   position: relative;
   left: 306px;

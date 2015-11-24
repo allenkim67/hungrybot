@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 
 var subscriberSchema = mongoose.Schema({
-  subscriberName: String,
-  subscriberEmail: String
+  name: String,
+  email: String
 });
 
 module.exports = mongoose.model('Subscriber', subscriberSchema);

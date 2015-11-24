@@ -14,9 +14,9 @@ $("#guest-message-demo").on('submit', function(evt) {
 
 $(".subscribe-btn").on('submit', function(evt) {
   evt.preventDefault();
-  var subscribeName =  $("subscribe-box-name").val();
-  var subscribeEmail =  $("subscribe-box-email").val();  
-  $.post('/subscribe', )
-  $("subscribe-box-name").val('');
-  $("subscribe-box-email").val('');  
+  var subscribeName =  $("#subscribe-box-name").val();
+  var subscribeEmail =  $("#subscribe-box-email").val();  
+  $.post('/subscriber', {name: subscribeName, email: subscribeEmail});
+  $("#subscribe-box-name").val('');
+  $("#subscribe-box-email").val('');  
 })
