@@ -8,7 +8,7 @@ module.exports = React.createClass({
         <li><Link to="menu">Your Menu</Link></li>
         <li><Link to="upgrade">Upgrade Account</Link></li>
         <li><Link to="demo">Bot Demo</Link></li>
-        <li><Link to="">Incoming Orders</Link></li>
+        <li><Link to="orders">Incoming Orders</Link></li>
       </ul>
     );
   }
