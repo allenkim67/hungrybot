@@ -17,6 +17,7 @@ var business         = require('./routes/business');
 var session          = require('./routes/session');
 var phone            = require('./routes/phone');
 var bot              = require('./routes/bot');
+var subscriber       = require('./routes/subscriber');
 var orders           = require('./routes/orders');
 //Model
 var Business         = require('./model/Business');
@@ -41,6 +42,7 @@ app.use('/user', business);
 app.use('/phone', phone);
 app.use('/session', session);
 app.use('/bot', bot);
+app.use('/subscriber', subscriber);
 app.use('/orders', orders);
 
 app.get('/', authMiddleware, function(req, res) {
