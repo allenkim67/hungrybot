@@ -1,0 +1,86 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="span4"/>
+      <div class="span4">
+        <div class="header text-center">
+          <h1>Text Delivery</h1>
+        </div>
+        <div class='sub-heading text-center'>
+          <p>
+            Have your customers order with a text. 
+            <br/>
+            Adopt a new way of ordering.
+          </p>
+        </div>
+      </div>
+      <div class="span4"/>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="span4"></div>
+      <div class="span4 demo">
+        <div class="iphone6">
+          <img class="center-block" src="img/iphone6.png">
+        </div>
+        <div class='chat-div'>
+          <section class='chat-text'>
+            <div class="from-me chat">
+              <p>Hey there! What's up?</p>
+            </div>
+            <div class="clear chat"></div>
+            <div class="from-them chat">
+              <p>Hello this is Cafe Anzio. How may I help you?</p>
+            </div>
+            <div class="clear chat"></div>
+            <div class="from-me chat">
+              <p>Yes. Can I see the menu?</p>
+            </div>
+            <div class="clear chat"></div>
+            <div class="from-them chat">
+              <p>[img resp]</p>
+            </div>
+            <div class="clear chat"></div>
+            <div class="from-me chat">
+              <p>I would like two sandwiches.</p>
+            </div>            
+          </section>
+        </div>
+          <div class="input-group">
+            <form id="guest-message-demo">
+              <span class="input-group-btn">
+                <input type="text" class="chat-form form-control" id="chat-box" autocomplete="off"/>
+                <button class="btn btn-default" type="button" id="chat-btn">Send</button>
+              </span>
+            </form>
+            </div>
+      </div>
+      <div class="span4"></div>
+    </div>
+  </div>
+  <div class="login-div text-center">
+    <form class="user-btn" action="/session/login">
+      <button class="btn btn-default" type="submit" id="login-btn">Login</button>
+    </form>
+  </div>
+  <div class="subscribe-div text-center">
+      <form class="subscribe-btn" action="/subscribe">
+        <input type="text" class="chat-form form-control" id="subscribe-box-name" autocomplete="off" placeholder="Your Name"/>
+        <input type="text" class="chat-form form-control" id="subscribe-box-email" autocomplete="off" placeholder="Your Email Address"/>        
+        <button class="btn btn-success" type="submit" id="subscribe-btn">Subscribe</button>
+      </form>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js"></script>
+<script src="/js/landingPage.js"></script>
+</body>
+</html>
