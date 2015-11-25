@@ -87,9 +87,10 @@ var transitionTable = [
   {
     inState: {},
     transitions: [
-      {input: 'greet',     output: greet,               outState: {}},
-      {input: 'show_menu', output: showMenu,            outState: {}},
-      {input: '_error',    output: generalErrorMessage, outState: {}}
+      {input: 'greet',       output: greet,               outState: {}},
+      {input: 'show_menu',   output: showMenu,            outState: {}},
+      {input: 'clear_order', output: noOrders,            outState: {}},
+      {input: '_error',      output: generalErrorMessage, outState: {}}
     ]
   },
   {
@@ -113,14 +114,14 @@ var transitionTable = [
   {
     inState: {status: 'orderPending'},
     transitions: [
-      {input: 'place_order', output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending'}},
+      {input: 'place_order', output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending', orderPending: true}},
       {input: 'deny',        output: getNextOrder,                      outState: {status: 'waitingForNextOrder'}}
     ]
   },
   {
     inState: {status: 'waitingForNextOrder'},
     transitions: [
-      {input: 'place_order',  output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending'}}
+      {input: 'place_order',  output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending', orderPending: true}}
     ]
   },
   {
@@ -132,15 +133,21 @@ var transitionTable = [
   {
     inState: {status: 'gettingPaymentInfo'},
     transitions: [
-      {input: 'get_cc', output: [makePayment, closeOrder, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
+      {input: 'get_cc', output: [makePayment, closeOrders, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true, orderPending: false}}
     ]
   },
   {
     inState: {status: 'confirmingSavedInfo'},
     transitions: [
-      {input: 'confirm', output: [makePayment, closeOrder, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true}}
+      {input: 'confirm', output: [makePayment, closeOrders, trackOrder, finishTransaction], outState: {status: 'start', withInfo: true, orderPending: false}}
     ]
-  }
+  },
+  {
+    inState: {orderPending: true},
+    transitions: [
+      {input: 'clear_order', output: [clearOrders, confirmClearOrders], outState: {status: 'start'}}
+    ]
+  },
 ];
 
 //RESPONSE OUTPUT
@@ -190,6 +197,14 @@ function generalErrorMessage() {
   return "Sorry I didn't understand that.";
 }
 
+function confirmClearOrders() {
+  return "Okay, we've clear your orders.  What would you like to order instead?";
+}
+
+function noOrders() {
+  return "You have no orders to cancel.  What would you like to order?";
+}
+
 //SIDE EFFECTS
 async function addOrder(input) {
   var menu = await Menu.findOne({
@@ -221,7 +236,7 @@ async function makePayment(input) {
   return input;
 }
 
-async function closeOrder(input) {
+async function closeOrders(input) {
   var order = await Order.findOneAndUpdate({
     businessId: input.models.business._id,
     customerId: input.models.customer._id,
@@ -235,4 +250,14 @@ async function closeOrder(input) {
 function trackOrder(input) {
   socket.io.to(input.models.business._id.toString()).emit('newOrder', input.models.order);
   return input;
+}
+
+async function clearOrders(input) {
+  await Order.findOneAndRemove({
+    businessId: input.models.business._id,
+    customerId: input.models.customer._id,
+    status: 'pending'
+  });
+
+  return input; 
 }
