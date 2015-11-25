@@ -11,9 +11,9 @@ var _              = require('underscore');
 router.post('/create', async function(req, res){
   try {
     await validators.createBusiness(req);
-    var business = await Business.create({name: req.body.name, password: bcrypt.hashSync(req.body.password, 8)});
+    var business = await Business.create({name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, 8)});
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
-    res.redirect('/');
+    res.redirect('/home');
   } catch (errors) {
     res.render(errors);
   }

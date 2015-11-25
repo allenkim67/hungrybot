@@ -3,6 +3,7 @@ var ai       = require('../util/ai');
 
 var businessSchema = mongoose.Schema({
   name: String,
+  email: String,
   password: String,
   stripeAccount: String,
   phone: String,
