@@ -65,14 +65,16 @@ module.exports.phoneBot = async function(phoneData) {
   return await bot(botInput);
 };
 
-module.exports.serverBot = async function(req, res) {
-  var DEMO_PHONE = '+12345678900';
+module.exports.serverBot = businessId => async (req, res) => {
+  if(req.cookies.demoCustomer) {
+    var customer = await Customer.findById(req.cookies.demoCustomer).exec();
+  } else {
+    var number = Math.random().toString(36);
+    var customer = await Customer.create({phone: number}); 
+    res.cookie('demoCustomer', customer._id);
+  }
 
-  var [business, customer] = await Promise.all([
-    Business.findById(req.session._id).exec(),
-    Customer.findOne({phone: DEMO_PHONE}).exec()
-  ]);
-
+  var business = await Business.findById(businessId || req.session._id).exec();
   var aiResponse = await ai.query(req.query.message, business._id.toString());
   var botInput = {
     models: {customer: customer, business: business},
@@ -96,7 +98,7 @@ var transitionTable = [
   {
     inState: {status: 'start'},
     transitions: [
-      {input: 'place_order', output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending'}}
+      {input: 'place_order', output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending'}}      
     ]
   },
   {
@@ -115,7 +117,7 @@ var transitionTable = [
     inState: {status: 'orderPending'},
     transitions: [
       {input: 'place_order', output: [addOrder, confirmOrderPlacement], outState: {status: 'orderPending', orderPending: true}},
-      {input: 'deny',        output: getNextOrder,                      outState: {status: 'waitingForNextOrder'}}
+      {input: 'deny',        output: getNextOrder,                         outState: {status: 'waitingForNextOrder'}}
     ]
   },
   {
@@ -205,6 +207,19 @@ function noOrders() {
   return "You have no orders to cancel.  What would you like to order?";
 }
 
+// async function removeItemMessage(input) {
+
+//   if() {
+
+//   } else {
+//     var total = '$' + (input.models.order.total / 100).toFixed(2);
+//     var totalOrder = input.models.order.orders.reduce(function (string, order) {
+//       return string + input.br + order.quantity + ' ' + order.item;
+//     }, '');
+//     return `Here is your updated order: ${totalOrder} ${input.br} The total will be ${total}. Does that complete your order?`;
+//   }
+// }
+
 //SIDE EFFECTS
 async function addOrder(input) {
   var menu = await Menu.findOne({
@@ -214,6 +229,16 @@ async function addOrder(input) {
   input.models.order = await Order.addOrder(input.models.business._id, input.models.customer._id, input.aiData.result.parameters, menu);
   return input;
 }
+
+// async function removeItem(input) {
+//   console.log(input.aiData.result.parameters);
+//   var menu = await Menu.findOneAndUpdate({
+//     businessId: input.models.business._id,
+//     name: input.aiData.result.parameters.food}
+//   ).exec();
+//   input.models.order = await Order.removeItem(input.models.business._id, input.models.customer._id, input.aiData.result.parameters, menu);
+//   return input;
+// }
 
 async function saveAddress(input) {
   input.models.customer.address = {

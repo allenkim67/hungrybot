@@ -72,7 +72,7 @@ socket.io.on('connection', function(socket) {
 });
 
 process.on('unhandledRejection', function(reason, p) {
-  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
+  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason.stack);
 });
 
 (async function() {

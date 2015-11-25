@@ -31,4 +31,28 @@ orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
   }.bind(this));
 }
 
+// orderSchema.statics.removeItem = function(businessId, customerId, params, menu) {
+//   return new Promise(function(resolve, reject) { 
+//     this.findOne({businessId: businessId, customerId: customerId, status: 'pending'}, function(err, order){
+//       if (err) { reject(err); }
+//       console.log(order.total, menu.price, params.number)
+//       order.total -= menu.price * params.number;
+//       var existingOrder = _.find(order.orders, function(order) {
+//         return order.item === params.food;
+//       });
+//       if(existingOrder) {
+//         existingOrder.quantity -= parseInt(params.number);
+//       } else {
+//         order.orders.filter(function(order) {
+//           return order !== {item: params.food, quantity: params.number};
+//         })
+//       }
+//       order.save(function(err, order) { 
+//         if (err) { reject(err); }
+//         resolve(order); 
+//       });
+//     });
+//   }.bind(this));
+// }
+
 module.exports = mongoose.model('Order', orderSchema);

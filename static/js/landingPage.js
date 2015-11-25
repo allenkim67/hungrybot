@@ -6,7 +6,7 @@ $("#guest-message-demo").on('submit', function(evt) {
   $("#chat-box").val(''); 
   chatDiv.scrollTop(chatDiv[0].scrollHeight);
 
-  $.get('/bot?message=' + guestMessage, function(botResponse) {
+  $.get('/bot/public?message=' + guestMessage, function(botResponse) {
     $(".chat-text").append('<div class="clear chat"></div><div class="from-them chat"><p>' + botResponse + '</p></div>');
     chatDiv.scrollTop(chatDiv[0].scrollHeight);  
   });

@@ -28,7 +28,7 @@ module.exports = React.createClass({
     var message = input.value;
     this.setState({messages: this.state.messages.concat(message)});
 
-    axios.get('/bot?message=' + message).then(res => {
+    axios.get('/bot/private?message=' + message).then(res => {
       this.setState({messages: this.state.messages.concat(res.data)});
     });
 
