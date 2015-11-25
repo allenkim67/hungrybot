@@ -60,8 +60,8 @@ module.exports.createBusiness = async function(req) {
 };
 
 module.exports.login = function(req, business) {
-  req.sanitize('name').trim();
-  req.checkBody('name', 'Username cannot be blank').notEmpty();
+  req.sanitize('email').trim();
+  req.checkBody('email', 'Email is incorrectly formatted').isEmail();
   req.checkBody('password', 'Username or password is incorrect').isCorrectCreds(business);
   req.checkBody('password', 'Password cannot be blank').notEmpty();
 
@@ -69,6 +69,6 @@ module.exports.login = function(req, business) {
 
   return errors ? {
     errors: _.values(errors),
-    name: _.any(errors, function(error) {return error.param === 'name'}) ? '' : req.body.name
+    name: _.any(errors, function(error) {return error.param === 'email'}) ? '' : req.body.email
   } : null;
 };

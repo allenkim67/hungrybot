@@ -15,13 +15,14 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login', async function(req, res){
-    var business = await Business.findOne({name: req.body.name}).exec();
+    var business = await Business.findOne({email: req.body.email}).exec();
     var errors = validators.login(req, business);
+    res.clearCookie('demoCustomer');
     if (errors) {
       res.render('session/login', errors);
     } else {
       res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
-      res.redirect('/');
+      res.redirect('/home');
     }
 });
 

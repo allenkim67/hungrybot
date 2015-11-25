@@ -45,8 +45,8 @@ app.use('/bot', bot);
 app.use('/subscriber', subscriber);
 app.use('/orders', orders);
 
-app.get('/', authMiddleware, function(req, res) {
-	res.render('index');
+app.get('/home', authMiddleware, function(req, res) {
+	res.render('home');
 });
 
 app.get('/stripe', authMiddleware, function(req, res){
