@@ -48,4 +48,8 @@ router.delete('/delete/:id', authMiddleware, async function(req, res){
   res.status(200).end();
 });
 
+router.get('/refresh', authMiddleware, async function(req, res) {
+  res.send(await refreshMenuEntities(req.session._id));
+});
+
 module.exports = router;
