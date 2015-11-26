@@ -165,9 +165,10 @@ input[type='text'] {
 
 
 .login-div {
+  display: inline-block;
   position: relative;
+  float: right;
   top: -560px;
-  left: 886px;
 }
 
 #login-btn {
