@@ -1,3 +1,261 @@
-h1 {
-  font-size: 1000px;
+/* Nav.js - Navbar*/
+.navbar {
+  margin-bottom: 0px;
+  top: -20px;
+  font-size: 20px;
+  left: 600px;
+  display: inline-block;
+}
+
+/*Main.js - Logout Button*/
+.logout-div {
+  position: relative;
+  top: 5px;
+  left: 880px;
+}
+
+#logout-btn {
+  position: relative;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: "Helvetica";
+  outline: none;
+}
+
+/*NewMenuForm.js - Create a menu item*/
+.create-menu-header {
+  position: relative;
+  left: 200px;
+  font-family: "Helvetica";
+  font-weight: bold;
+}
+
+.create-menu-form {
+  position: relative;
+  left: 100px;
+  display: inline;
+  width: 1000px;
+  height: 50px;
+  top: 10px;
+
+}
+.create-menu-name {
+  position: relative;
+  left: 100px;
+  display: inline-block;
+  width: 200px;
+  height: 50px;
+
+}
+.create-menu-description {
+  position: relative;
+  left: 100px;
+  display: inline-block;
+  width: 250px;
+  height: 50px;
+  margin-left: 10px;
+}
+.create-menu-price {
+  position: relative;
+  left: 100px;
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  margin-left: 10px;
+}
+
+/*Menu.js*/
+.menu-header {
+  position: relative;
+  left: 200px;
+  top: 20px;
+}
+
+.menu-listing {
+  width: 1400px;
+  left: 200px;
+  position: relative;
+  top: 20px;
+  list-style: none;
+}
+
+/*MenuListing.js - Menu Listing*/
+
+.menu-item-list {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  height: 250px;
+  left: -10px;
+  float: left;
+  margin: 10px 10px 10px 10px;
+}
+
+.menu-item {
+  list-style: none;
+  position: relative;
+  float: left;
+  width: 200px;
+  left: -38px;
+  font-size: 17px;
+  font-family: "Helvetica";
+  word-wrap: break-word;
+}
+
+.menu-btns {
+  width: 160px;
+  height: 50px;
+  position: absolute;
+  top: 160px;
+}
+/*MenuListing.js - Edit Listing*/
+
+.menu-edit-btns {
+  width: 160px;
+  height: 50px;
+  position: absolute;
+  top: 160px;
+}
+
+/*IncomingOrders.js - Incoming Order Listing*/
+
+.incoming-header {
+  position: relative;
+  left: 200px;
+  font-family: "Helvetica";
+  font-weight: bold;
+}
+
+.incoming-order-list {
+  width: 1400px;
+  left: 200px;
+  height:2000px;
+  position: relative;
+  top: 20px;
+  list-style: none;
+}
+
+.incoming-order {
+  list-style: none;
+  position: relative;
+  float: left;
+  left: -48px;
+  width: 225px;
+  font-size: 17px;
+  font-family: "Helvetica";
+  word-wrap: break-word;
+  margin: 10px 10px 10px 10px;
+}
+
+.incoming-list {
+  list-style: none;
+  left: -20px;
+  position: relative;
+}
+
+/*UserUpgrade.js - Upgrade Your Account*/
+
+.upgrade-container {
+  position: relative;
+  width: 410px;
+  height: 445px;
+  left: 710px;
+  top: 100px;
+  border-radius: 15px;
+  background-color: #0B93F6;
+}
+
+.upgrade-header {
+  position: relative;
+  top: 20px;
+  left: 20px;
+  color: white;
+}
+
+.upgrade-header-step {
+  position: relative;
+  top: 20px;
+  left: 20px;
+  color: white;
+}
+
+.stripe-btn {
+  top: 20px;
+  position: relative;
+  left: 50px;
+  width: 300px;
+}
+
+.input-area-code {
+  width: 220px;
+  left: 50px;
+  position: relative;
+  top: 14px;
+}
+
+.area-code-text {
+  left: 50px;
+  position: relative;
+  top: 19px;
+  font-size: 16px;
+  color: white;
+}
+
+.area-code-btn {
+  position: relative;
+  left: 266px;
+  top: -20px;
+  width: 84px;
+}
+
+.area-phone-numbers {
+  position: relative;
+  left: 50px;
+  width: 300px;
+  height: 100px;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.upgrade-btn {
+  top: -5px;
+  position: relative;
+  left: 50px;
+  width: 300px;
+}
+
+/*BotDemo.js - Bot Demo*/
+
+.bot-header {
+  position: relative;
+  left: 200px;
+  font-family: "Helvetica";
+  font-weight: bold;
+}
+
+.chat-box {
+  position: relative;
+  left: 200px;
+  border: 1px #ccc solid;
+  width: 750px;
+  height: 400px;
+  top: 2px;
+  border-radius: 10px 0px 0px 0px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.chat-input {
+  width: 650px;
+  left: 200px;
+  position: relative;
+  border-radius: 0px 0px 0px 10px;
+}
+
+.chat-btn {
+  position: relative;
+  top: -34px;
+  left: 844px;
+  width: 107px;
 }
