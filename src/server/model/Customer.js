@@ -1,23 +1,18 @@
 var mongoose = require('mongoose');
 
-var defaultConvoState = {status: 'start', withInfo: false};
-
 var customerSchema = mongoose.Schema({
   phone: String,
   stripeId: String,
   address: {
-    street: String,
-    city: String,
-    state: String
+    type: {
+      street: String,
+      city: String,
+      state: String
+    },
+    default: null
   },
-  cc: Number,
-  convoState: {
-    type: {status: String, withInfo: Boolean},
-    default: defaultConvoState
-  }
+  cc: Number
 });
-
-customerSchema.statics.defaultState = defaultConvoState;
 
 customerSchema.statics.createByPhoneIfNotExist = function(phone) {
   return this.update({phone: phone}, {$setOnInsert: {phone: phone}}, {upsert: true});

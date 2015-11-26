@@ -77,7 +77,7 @@ process.on('unhandledRejection', function(reason, p) {
 
 (async function() {
   try {
-    server.listen(process.env.PORT || 3000);
+    server.listen(process.env.PORT || 3000, () => console.log('Server is listening.'));
   } catch (err) {
     console.log(err.stack);
   }

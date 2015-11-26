@@ -15,7 +15,7 @@ router.post('/create', async function(req, res){
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
     res.redirect('/home');
   } catch (errors) {
-    res.render(errors);
+    res.render('signup', errors);
   }
 });
 
