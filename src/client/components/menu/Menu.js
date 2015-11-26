@@ -19,14 +19,16 @@ module.exports = React.createClass({
     return (
       <div>
         <NewMenuForm addMenu={this.addMenu}/>
-        <h2>Menu:</h2>
-        {this.state.menuItems.length ? null : '(You have no menu items yet.)'}
-        {this.state.menuItems.map(menuItem => {
-          return <MenuListing menuItem={menuItem}
-                              toggleEditMode={this.toggleEditMode}
-                              removeMenu={this.removeMenu}
-                              replaceMenu={this.replaceMenu}/>
-        })}
+        <h2 className="menu-header">Menu:</h2>
+        <div className="menu-listing"> 
+          {this.state.menuItems.length ? null : '(You have no menu items yet.)'}
+          {this.state.menuItems.map(menuItem => {
+            return <MenuListing menuItem={menuItem}
+                                toggleEditMode={this.toggleEditMode}
+                                removeMenu={this.removeMenu}
+                                replaceMenu={this.replaceMenu}/>
+          })}
+        </div>
       </div>
     );
   },

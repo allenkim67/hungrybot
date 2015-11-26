@@ -8,15 +8,15 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div>
-        <h2>Bot Demo</h2>
-        <div>
+        <h2 className="bot-header">Bot Demo</h2>
+        <div className="chat-box">
           {this.state.messages.map(function(message) {
             return <div dangerouslySetInnerHTML={{__html: message}}></div>;
           })}
         </div>
         <form onSubmit={this.submitMessage}>
-          <input autoComplete="off"/>
-          <button>send</button>
+          <input className="chat-form form-control chat-input" autoComplete="off"/>
+          <button className="btn btn-primary chat-btn">Send</button>
         </form>
       </div>
     );

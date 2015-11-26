@@ -22,33 +22,39 @@ module.exports = React.createClass({
   },
   renderMenuItem: function() {
     return (
-      <div key={this.props.menuItem._id}>
-        <ul>
-          <li>Name: {this.props.menuItem.name}</li>
-          <li>Description: {this.props.menuItem.description}</li>
-          <li>Price: {(this.props.menuItem.price/100).toFixed(2)}</li>
+      <div className="menu-item-list" key={this.props.menuItem._id}>
+        <ul className="menu-item">
+          <li><strong>Name: </strong>{this.props.menuItem.name}</li>
+          <li><strong>Description: </strong><br/>{this.props.menuItem.description}</li>
+          <li><strong>Price: </strong>{(this.props.menuItem.price/100).toFixed(2)}</li>
         </ul>
-        <button onClick={this.toggleEditMode}>Edit</button>
-        <button onClick={this.deleteMenu}>Delete</button>
+      <div className="menu-btns"> 
+        <button className="btn btn-default menu-btn" onClick={this.toggleEditMode}>Edit</button>
+        <button className="btn btn-default menu-btn" onClick={this.deleteMenu}>Delete</button>
+      </div>
       </div>
     );
   },
   renderMenuEdit: function() {
     return (
       <form key={this.props.menuItem._id} onSubmit={this.saveEdit}>
-        <ul>
-          <li>Name:
-            <input name="name" defaultValue={this.props.menuItem.name}/>
-          </li>
-          <li>Description:
-            <input name="description" defaultValue={this.props.menuItem.description}/>
-          </li>
-          <li>Price:
-            <input name="price" defaultValue={(this.props.menuItem.price/100).toFixed(2)}/>
-          </li>
-        </ul>
-        <button>Save</button>
-        <button onClick={this.toggleEditMode}>Cancel</button>
+        <div className="menu-item-list">
+          <ul className="menu-item">
+            <li><strong>Name: </strong>
+              <input className="chat-form form-control" name="name" defaultValue={this.props.menuItem.name}/>
+            </li>
+            <li><strong>Description: </strong>
+              <input className="chat-form form-control" name="description" defaultValue={this.props.menuItem.description}/>
+            </li>
+            <li><strong>Price: </strong>
+              <input className="chat-form form-control" name="price" defaultValue={(this.props.menuItem.price/100).toFixed(2)}/>
+            </li>
+          </ul>
+        <div className="menu-edit-btns">  
+          <button className="btn btn-default">Save</button>
+          <button className="btn btn-default" onClick={this.toggleEditMode}>Cancel</button>
+        </div>
+        </div>
       </form>
     )
   },
