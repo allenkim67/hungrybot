@@ -12,7 +12,7 @@ html(lang="en")
             li=error.msg
       form(action='/session/login', method='post')
         input(class="form-control" type='text' name='email' value= locals.name placeholder="Enter your email")
-        input(class="form-control input-password" type='text' name='password' placeholder="Password")
+        input(class="form-control input-password" type='password' name='password' placeholder="Password")
         button(class= "btn-default btn login-btn") Login
         br
         a(href='/user/signup' class='create-text') Create An Account
