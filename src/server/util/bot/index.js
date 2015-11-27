@@ -18,8 +18,11 @@ module.exports.phoneBot = async function(phoneData) {
   return await bot(botInput);
 };
 
-module.exports.serverBot = businessId => async (req, res) => {
-  var business = await Business.findById(businessId || req.session._id).exec();
+module.exports.serverBot = options => async (req, res) => {
+  var business = options.public ?
+    await Business.findOne({email: 'hungryDemoBusiness@hungrybot.io'}).exec() :
+    await Business.findById(req.session._id).exec();
+
   var customer = req.cookies.demoCustomer ?
     await Customer.findById(req.cookies.demoCustomer).exec() :
     await Customer.create({phone: Math.random().toString(36)});

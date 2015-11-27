@@ -1,5 +1,6 @@
-var mongoose = require('mongoose');
-var ai       = require('../util/ai');
+var mongoose     = require('mongoose');
+var findOrCreate = require('mongoose-findorcreate');
+var ai           = require('../util/ai');
 
 var businessSchema = mongoose.Schema({
   name: String,
@@ -16,5 +17,7 @@ businessSchema.set('toJSON', {
     return ret;
   }
 });
+
+businessSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model('Business', businessSchema);
