@@ -74,7 +74,7 @@ module.exports = [
 
 //RESPONSE OUTPUT
 function greet(input) {
-  input.message = "Hello this is ${input.name}, feel free to order from the menu or type 'show menu'.";
+  input.message = "Hello, feel free to order from the menu or type 'show menu'.";
   return input;
 }
 
