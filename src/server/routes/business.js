@@ -13,7 +13,7 @@ router.post('/create', async function(req, res){
     await validators.createBusiness(req);
     var business = await Business.create({name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, 8)});
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
-    res.redirect('/home');
+    res.redirect('/');
   } catch (errors) {
     res.render('signup', errors);
   }

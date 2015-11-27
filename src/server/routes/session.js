@@ -22,7 +22,7 @@ router.post('/login', async function(req, res){
       res.render('session/login', errors);
     } else {
       res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
-      res.redirect('/home');
+      res.redirect('/');
     }
 });
 

@@ -5,6 +5,7 @@ var bodyParser       = require('body-parser');
 var mongoose         = require('mongoose');
 var cookieParser     = require('cookie-parser');
 var fs               = require('fs');
+var path             = require('path');
 var jwt              = require('jsonwebtoken');
 var axios            = require('axios');
 var socket           = require('./util/socket');
@@ -45,8 +46,12 @@ app.use('/bot', bot);
 app.use('/subscriber', subscriber);
 app.use('/orders', orders);
 
-app.get('/home', authMiddleware, function(req, res) {
-	res.render('home');
+app.get('/', authMiddleware.noRedirect, function(req, res) {
+  if (req.session) {
+    res.render('home');
+  } else {
+    res.sendFile('landing.html', {root: path.join(__dirname, '../../static')});
+  }
 });
 
 app.get('/stripe', authMiddleware, function(req, res){
