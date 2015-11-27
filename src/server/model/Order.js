@@ -1,5 +1,6 @@
 var mongoose     = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
+var timestamps   = require('mongoose-timestamp');
 var _            = require('underscore');
 
 var orderSchema = mongoose.Schema({
@@ -11,6 +12,7 @@ var orderSchema = mongoose.Schema({
 });
 
 orderSchema.plugin(findOrCreate);
+orderSchema.plugin(timestamps);
 
 orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
   return new Promise(function(resolve, reject) { 
