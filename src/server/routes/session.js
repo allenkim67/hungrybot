@@ -19,7 +19,7 @@ router.post('/login', async function(req, res){
     var errors = validators.login(req, business);
     res.clearCookie('demoCustomer');
     if (errors) {
-      res.render('session/login', errors);
+      res.render('login', errors);
     } else {
       res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
       res.redirect('/');
