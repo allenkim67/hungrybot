@@ -1,3 +1,6 @@
+require("babel-polyfill");
+require('babel-core/register');
+
 var mongoose = require('mongoose');
 var Business = require('./src/server/model/Business');
 var Menu     = require("./src/server/model/Menu");
@@ -14,7 +17,7 @@ mongoose.connection.on('open', function () {
       name: 'Krabby Patty',
       description: 'The classic!',
       price: 200
-    })
+    }, function() {})
   });
   Business.findOrCreate(businessData, function(err, business) {
     Menu.findOrCreate({
@@ -22,7 +25,7 @@ mongoose.connection.on('open', function () {
       name: 'Krusty Combo',
       description: 'Now you can have it all',
       price: 399
-    })
+    }, function() {})
   });
   Business.findOrCreate(businessData, function(err, business) {
     Menu.findOrCreate({
@@ -30,7 +33,7 @@ mongoose.connection.on('open', function () {
       name: 'Krusty Deluxe',
       description: 'Pure decadence',
       price: 300
-    })
+    }, function() {})
   });
   Business.findOrCreate(businessData, function(err, business) {
     Menu.findOrCreate({
@@ -38,7 +41,7 @@ mongoose.connection.on('open', function () {
       name: 'Seaweed Salad',
       description: 'For the health conscious sea-dweller',
       price: 200
-    })
+    }, function() {})
   });
   Business.findOrCreate(businessData, function(err, business) {
     Menu.findOrCreate({
@@ -46,6 +49,6 @@ mongoose.connection.on('open', function () {
       name: 'Coral Bits',
       description: 'A delicious side dish',
       price: 200
-    })
+    }, function() {})
   });
 });
