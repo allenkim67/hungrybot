@@ -53,7 +53,7 @@ function getTransitionGroup(transitionTable, input) {
       true;
 
     var transitionMatches = transitionGroup.transitions.find(transition => {
-      return transition.input === input.aiData.result.action || transition.input === '_default';
+      return transition.input === input.aiData.intent || transition.input === '_default';
     });
 
     return statusMatches && stateMatches && transitionMatches;
@@ -62,7 +62,7 @@ function getTransitionGroup(transitionTable, input) {
 
 function getTransition(transitionGroup, input) {
   return transitionGroup.transitions.find(transition => {
-    return transition.input === input.aiData.result.action || transition.input === '_default';
+    return transition.input === input.aiData.intent || transition.input === '_default';
   });
 }
 

@@ -7,7 +7,7 @@ module.exports = [
   {
     state: {order: {$exists: false}},
     transitions: [
-      {input: 'place_order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
+      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
     ]
   },
   {
@@ -27,14 +27,14 @@ module.exports = [
   {
     status: 'pending',
     transitions: [
-      {input: 'place_order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
-      {input: 'deny',        output: getNextOrder                     , updateStatus: 'waitingForNextOrder'}
+      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
+      {input: 'deny', output: getNextOrder, updateStatus: 'waitingForNextOrder'}
     ]
   },
   {
     status: 'waitingForNextOrder',
     transitions: [
-      {input: 'place_order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
+      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
     ]
   },
   {
@@ -65,7 +65,7 @@ module.exports = [
     state: {},
     transitions: [
       {input: 'greet',       output: greet},
-      {input: 'show_menu',   output: showMenu},
+      {input: 'showMenu',    output: showMenu},
       {input: 'clear_order', output: noOrders},
       {input: '_default',    output: generalErrorMessage}
     ]
@@ -158,27 +158,27 @@ function noOrders(input) {
 async function addOrder(input) {
   var menu = await Menu.findOne({
     businessId: input.business._id,
-    name: input.aiData.result.parameters.food}
+    name: input.aiData.entities.food}
   ).exec();
-  input.convoState.order = await Order.addOrder(input.business._id, input.convoState.customer._id, input.aiData.result.parameters, menu);
+  input.convoState.order = await Order.addOrder(input.business._id, input.convoState.customer._id, input.aiData.entities, menu);
   return input;
 }
 
 // async function removeItem(input) {
-//   console.log(input.aiData.result.parameters);
+//   console.log(input.aiData.entities);
 //   var menu = await Menu.findOneAndUpdate({
 //     businessId: input.models.business._id,
-//     name: input.aiData.result.parameters.food}
+//     name: input.aiData.entities.food}
 //   ).exec();
-//   input.models.order = await Order.removeItem(input.models.business._id, input.models.customer._id, input.aiData.result.parameters, menu);
+//   input.models.order = await Order.removeItem(input.models.business._id, input.models.customer._id, input.aiData.entities, menu);
 //   return input;
 // }
 
 async function saveAddress(input) {
   input.convoState.customer.address = {
-    street: input.aiData.result.parameters.address,
-    city: input.aiData.result.parameters['geo-city-us'],
-    state: input.aiData.result.parameters['geo-state-us']
+    street: input.aiData.entities.address,
+    city: input.aiData.entities['geo-city-us'],
+    state: input.aiData.entities['geo-state-us']
   };
   return input;
 }
@@ -189,7 +189,7 @@ async function makePayment(input) {
     customerId: input.convoState.customer._id,
     status: 'pending'
   });
-  var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.aiData.result.parameters, input.convoState.customer);
+  var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.aiData.entities, input.convoState.customer);
   await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, input.business);
   return input;
 }

@@ -26,7 +26,9 @@ module.exports.serverBot = options => async (req, res) => {
   var customer = req.cookies.demoCustomer ?
     await Customer.findById(req.cookies.demoCustomer).exec() :
     await Customer.create({phone: Math.random().toString(36)});
+
   res.cookie('demoCustomer', customer._id);
+
   var aiResponse = await ai.query(req.query.message, business._id.toString());
   var botInput = {
     models: {customer: customer, business: business},

@@ -1,6 +1,5 @@
 var mongoose     = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
-var ai           = require('../util/ai');
 
 var businessSchema = mongoose.Schema({
   name: String,
