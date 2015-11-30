@@ -1,3 +1,9 @@
+h1 {
+  font-family: "Helvetica";
+  font-size: 56px;
+  font-weight: bold;
+}
+
 .landing-container {
     width: 767px;
     margin: auto;
