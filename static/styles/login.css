@@ -10,7 +10,6 @@ input {
 .login-form {
   position: relative;
   width: 240px;
-  height: 230px;
   top: 250px;
   border-radius: 15px;
   background-color: #0B93F6;
@@ -21,19 +20,14 @@ input {
 }
 
 .login-btn {
-  position: relative;
+  margin-top: 15px;
   width: 210px;
-  height: 34px;
-  top: 13px;
   font-size: 16px;
   font-family: "Helvetica";
 }
 
 .create-text {
-  position: relative;
-  top: 25px;
   color: white;
-  left: 2px;
   font-size: 18px;
   font-family: "Helvetica";
 }

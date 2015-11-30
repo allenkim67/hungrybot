@@ -1,48 +1,47 @@
 h2 {
 position: relative;
-top: -5px;
+left: 15px;
 color: white;
-}
-
-input {
-  position: relative;
 }
 
 p {
   font-size: 16px;
+  margin: auto;
+  padding-left: 15px;
   font-weight: thin;
   color: white;
 }
 
 .form-control {
-  top: -5px;
+  margin: auto;
   height: 28px;
+  width: 210px;
+  margin-bottom: 10px;
 }
 
 .signup-form {
-  position: relative;
-  width: 240px;
-  height: 430px;
   top: 200px;
+  position: relative;
+  margin: auto;
+  width: 240px;
   border-radius: 15px;
   background-color: #0B93F6;
 }
 
 .create-btn {
   position: relative;
+  left: 15px;
   width: 210px;
   height: 34px;
-  top: 13px;
   font-size: 16px;
   font-family: "Helvetica";
 }
 
 .return-text {
-  position: relative;
-  top: 25px;
   color: white;
   left: 2px;
   font-size: 18px;
   font-family: "Helvetica";
-  left: 18px;
+  left: 15px;
+  position: relative;
 }
