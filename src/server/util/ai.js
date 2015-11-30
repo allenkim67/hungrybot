@@ -1,61 +1,14 @@
-var axios    = require('axios');
-var throttle = require('./throttle');
-var Menu     = require('../model/Menu');
+var axios = require('axios');
+var Menu  = require('../model/Menu');
 
-var createUserEntity = module.exports.createUserEntity = async function(data){
-  var config = {
-    headers: {
-      "Authorization": "Bearer " + process.env.AI_DEV_ACCESS_TOKEN,
-      "ocp-apim-subscription-key": process.env.AI_SUBSCRIPTION_KEY
-    },
-    params: {
-      sessionId: data.sessionId
-    }
-  };
-  var userEntities = await axios.get(`https://api.api.ai/v1/userEntities/${data.name}?v=20150910`, config);
-  if (userEntities.data.status && userEntities.data.status.errorType === 'not_found') {
-    return await axios.post("https://api.api.ai/v1/userEntities?v=20150910", data, config);
-  } else {
-    return await axios.put(`https://api.api.ai/v1/userEntities/${data.name}?v=20150910`, data, config);
-  }
+var NLP_URL = 'http://localhost:3000';
+
+module.exports.refreshUserEntities = async function(sessionId){
+  var menu = await Menu.find({businessId: sessionId}).exec();
+  return await axios.post(`${NLP_URL}/userEntities/${sessionId}`, {food: menu.map(item => item.name)});
 };
 
-module.exports.query = function(message, sessionId, opts={refresh: true}){
-  if (opts.refresh) refreshMenuEntitiesThrottled(sessionId);
-
-  var config = {
-    headers: {
-      "Authorization": "Bearer " + process.env.AI_CLIENT_ACCESS_TOKEN,
-      "ocp-apim-subscription-key": process.env.AI_SUBSCRIPTION_KEY
-    },
-    params: {
-      query: message,
-      sessionId: sessionId,
-      lang: "en"
-    }
-  };
-
-  return axios.get("https://api.api.ai/v1/query?v=20150910", config)
-    .then(function(response){
-      return response.data
-    })
-    .catch(function(err) { console.log(err); });
+module.exports.query = async function(message, sessionId){
+  var res = await axios.get(`${NLP_URL}/query/${sessionId}?message=${message}`);
+  return res.data;
 };
-
-var refreshMenuEntities = async function(businessId) {
-  var menu = await Menu.find({businessId: businessId}).exec();
-  var userEntity = {
-    sessionId: businessId.toString(),
-    name: "food",
-    extend: false,
-    entries: menu.map(function (menuItem) {
-      return {
-        value: menuItem.name,
-        synonyms: [menuItem.name]
-      }
-    })
-  };
-  return await createUserEntity(userEntity);
-};
-
-var refreshMenuEntitiesThrottled = module.exports.refreshMenuEntities = throttle(refreshMenuEntities, 1740000);

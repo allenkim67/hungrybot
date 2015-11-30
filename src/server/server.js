@@ -69,6 +69,16 @@ app.get('/stripe', authMiddleware, function(req, res){
   });
 });
 
+app.get('/momo', authMiddleware, async function(req, res) {
+  try {
+    var message = 'hi';
+    var response = await axios.get('http://localhost:3000/query/' + req.session._id + '?message=' + message);
+    res.send(response.data);
+  } catch (err) {
+    res.send(err.data);
+  }
+});
+
 socket.io.on('connection', function(socket) {
   socket.on('sessionToken', function(sessionToken) {
     var sessionId = jwt.verify(sessionToken, process.env.JWT_SECRET_KEY)._id;
@@ -82,7 +92,7 @@ process.on('unhandledRejection', function(reason, p) {
 
 (async function() {
   try {
-    server.listen(process.env.PORT || 3000, () => console.log('Server is listening.'));
+    server.listen(process.env.PORT || 3001, () => console.log('Server is listening.'));
   } catch (err) {
     console.log(err.stack);
   }

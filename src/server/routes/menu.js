@@ -3,7 +3,7 @@ var validators          = require('../validators');
 var authMiddleware      = require('../authMiddleware');
 var Business            = require('../model/Business');
 var Menu                = require('../model/Menu');
-var refreshMenuEntities = require('../util/ai').refreshMenuEntities;
+var refreshUserEntities = require('../util/ai').refreshUserEntities;
 
 router.get('/', authMiddleware, function(req, res) {
   Menu.find({businessId: req.session._id},function (err, menuItems) {
@@ -20,7 +20,7 @@ router.post('/create', authMiddleware, async function(req, res){
       description: req.body.description,
       price: req.body.price * 100
     });
-    await refreshMenuEntities(req.session._id);
+    await refreshUserEntities(req.session._id);
     res.send(menu);
   } catch (errors) {
     res.status(400).send(errors);
@@ -49,7 +49,7 @@ router.delete('/delete/:id', authMiddleware, async function(req, res){
 });
 
 router.get('/refresh', authMiddleware, async function(req, res) {
-  res.send(await refreshMenuEntities(req.session._id));
+  res.send(await refreshUserEntities(req.session._id));
 });
 
 module.exports = router;
