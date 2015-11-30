@@ -1,3 +1,9 @@
+h1 {
+  font-family: "Helvetica";
+  font-size: 56px;
+  font-weight: bold;
+}
+
 .landing-container {
     width: 767px;
     margin: auto;
@@ -11,11 +17,11 @@
 .chat-container {
     position: absolute;
     top: 23px;
-    left: 10px;
+    left: 12px;
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 596px;
+    width: 595px;
 }
 
 .chat-div {
@@ -29,15 +35,19 @@
 .chat-input {
     width: 90%;
     float: left;
+    border-radius: 0px 0px 0px 5px;
 }
 
 .chat-button {
     width: 10%;
     float: right;
+    font-weight: bold;
+    border-radius: 0px 0px 5px 0;
 }
 
 .login-button {
     float: right;
+    font-weight: bold;
 }
 
 .subscribe-form {
@@ -47,10 +57,15 @@
 
 .subscribe-form input {
     width: 90%;
+    margin-top: 7px;
+    margin-left: 5px;
 }
 
 .subscribe-button {
+    margin-top: 5px;
+    margin-left: 5px;
     float: left;
+    font-weight: bold;
 }
 
 /*chat div*/
