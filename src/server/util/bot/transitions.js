@@ -58,7 +58,7 @@ module.exports = [
   {
     state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
     transitions: [
-      {input: 'clear_order', output: [clearOrders, confirmClearOrders]}
+      {input: 'clearOrder', output: [clearOrders, confirmClearOrders]}
     ]
   },
   {
@@ -66,7 +66,7 @@ module.exports = [
     transitions: [
       {input: 'greet',       output: greet},
       {input: 'showMenu',    output: showMenu},
-      {input: 'clear_order', output: noOrders},
+      {input: 'clearOrder', output: noOrders},
       {input: '_default',    output: generalErrorMessage}
     ]
   }
