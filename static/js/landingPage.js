@@ -12,11 +12,11 @@ $("#guest-message-demo").on('submit', function(evt) {
   });
 })
 
-$(".subscribe-btn").on('submit', function(evt) {
+$(".js-subscribe-form").on('submit', function(evt) {
   evt.preventDefault();
-  var subscribeName =  $("#subscribe-box-name").val();
-  var subscribeEmail =  $("#subscribe-box-email").val();  
+  var subscribeName =  $("#js-subscribe-box-name").val();
+  var subscribeEmail =  $("#js-subscribe-box-email").val();
   $.post('/subscriber', {name: subscribeName, email: subscribeEmail});
-  $("#subscribe-box-name").val('');
-  $("#subscribe-box-email").val('');  
+  $("#js-subscribe-box-name").val('');
+  $("#js-subscribe-box-email").val('');
 })
