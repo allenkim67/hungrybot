@@ -5,9 +5,9 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div>
-        <div className="logout-div text-center">
-          <form className="user-btn" action='/session/logout'>
-            <button className="btn btn-default" type="submit" id="logout-btn">Logout</button>
+        <div>
+          <form action='/session/logout'>
+            <button className="btn btn-default logout-btn" type="submit">Logout</button>
           </form>
         </div>
         <Nav/>
