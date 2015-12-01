@@ -36,11 +36,12 @@ module.exports = React.createClass({
     evt.preventDefault();
     var input = this.refs.chatInput;
 
-    var message = input.value;
+    var message = `You: ${input.value}`;
     this.setState({messages: this.state.messages.concat(message)});
 
     axios.get('/bot/private?message=' + message).then(res => {
-      this.setState({messages: this.state.messages.concat(res.data)});
+      var resMsg = `Bot: ${res.data}`;
+      this.setState({messages: this.state.messages.concat(resMsg)});
     });
 
     input.value = '';
