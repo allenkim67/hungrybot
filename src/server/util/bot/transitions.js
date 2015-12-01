@@ -7,69 +7,69 @@ module.exports = [
   {
     state: {order: {$exists: false}},
     transitions: [
-      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
-      {input: '_default',    output: noOrderErrorMessage}
+      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
+      {intent: '_default',    output: noOrderErrorMessage}
     ]
   },
   {
     status: 'pending',
     state: {customer: {address: {$exists: false}, cc: {$exists: false}}},
     transitions: [
-      {input: 'confirm', output: getAddress, updateStatus: 'waitingForAddress'}
+      {intent: 'confirm', output: getAddress, updateStatus: 'waitingForAddress'}
     ]
   },
   {
     status: 'pending',
     state: {customer: {address: {$exists: true}, cc: {$exists: true}}},
     transitions: [
-      {input: 'confirm', output: confirmSavedInfo, updateStatus: 'confirmingSavedInfo'}
+      {intent: 'confirm', output: confirmSavedInfo, updateStatus: 'confirmingSavedInfo'}
     ]
   },
   {
     status: 'pending',
     transitions: [
-      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
-      {input: 'deny', output: getNextOrder, updateStatus: 'waitingForNextOrder'}
+      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
+      {intent: 'deny', output: getNextOrder, updateStatus: 'waitingForNextOrder'}
     ]
   },
   {
     status: 'waitingForNextOrder',
     transitions: [
-      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
+      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
     ]
   },
   {
     status: 'waitingForAddress',
     transitions: [
-      {input: 'address', output: [saveAddress, getPaymentInfo], updateStatus: 'waitingForPaymentInfo'}
+      {intent: 'address', output: [saveAddress, getPaymentInfo], updateStatus: 'waitingForPaymentInfo'}
     ]
   },
   {
     status: 'waitingPaymentInfo',
     transitions: [
-      {input: 'get_cc', output: [makePayment, completeOrders, trackOrder, finishTransaction]}
+      {intent: 'get_cc', output: [makePayment, completeOrders, trackOrder, finishTransaction]}
     ]
   },
   {
     status: 'confirmingSavedInfo',
     transitions: [
-      {input: 'confirm', output: [makePayment, completeOrders, trackOrder, finishTransaction]}
+      {intent: 'confirm', output: [makePayment, completeOrders, trackOrder, finishTransaction]}
     ]
   },
   {
     state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
     transitions: [
-      {input: 'clearOrder', output: [clearOrders, confirmClearOrders]}
+      {intent: 'clearOrder', output: [clearOrders, confirmClearOrders]}
     ]
   },
   {
     state: {},
     transitions: [
-      {input: 'greet',       output: greet},
-      {input: 'showMenu',    output: showMenu},
-      {input: 'clearOrder', output: noOrders},
-      {input: 'moreInfo',    output: moreInfoMessage},
-      {input: '_default',    output: generalErrorMessage}
+      {intent: 'greet',       output: greet},
+      {intent: 'showMenu',    output: showMenu},
+      {intent: 'clearOrder', output: noOrders},
+      {intent: 'moreInfo',    output: moreInfoMessage},
+      {intent: '_default',    output: generalErrorMessage}
     ]
   }
 ];
