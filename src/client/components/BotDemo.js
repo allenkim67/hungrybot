@@ -5,16 +5,9 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {messages: []}
   },
-  componentWillUpdate: function() {
-    var node = this.refs.messagesContainer;
-    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
-  },
-
   componentDidUpdate: function() {
-    if (this.shouldScrollBottom) {
-      var node = this.refs.messagesContainer;
-      node.scrollTop = node.scrollHeight
-    }
+    var node = this.refs.messagesContainer;
+    node.scrollTop = node.scrollHeight
   },
   render: function() {
     return (
