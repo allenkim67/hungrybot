@@ -18,13 +18,13 @@ var businessSchema = mongoose.Schema({
   contactPhone: String,
   site: String,
   hours: {
-    mon: {start: String, end: String},
-    tues: {start: String, end: String},
-    wed: {start: String, end: String},
-    thurs: {start: String, end: String},
-    fri: {start: String, end: String},
-    sat: {start: String, end: String},
-    sun: {start: String, end: String}
+    mon: {start: String, end: String, working: Boolean},
+    tues: {start: String, end: String, working: Boolean},
+    wed: {start: String, end: String, working: Boolean},
+    thurs: {start: String, end: String, working: Boolean},
+    fri: {start: String, end: String, working: Boolean},
+    sat: {start: String, end: String, working: Boolean},
+    sun: {start: String, end: String, working: Boolean}
   }
 });
 

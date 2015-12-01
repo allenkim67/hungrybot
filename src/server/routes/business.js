@@ -8,6 +8,16 @@ var jwt            = require('jsonwebtoken');
 var client         = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 var _              = require('underscore');
 
+router.get('/', authMiddleware, async function(req, res) {
+  var business = await Business.findById(req.session._id).exec();
+  res.send(business);
+});
+
+router.put('/', authMiddleware, async function(req, res) {
+  var business = await Business.update({_id: req.session._id}, req.body).exec();
+  res.send(business);
+});
+
 router.post('/create', async function(req, res){
   try {
     await validators.createBusiness(req);

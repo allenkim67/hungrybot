@@ -1,235 +1,264 @@
-var React   = require('react');
-var axios   = require('axios');
-var update  = require('react-addons-update');
+var React     = require('react');
+var axios     = require('axios');
+var serialize = require('form-serialize');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {orders: []};
+    return {business: {}, loaded: false, saveSuccess: false};
+  },
+  componentDidMount: function() {
+    axios.get('/user').then(res => {
+      this.setState({business: res.data, loaded: true});
+    });
   },
   render: function() {
+    var business = this.state.business;
+    var hours = this.state.business.hours || {mon: {}, tue: {}, wed: {}, thur: {}, fri: {}, sat: {}, sun: {}};
     return (
       <div>
+        {this.state.loaded ? (<div>
         <h2>Profile</h2>
-        <form>
+        <form onSubmit={this.submitHandler}>
           <label>Address</label>
-          <input/>
+          <input name="address[street1]" defaultValue={business.address ? business.address.street1 : null}/>
           <br/>
           <label>Address (line 2)</label>
-          <input/>
+          <input name="address[stree2]" defaultValue={business.address ? business.address.street2 : null}/>
           <br/>
           <label>City</label>
-          <input/>
+          <input name="address[city]" defaultValue={business.address ? business.address.city : null}/>
           <br/>
           <label>State</label>
-          {stateSelect}
+          {stateSelect(business.address ? business.address.state : null)}
           <br/>
           <label>Zip Code</label>
-          <input/>
+          <input name="address[zipCode]" defaultValue={business.address ? business.address.zipCode : null}/>
           <br/>
           <br/>
           <label>Phone Number</label>
-          <input/>
+          <input name="contactPhone" defaultValue={business.contactPhone}/>
           <br/>
           <br/>
           <label>Open Hours</label>
           <br/>
           <table>
-            <tr>
-              <td><input type="checkbox" value=""/> monday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> tuesday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> wednesday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> thursday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> friday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> saturday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" value=""/> sunday</td>
-              <td>from {hoursSelect} to {hoursSelect}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>monday</td>
+                <td>from {hoursSelect(hours.mon.start || '09:00')} to {hoursSelect(hours.mon.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>tuesday</td>
+                <td>from {hoursSelect(hours.tue.start || '09:00')} to {hoursSelect(hours.tue.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>wednesday</td>
+                <td>from {hoursSelect(hours.wed.start || '09:00')} to {hoursSelect(hours.wed.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>thursday</td>
+                <td>from {hoursSelect(hours.thur.start || '09:00')} to {hoursSelect(hours.thur.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>friday</td>
+                <td>from {hoursSelect(hours.sat.start || '09:00')} to {hoursSelect(hours.sat.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>saturday</td>
+                <td>from {hoursSelect(hours.sun.start || '09:00')} to {hoursSelect(hours.sun.end || '17:00')}</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="working[]" value=""/>sunday</td>
+                <td>from {hoursSelect(hours.mon.start || '09:00')} to {hoursSelect(hours.mon.end || '17:00')}</td>
+              </tr>
+            </tbody>
           </table>
           <br/>
           <br/>
           <label>Site</label>
-          <input/>
+          <input name="site" value={business.site}/>
           <br/>
           <br/>
-          <button>Edit</button>
+          <button>Save</button>{this.state.saveSuccess ? "You saved!" : null}
         </form>
+        </div>) : null }
       </div>
     );
+  },
+  submitHandler: function(evt) {
+    evt.preventDefault();
+    axios.put('/user', serialize(evt.target, {json: true})).then(() => {
+      this.setState({saveSuccess: true});
+    });
   }
 });
 
-var stateSelect = (
-  <select>
-    <option></option>
-    <option value="AL">Alabama</option>
-    <option value="AK">Alaska</option>
-    <option value="AZ">Arizona</option>
-    <option value="AR">Arkansas</option>
-    <option value="CA">California</option>
-    <option value="CO">Colorado</option>
-    <option value="CT">Connecticut</option>
-    <option value="DE">Delaware</option>
-    <option value="DC">District Of Columbia</option>
-    <option value="FL">Florida</option>
-    <option value="GA">Georgia</option>
-    <option value="HI">Hawaii</option>
-    <option value="ID">Idaho</option>
-    <option value="IL">Illinois</option>
-    <option value="IN">Indiana</option>
-    <option value="IA">Iowa</option>
-    <option value="KS">Kansas</option>
-    <option value="KY">Kentucky</option>
-    <option value="LA">Louisiana</option>
-    <option value="ME">Maine</option>
-    <option value="MD">Maryland</option>
-    <option value="MA">Massachusetts</option>
-    <option value="MI">Michigan</option>
-    <option value="MN">Minnesota</option>
-    <option value="MS">Mississippi</option>
-    <option value="MO">Missouri</option>
-    <option value="MT">Montana</option>
-    <option value="NE">Nebraska</option>
-    <option value="NV">Nevada</option>
-    <option value="NH">New Hampshire</option>
-    <option value="NJ">New Jersey</option>
-    <option value="NM">New Mexico</option>
-    <option value="NY">New York</option>
-    <option value="NC">North Carolina</option>
-    <option value="ND">North Dakota</option>
-    <option value="OH">Ohio</option>
-    <option value="OK">Oklahoma</option>
-    <option value="OR">Oregon</option>
-    <option value="PA">Pennsylvania</option>
-    <option value="RI">Rhode Island</option>
-    <option value="SC">South Carolina</option>
-    <option value="SD">South Dakota</option>
-    <option value="TN">Tennessee</option>
-    <option value="TX">Texas</option>
-    <option value="UT">Utah</option>
-    <option value="VT">Vermont</option>
-    <option value="VA">Virginia</option>
-    <option value="WA">Washington</option>
-    <option value="WV">West Virginia</option>
-    <option value="WI">Wisconsin</option>
-    <option value="WY">Wyoming</option>
-  </select>
-);
+var stateSelect = selected => {
+  return (
+    <select name="address[state]" defaultValue={selected}>
+      {STATES.map(state => <option key={state[0]} value={state[0]}>{state[1]}</option>)}
+    </select>
+  );
+};
 
-var hoursSelect = (
-  <select>
-    <option value="">00:00</option>
-    <option value="">00:15</option>
-    <option value="">00:30</option>
-    <option value="">00:45</option>
-    <option value="">01:00</option>
-    <option value="">01:15</option>
-    <option value="">01:30</option>
-    <option value="">01:45</option>
-    <option value="">02:00</option>
-    <option value="">02:15</option>
-    <option value="">02:30</option>
-    <option value="">02:45</option>
-    <option value="">03:00</option>
-    <option value="">03:15</option>
-    <option value="">03:30</option>
-    <option value="">03:45</option>
-    <option value="">04:00</option>
-    <option value="">04:15</option>
-    <option value="">04:30</option>
-    <option value="">04:45</option>
-    <option value="">05:00</option>
-    <option value="">05:15</option>
-    <option value="">05:30</option>
-    <option value="">05:45</option>
-    <option value="">06:00</option>
-    <option value="">06:15</option>
-    <option value="">06:30</option>
-    <option value="">06:45</option>
-    <option value="">07:00</option>
-    <option value="">07:15</option>
-    <option value="">07:30</option>
-    <option value="">07:45</option>
-    <option value="">08:00</option>
-    <option value="">08:15</option>
-    <option value="">08:30</option>
-    <option value="">08:45</option>
-    <option value="">09:00</option>
-    <option value="">09:15</option>
-    <option value="">09:30</option>
-    <option value="">09:45</option>
-    <option value="">10:00</option>
-    <option value="">10:15</option>
-    <option value="">10:30</option>
-    <option value="">10:45</option>
-    <option value="">11:00</option>
-    <option value="">11:15</option>
-    <option value="">11:30</option>
-    <option value="">11:45</option>
-    <option value="">12:00</option>
-    <option value="">12:15</option>
-    <option value="">12:30</option>
-    <option value="">12:45</option>
-    <option value="">13:00</option>
-    <option value="">13:15</option>
-    <option value="">13:30</option>
-    <option value="">13:45</option>
-    <option value="">14:00</option>
-    <option value="">14:15</option>
-    <option value="">14:30</option>
-    <option value="">14:45</option>
-    <option value="">15:00</option>
-    <option value="">15:15</option>
-    <option value="">15:30</option>
-    <option value="">15:45</option>
-    <option value="">16:00</option>
-    <option value="">16:15</option>
-    <option value="">16:30</option>
-    <option value="">16:45</option>
-    <option value="">17:00</option>
-    <option value="">17:15</option>
-    <option value="">17:30</option>
-    <option value="">17:45</option>
-    <option value="">18:00</option>
-    <option value="">18:15</option>
-    <option value="">18:30</option>
-    <option value="">18:45</option>
-    <option value="">19:00</option>
-    <option value="">19:15</option>
-    <option value="">19:30</option>
-    <option value="">19:45</option>
-    <option value="">20:00</option>
-    <option value="">20:15</option>
-    <option value="">20:30</option>
-    <option value="">20:45</option>
-    <option value="">21:00</option>
-    <option value="">21:15</option>
-    <option value="">21:30</option>
-    <option value="">21:45</option>
-    <option value="">22:00</option>
-    <option value="">22:15</option>
-    <option value="">22:30</option>
-    <option value="">22:45</option>
-    <option value="">23:00</option>
-    <option value="">23:15</option>
-    <option value="">23:30</option>
-    <option value="">23:45</option>
-  </select>
-);
+var hoursSelect = (selected) => {
+  return (
+    <select defaultValue={selected}>
+      {TIMES.map(time => <option key={time} value={time}>{time}</option>)}
+    </select>
+  );
+};
+
+var STATES = [
+  ["", ""],
+  ["AL", "Alabama"],
+  ["AK", "Alaska"],
+  ["AZ", "Arizona"],
+  ["AR", "Arkansas"],
+  ["CA", "California"],
+  ["CO", "Colorado"],
+  ["CT", "Connecticut"],
+  ["DE", "Delaware"],
+  ["DC", "District Of Columbia"],
+  ["FL", "Florida"],
+  ["GA", "Georgia"],
+  ["HI", "Hawaii"],
+  ["ID", "Idaho"],
+  ["IL", "Illinois"],
+  ["IN", "Indiana"],
+  ["IA", "Iowa"],
+  ["KS", "Kansas"],
+  ["KY", "Kentucky"],
+  ["LA", "Louisiana"],
+  ["ME", "Maine"],
+  ["MD", "Maryland"],
+  ["MA", "Massachusetts"],
+  ["MI", "Michigan"],
+  ["MN", "Minnesota"],
+  ["MS", "Mississippi"],
+  ["MO", "Missouri"],
+  ["MT", "Montana"],
+  ["NE", "Nebraska"],
+  ["NV", "Nevada"],
+  ["NH", "New Hampshire"],
+  ["NJ", "New Jersey"],
+  ["NM", "New Mexico"],
+  ["NY", "New York"],
+  ["NC", "North Carolina"],
+  ["ND", "North Dakota"],
+  ["OH", "Ohio"],
+  ["OK", "Oklahoma"],
+  ["OR", "Oregon"],
+  ["PA", "Pennsylvania"],
+  ["RI", "Rhode Island"],
+  ["SC", "South Carolina"],
+  ["SD", "South Dakota"],
+  ["TN", "Tennessee"],
+  ["TX", "Texas"],
+  ["UT", "Utah"],
+  ["VT", "Vermont"],
+  ["VA", "Virginia"],
+  ["WA", "Washington"],
+  ["WV", "West Virginia"],
+  ["WI", "Wisconsin"],
+  ["WY", "Wyoming"]
+];
+
+var TIMES = [
+  "00:00",
+  "00:15",
+  "00:30",
+  "00:45",
+  "01:00",
+  "01:15",
+  "01:30",
+  "01:45",
+  "02:00",
+  "02:15",
+  "02:30",
+  "02:45",
+  "03:00",
+  "03:15",
+  "03:30",
+  "03:45",
+  "04:00",
+  "04:15",
+  "04:30",
+  "04:45",
+  "05:00",
+  "05:15",
+  "05:30",
+  "05:45",
+  "06:00",
+  "06:15",
+  "06:30",
+  "06:45",
+  "07:00",
+  "07:15",
+  "07:30",
+  "07:45",
+  "08:00",
+  "08:15",
+  "08:30",
+  "08:45",
+  "09:00",
+  "09:15",
+  "09:30",
+  "09:45",
+  "10:00",
+  "10:15",
+  "10:30",
+  "10:45",
+  "11:00",
+  "11:15",
+  "11:30",
+  "11:45",
+  "12:00",
+  "12:15",
+  "12:30",
+  "12:45",
+  "13:00",
+  "13:15",
+  "13:30",
+  "13:45",
+  "14:00",
+  "14:15",
+  "14:30",
+  "14:45",
+  "15:00",
+  "15:15",
+  "15:30",
+  "15:45",
+  "16:00",
+  "16:15",
+  "16:30",
+  "16:45",
+  "17:00",
+  "17:15",
+  "17:30",
+  "17:45",
+  "18:00",
+  "18:15",
+  "18:30",
+  "18:45",
+  "19:00",
+  "19:15",
+  "19:30",
+  "19:45",
+  "20:00",
+  "20:15",
+  "20:30",
+  "20:45",
+  "21:00",
+  "21:15",
+  "21:30",
+  "21:45",
+  "22:00",
+  "22:15",
+  "22:30",
+  "22:45",
+  "23:00",
+  "23:15",
+  "23:30",
+  "23:45"
+];
