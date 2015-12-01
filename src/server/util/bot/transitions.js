@@ -7,8 +7,13 @@ module.exports = [
   {
     state: {order: {$exists: false}},
     transitions: [
-      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
-      {intent: '_default',    output: noOrderErrorMessage}
+      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
+    ]
+  },
+  {
+    state: {order: {$exists: true}},
+    transitions: [
+      {intent: 'showCurrentOrders', output: currentOrdersMessage}
     ]
   },
   {
@@ -65,9 +70,9 @@ module.exports = [
   {
     state: {},
     transitions: [
-      {intent: 'greet',       output: greet},
+      {intent: 'greet',       output: "Hello, feel free to order from the menu or type 'show menu'."},
       {intent: 'showMenu',    output: showMenu},
-      {intent: 'clearOrder', output: noOrders},
+      {intent: 'clearOrder',  output: noOrders},
       {intent: 'moreInfo',    output: moreInfoMessage},
       {intent: '_default',    output: generalErrorMessage}
     ]
@@ -150,6 +155,16 @@ function moreInfoMessage(input) {
 
 function noOrderErrorMessage(input) {
   input.message = "I didn't understand that.  You can type menu to see our order, or let us know what you want.";
+  return input;
+}
+
+function currentOrdersMessage(input) {
+  var br = input.options.br;
+  var total = '$' + (input.convoState.order.total / 100).toFixed(2);
+  var totalOrder = input.convoState.order.items.reduce(function (string, order) {
+    return string + br + order.quantity + ' ' + order.item;
+  }, '');
+  input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}. What else would you like?`;
   return input;
 }
 

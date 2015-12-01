@@ -6,7 +6,7 @@ var Order           = require('../../model/Order');
 module.exports = async function(input) {
   input = await parseInput(input);
 
-  console.log('START STATE:\n', input.convoState);
+  console.log('INPUT:\n', input);
 
   var transitionGroup = getTransitionGroup(transitionTable, input);
   var transition = getTransition(transitionGroup, input);
@@ -14,15 +14,21 @@ module.exports = async function(input) {
 
   saveStatus(transition, input);
 
-  console.log('NEXT STATE:\n', output.convoState);
+  console.log('OUTPUT:\n', output);
 
   return output.message;
 };
 
 async function applyOutputFns(outputFns, input) {
   return R.isArrayLike(outputFns) ?
-    outputFns.reduce(async (input, outputFn) => {return await outputFn(await input);}, input) :
-    await outputFns(input);
+    outputFns.reduce(applyOutputFn, input) :
+    await applyOutputFn(input, outputFns);
+}
+
+async function applyOutputFn(input, outputFn) {
+  return typeof outputFn === 'string' ?
+    R.assoc('message', outputFn, input) :
+    await outputFn(await input);
 }
 
 async function parseInput(input) {
