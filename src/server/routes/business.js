@@ -29,7 +29,7 @@ router.post('/addphone', authMiddleware, function (req, res) {
   }, function(err, purchasedNumber) {
     if(!err){
       Business.findOne({name: req.session.name}, function(err, business){
-        business.phone = purchasedNumber.phoneNumber;
+        business.botPhone = purchasedNumber.phoneNumber;
         business.save();
         res.redirect('/');
       })

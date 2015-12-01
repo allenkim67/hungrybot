@@ -6,7 +6,7 @@ var bot      = require('./bot');
 module.exports.phoneBot = async function(phoneData) {
   var [customer, business] = await Promise.all([
     Customer.findOne({phone: phoneData.From}).exec(),
-    Business.findOne({phone: phoneData.To}).exec()
+    Business.findOne({botPhone: phoneData.To}).exec()
   ]);
 
   var aiResponse = await ai.query(phoneData.Body, business._id.toString());

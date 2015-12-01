@@ -51,7 +51,7 @@ module.exports = React.createClass({
               <td>from {hoursSelect} to {hoursSelect}</td>
             </tr>
             <tr>
-              <td><input type="checkbox" value=""/> fridayy</td>
+              <td><input type="checkbox" value=""/> friday</td>
               <td>from {hoursSelect} to {hoursSelect}</td>
             </tr>
             <tr>

@@ -6,8 +6,26 @@ var businessSchema = mongoose.Schema({
   email: String,
   password: String,
   stripeAccount: String,
-  phone: String,
-  appFee: {type: Number, default: 0.135}
+  botPhone: String,
+  appFee: {type: Number, default: 0.135},
+  address: {
+    street1: String,
+    street2: String,
+    city: String,
+    state: String,
+    zipCode: Number
+  },
+  contactPhone: String,
+  site: String,
+  hours: {
+    mon: {start: String, end: String},
+    tues: {start: String, end: String},
+    wed: {start: String, end: String},
+    thurs: {start: String, end: String},
+    fri: {start: String, end: String},
+    sat: {start: String, end: String},
+    sun: {start: String, end: String}
+  }
 });
 
 businessSchema.set('toJSON', {
