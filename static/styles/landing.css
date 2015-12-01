@@ -50,6 +50,17 @@ h1 {
     font-weight: bold;
 }
 
+.subscribed-msg-div {
+  width: 596px;
+  height: 50px;
+  margin: auto;
+}
+
+.subscribed-msg {
+  float: left;
+  margin-left: 5px;
+}
+
 .subscribe-form {
     width: 596px;
     margin: auto;
