@@ -81,7 +81,7 @@ module.exports = [
 
 //RESPONSE OUTPUT
 function greet(input) {
-  input.message = "Hello, feel free to order from the menu or type 'show menu'.";
+  input.message = "Hello.  How may I help you today?  To see the menu reply with 'menu'.";
   return input;
 }
 
@@ -91,7 +91,7 @@ async function showMenu(input) {
   var menuListing = menuItems.map(function(menuItem, i) {
     return `${i + 1}. ${menuItem.name} -- $${(menuItem.price/100).toFixed(2)}${br}${menuItem.description}`;
   }).join(br);
-  input.message =`Here's the menu: ${br}` + menuListing;
+  input.message =`Here's the menu: ${br}` + menuListing + `What would you like to order?`;
   return input;
 }
 
@@ -134,12 +134,12 @@ function finishTransaction(input) {
 }
 
 function generalErrorMessage(input) {
-  input.message = "Sorry I didn't understand that.";
+  input.message = "Reply with 'menu' to see the menu, or you can let us know what you would like to order.";
   return input;
 }
 
 function confirmClearOrders(input) {
-  input.message = "Okay, we've clear your orders.  What would you like to order instead?";
+  input.message = "Okay, we've cleared your orders.  What would you like to order instead?";
   return input;
 }
 
@@ -149,12 +149,7 @@ function noOrders(input) {
 }
 
 function moreInfoMessage(input) {
-  input.message = "Type show menu and let us know what you want.";
-  return input;
-}
-
-function noOrderErrorMessage(input) {
-  input.message = "I didn't understand that.  You can type menu to see our order, or let us know what you want.";
+  input.message = `You can see the menu by replying "Menu", or start ordering by asking for what you would like.  For example, "I would like one ____", or "Can I see the menu?"`;
   return input;
 }
 
