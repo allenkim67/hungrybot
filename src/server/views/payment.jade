@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+  head
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous")
+    link(rel='stylesheet', href='/styles/payment.css')
+  body
+    div(class="payment-form")
+      h2 Text Delivery
+      if locals.errors
+        ul
+          each error in errors
+            li=error.msg
+      form(action='/payment' method='post')
+        p Email:
+        input(class="form-control input-email" type='text' placeholder="your@email.com" name='email' value=locals.email)
+        p Card:
+        input(class="form-control input-card" type='text' placeholder="**** **** **** ****" name='name' value=locals.name)
+        p Expiry:
+        input(class="form-control input-exp" type='text' placeholder="MM/YY" name='locals.expiration')
+        p CVC:
+        input(class="form-control input-cvc" placeholder="123" type='password' name='locals.cvc')
+        button(class= "btn-default btn create-btn") Create
