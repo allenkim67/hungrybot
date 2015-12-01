@@ -5,6 +5,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <ul className="nav nav-pills">
+        <li><Link to="profile">Profile</Link></li>
         <li><Link to="menu">Your Menu</Link></li>
         <li><Link to="upgrade">Upgrade Account</Link></li>
         <li><Link to="demo">Bot Demo</Link></li>

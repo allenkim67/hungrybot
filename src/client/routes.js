@@ -7,6 +7,7 @@ var UserUpgrade     = require('./components/UserUpgrade');
 var BotDemo         = require('./components/BotDemo');
 var Menu            = require('./components/menu/Menu');
 var IncomingOrders  = require('./components/IncomingOrders');
+var Profile         = require('./components/Profile');
 
 socket.emit('sessionToken', Cookies.get('session'));
 
@@ -21,6 +22,7 @@ module.exports = (
       <Route path="demo" component={BotDemo}/>
       <Route path="menu" component={Menu}/>
       <Route path="orders" component={IncomingOrders}/>
+      <Route path="profile" component={Profile}/>
     </Route>
   </Router>
 );
