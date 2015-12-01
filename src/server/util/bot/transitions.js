@@ -7,7 +7,8 @@ module.exports = [
   {
     state: {order: {$exists: false}},
     transitions: [
-      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
+      {input: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
+      {input: '_default',    output: noOrderErrorMessage}
     ]
   },
   {
@@ -67,6 +68,7 @@ module.exports = [
       {input: 'greet',       output: greet},
       {input: 'showMenu',    output: showMenu},
       {input: 'clearOrder', output: noOrders},
+      {input: 'moreInfo',    output: moreInfoMessage},
       {input: '_default',    output: generalErrorMessage}
     ]
   }
@@ -138,6 +140,16 @@ function confirmClearOrders(input) {
 
 function noOrders(input) {
   input.message = "You have no orders to cancel.  What would you like to order?";
+  return input;
+}
+
+function moreInfoMessage(input) {
+  input.message = "Type show menu and let us know what you want.";
+  return input;
+}
+
+function noOrderErrorMessage(input) {
+  input.message = "I didn't understand that.  You can type menu to see our order, or let us know what you want.";
   return input;
 }
 
