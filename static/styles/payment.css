@@ -1,0 +1,39 @@
+h2 {
+  font-family: "Helvetica";
+}
+
+p {
+  font-size: 16px;
+  font-weight: thin;
+}
+
+.input-email {
+  height: 28px;
+  width: 210px;
+  margin-bottom: 10px;
+}
+
+.input-card  {
+  height: 28px;
+  width: 210px;
+  margin-bottom: 10px;
+}
+
+.input-exp  {
+  height: 28px;
+  width: 105px;
+  margin-bottom: 10px;
+}
+
+.input-cvc  {
+  height: 28px;
+  width: 105px;
+  margin-bottom: 10px;
+}
+
+.create-btn {
+  width: 210px;
+  height: 34px;
+  font-size: 16px;
+  font-family: "Helvetica";
+}

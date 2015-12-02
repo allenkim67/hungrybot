@@ -42,6 +42,7 @@
     "mongoose": "^4.2.2",
     "mongoose-findorcreate": "^0.1.2",
     "mongoose-timestamp": "^0.4.0",
+    "nodemailer": "^1.10.0",
     "ramda": "^0.18.0",
     "react": "^0.14.3",
     "react-addons-update": "^0.14.3",

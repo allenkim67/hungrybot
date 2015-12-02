@@ -20,6 +20,7 @@ var phone            = require('./routes/phone');
 var bot              = require('./routes/bot');
 var subscriber       = require('./routes/subscriber');
 var orders           = require('./routes/orders');
+var payment          = require('./routes/payment');
 //Model
 var Business         = require('./model/Business');
 var Customer         = require('./model/Customer');
@@ -45,6 +46,7 @@ app.use('/session', session);
 app.use('/bot', bot);
 app.use('/subscriber', subscriber);
 app.use('/orders', orders);
+app.use('/payment', payment);
 
 app.get('/', authMiddleware.noRedirect, function(req, res) {
   if (req.session) {

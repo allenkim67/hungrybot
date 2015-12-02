@@ -19,4 +19,7 @@ $(".js-subscribe-form").on('submit', function(evt) {
   $.post('/subscriber', {name: subscribeName, email: subscribeEmail});
   $("#js-subscribe-box-name").val('');
   $("#js-subscribe-box-email").val('');
+
+  var subscribedDiv = $(".js-subscribed-msg");
+  subscribedDiv.append('<h2 class="subscribed-msg">Thanks for signing up!</h2>');
 })
