@@ -1,7 +1,7 @@
-var payment         = require('../payment');
-var socket          = require('../socket');
-var Menu            = require('../../model/Menu');
-var Order           = require('../../model/Order');
+var payment = require('../payment');
+var socket  = require('../socket');
+var Menu    = require('../../model/Menu');
+var Order   = require('../../model/Order');
 
 module.exports = [
   {
@@ -121,7 +121,7 @@ function currentOrdersMessage(input) {
   var totalOrder = input.convoState.order.items.reduce(function (string, order) {
     return string + br + order.quantity + ' ' + order.item;
   }, '');
-  input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}. What else would you like?`;
+  input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}.`;
   return input;
 }
 

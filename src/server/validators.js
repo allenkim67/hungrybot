@@ -4,9 +4,9 @@ var Business = require('./model/Business');
 var bcrypt   = require('bcrypt');
 
 module.exports.customValidators = {
-  isUniqueBusinessName: function(name) {
+  isUniqueEmail: function(email) {
     return new Promise(function(resolve, reject) {
-      Business.findOne({name: name}, function (err, business) {
+      Business.findOne({email: email}, function (err, business) {
         business ? reject() : resolve();
       });
     })
@@ -40,11 +40,12 @@ module.exports.menu = async function(req) {
 };
 
 module.exports.createBusiness = async function(req) {
-  req.sanitize('name').trim();
+  req.sanitize('first').trim();
+  req.santiize('last').trim();
   req.sanitize('email').trim();
-  req.checkBody('name', 'Username cannot be blank').notEmpty();
-  req.checkBody('name', 'Username is already taken').isUniqueBusinessName();
+  req.checkBody('email', 'Email is already taken. Did you forget your password? Click here.').isUniqueEmailName();
   req.checkBody('email', 'Email is incorrectly formatted').isEmail();
+  req.checkBody('first', 'First name cannot be blank').notEmpty();
   req.checkBody('password', 'Password cannot be blank').notEmpty();
   req.checkBody('password', 'Password do not match').matches(req.body.verifyPassword);
 

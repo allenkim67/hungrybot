@@ -21,7 +21,12 @@ router.put('/', authMiddleware, async function(req, res) {
 router.post('/create', async function(req, res){
   try {
     await validators.createBusiness(req);
-    var business = await Business.create({name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, 8)});
+    var business = await Business.create({
+      first: req.body.first,
+      last: req.body.last,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 8)
+    });
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
     res.redirect('/');
   } catch (errors) {

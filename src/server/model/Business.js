@@ -2,12 +2,14 @@ var mongoose     = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
 
 var businessSchema = mongoose.Schema({
-  name: String,
   email: String,
   password: String,
   stripeAccount: String,
   botPhone: String,
   appFee: {type: Number, default: 0.135},
+  first: String,
+  last: String,
+  name: String,
   address: {
     street1: String,
     street2: String,
