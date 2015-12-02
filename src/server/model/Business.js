@@ -21,9 +21,9 @@ var businessSchema = mongoose.Schema({
   site: String,
   hours: {
     mon: {start: String, end: String, working: Boolean},
-    tues: {start: String, end: String, working: Boolean},
+    tue: {start: String, end: String, working: Boolean},
     wed: {start: String, end: String, working: Boolean},
-    thurs: {start: String, end: String, working: Boolean},
+    thu: {start: String, end: String, working: Boolean},
     fri: {start: String, end: String, working: Boolean},
     sat: {start: String, end: String, working: Boolean},
     sun: {start: String, end: String, working: Boolean}

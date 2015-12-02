@@ -1,6 +1,7 @@
 var React     = require('react');
 var axios     = require('axios');
 var serialize = require('form-serialize');
+var R         = require('ramda');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -13,7 +14,7 @@ module.exports = React.createClass({
   },
   render: function() {
     var business = this.state.business;
-    var hours = this.state.business.hours || {mon: {}, tue: {}, wed: {}, thur: {}, fri: {}, sat: {}, sun: {}};
+    var hours = this.state.business.hours || {mon: {}, tue: {}, wed: {}, thu: {}, fri: {}, sat: {}, sun: {}};
     return (
       <div>
         {this.state.loaded ? (<div>
@@ -21,6 +22,8 @@ module.exports = React.createClass({
         <form onSubmit={this.submitHandler}>
           <label>Name</label>
           <input name="name" defaultValue={business.name || null}/>
+          <br/>
+          <br/>
           <label>Address</label>
           <input name="address[street1]" defaultValue={business.address ? business.address.street1 : null}/>
           <br/>
@@ -45,34 +48,7 @@ module.exports = React.createClass({
           <br/>
           <table>
             <tbody>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>monday</td>
-                <td>from {hoursSelect(hours.mon.start || '09:00')} to {hoursSelect(hours.mon.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>tuesday</td>
-                <td>from {hoursSelect(hours.tue.start || '09:00')} to {hoursSelect(hours.tue.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>wednesday</td>
-                <td>from {hoursSelect(hours.wed.start || '09:00')} to {hoursSelect(hours.wed.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>thursday</td>
-                <td>from {hoursSelect(hours.thur.start || '09:00')} to {hoursSelect(hours.thur.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>friday</td>
-                <td>from {hoursSelect(hours.sat.start || '09:00')} to {hoursSelect(hours.sat.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>saturday</td>
-                <td>from {hoursSelect(hours.sun.start || '09:00')} to {hoursSelect(hours.sun.end || '17:00')}</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" name="working[]" value=""/>sunday</td>
-                <td>from {hoursSelect(hours.mon.start || '09:00')} to {hoursSelect(hours.mon.end || '17:00')}</td>
-              </tr>
+              {DAYS.map(day => hoursRow(day, hours))}
             </tbody>
           </table>
           <br/>
@@ -89,7 +65,9 @@ module.exports = React.createClass({
   },
   submitHandler: function(evt) {
     evt.preventDefault();
-    axios.put('/user', serialize(evt.target, {json: true})).then(() => {
+    var bizData = serialize(evt.target, {json: true});
+    R.forEach(function(day) {bizData.hours[day].working = R.contains(day, bizData.working)}, R.keys(bizData.hours));
+    axios.put('/user', bizData).then(() => {
       this.setState({saveSuccess: true});
     });
   }
@@ -103,13 +81,23 @@ var stateSelect = selected => {
   );
 };
 
-var hoursSelect = (selected) => {
+var hoursRow = (day, hours) => {
+  var dayAbbr = day.slice(0, 3);
+  var hoursSelect = (type, selected) => {
+    return (
+      <select name={`hours[${dayAbbr}][${type}]`} defaultValue={selected}>
+        {TIMES.map(time => <option key={time} value={time}>{time}</option>)}
+      </select>
+    );
+  };
+  var checked = typeof hours[dayAbbr].working === 'undefined' || hours[dayAbbr].working;
   return (
-    <select defaultValue={selected}>
-      {TIMES.map(time => <option key={time} value={time}>{time}</option>)}
-    </select>
+    <tr key={day}>
+      <td><input type="checkbox" name="working[]" value={dayAbbr} defaultChecked={checked}/> {day}</td>
+      <td>from {hoursSelect('start', hours[dayAbbr].start || '09:00')} to {hoursSelect('end', hours[dayAbbr].end || '17:00')}</td>
+    </tr>
   );
-};
+}
 
 var STATES = [
   ["", ""],
@@ -164,6 +152,16 @@ var STATES = [
   ["WV", "West Virginia"],
   ["WI", "Wisconsin"],
   ["WY", "Wyoming"]
+];
+
+var DAYS = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday'
 ];
 
 var TIMES = [
