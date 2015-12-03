@@ -5,18 +5,19 @@ html(lang="en")
     link(rel='stylesheet', href='/styles/payment.css')
   body
     div(class="payment-form")
-      h2 Text Delivery
-      if locals.errors
-        ul
-          each error in errors
-            li=error.msg
-      form(action='/' method='post')
-        p Email:
-        input(class="form-control input-email" type='text' placeholder="your@email.com" name='email')
-        p Card:
-        input(class="form-control input-card" type='text' placeholder="**** **** **** ****" name='card')
-        p Expiry:
-        input(class="form-control input-exp" type='text' placeholder="MM/YY" name='expiration')
-        p CVC:
-        input(class="form-control input-cvc" placeholder="123" type='text' name='cvc')
-        button(class= "btn-default btn create-btn") Submit
+      - var customerNumber = customer.phone
+      - var orderInfo = order.total
+      - var businessInfo = business.name
+      p= customerNumber
+      p= orderInfo
+      p= businessInfo
+  form(action="/charge" method="POST")
+    script(
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"
+      data-image=""
+      data-name=businessInfo
+      data-description="2 widgets"
+      data-amount=orderInfo
+      data-locale="auto"
+      data-shipping-address=true)

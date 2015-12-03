@@ -74,6 +74,7 @@ module.exports = [
     transitions: [
       {intent: 'greet',       output: "Hello, feel free to order from the menu or type 'show menu'."},
       {intent: 'showMenu',    output: showMenu},
+      {intent: 'payTest',     output: paymentLink},
       {intent: 'clearOrder',  output: "You have no orders to cancel.  What would you like to order?"},
       {intent: 'moreInfo',    output: `You can see the menu by replying "menu", or start ordering by asking for what you would like. For example, "I would like one ____", or "Can I see the menu?"`},
       {intent: '_default',    output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."}
@@ -133,6 +134,12 @@ function currentOrdersMessage(input) {
     }, '');
     input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}.`;
   }
+  return input;
+}
+
+function paymentLink(input) {
+  var orderId = input.convoState.order._id;
+  input.message = `All fees are included! Just use this link to complete this order: text-delivery.com/payment/${orderId} localhost:3001/payment/${orderId}`;
   return input;
 }
 
