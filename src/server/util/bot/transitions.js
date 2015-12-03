@@ -7,13 +7,15 @@ module.exports = [
   {
     state: {order: {$exists: false}},
     transitions: [
+      {intent: 'showCurrentOrders', output: 'You have no current orders.'},
       {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
     ]
   },
   {
     state: {order: {$exists: true}},
     transitions: [
-      {intent: 'showCurrentOrders', output: currentOrdersMessage}
+      {intent: 'showCurrentOrders', output: currentOrdersMessage},
+      {intent: 'removeOrder', output: [removeOrder, currentOrdersMessage]}
     ]
   },
   {
@@ -91,9 +93,14 @@ async function showMenu(input) {
   var menuListing = menuItems.map(function(menuItem, i) {
     return `${i + 1}. ${menuItem.name} -- $${(menuItem.price/100).toFixed(2)}${br}${menuItem.description}`;
   }).join(br);
-  input.message = menuItems.length ?
-    `Here's the menu: ${br}` + menuListing + `What would you like to order?` :
-    'This restaurant has not set up a menu yet.';
+  var menuMessage =
+    `Here's the menu:${br}
+    ${menuListing}
+    ${br}
+    What would you like to order?`;
+
+  input.message = menuItems.length ? menuMessage : 'This restaurant has not set up a menu yet.';
+
   return input;
 }
 
@@ -116,12 +123,16 @@ function confirmSavedInfo(input) {
 }
 
 function currentOrdersMessage(input) {
-  var br = input.options.br;
-  var total = '$' + (input.convoState.order.total / 100).toFixed(2);
-  var totalOrder = input.convoState.order.items.reduce(function (string, order) {
-    return string + br + order.quantity + ' ' + order.item;
-  }, '');
-  input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}.`;
+  if (!input.convoState.order) {
+    input.message = 'You have no current orders. Subtotal is $0.00.';
+  } else {
+    var br = input.options.br;
+    var total = '$' + (input.convoState.order.total / 100).toFixed(2);
+    var totalOrder = input.convoState.order.items.reduce(function (string, order) {
+      return string + br + order.quantity + ' ' + order.item;
+    }, '');
+    input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}.`;
+  }
   return input;
 }
 
@@ -148,15 +159,14 @@ async function addOrder(input) {
   return input;
 }
 
-// async function removeItem(input) {
-//   console.log(input.aiData.entities);
-//   var menu = await Menu.findOneAndUpdate({
-//     businessId: input.models.business._id,
-//     name: input.aiData.entities.food}
-//   ).exec();
-//   input.models.order = await Order.removeItem(input.models.business._id, input.models.customer._id, input.aiData.entities, menu);
-//   return input;
-// }
+ async function removeOrder(input) {
+   var menu = await Menu.findOne({
+     businessId: input.business._id,
+     name: input.aiData.entities.food
+   }).exec();
+   input.convoState.order = await Order.removeItem(input.business._id, input.convoState.customer._id, input.aiData.entities, menu);
+   return input;
+ }
 
 async function saveAddress(input) {
   input.convoState.customer.address = {
