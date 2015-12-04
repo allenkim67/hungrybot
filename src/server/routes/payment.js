@@ -3,14 +3,11 @@ var Customer  = require('../model/Customer');
 var Business  = require('../model/Business');
 var Order     = require('../model/Order');
 
-router.get('/:id', function(req, res) {
-  Order.findById(req.params.id, function(err, order) {
-    Customer.findById(order.customerId, function(err, customer) {
-      Business.findById(order.businessId, function(err, business) {
-      res.render('payment', {order: order, customer: customer, business: business});
-      });
-    });
-  });
+router.get('/:id', async function(req, res) {
+  var order = await Order.findById(req.params.id).exec();
+  var customer = await Customer.findById(order.customerId).exec();
+  var business = await Business.findById(order.businessId).exec();
+  res.render('payment', {order: order, customer: customer, business: business});
 });
 
 module.exports = router;

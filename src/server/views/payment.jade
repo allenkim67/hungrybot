@@ -4,20 +4,16 @@ html(lang="en")
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous")
     link(rel='stylesheet', href='/styles/payment.css')
   body
-    div(class="payment-form")
-      - var customerNumber = customer.phone
-      - var orderInfo = order.total
-      - var businessInfo = business.name
-      p= customerNumber
-      p= orderInfo
-      p= businessInfo
-  form(action="/charge" method="POST")
-    script(
-      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-      data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"
-      data-image=""
-      data-name=businessInfo
-      data-description="2 widgets"
-      data-amount=orderInfo
-      data-locale="auto"
-      data-shipping-address=true)
+    form(action="/charge" method="POST")
+      -var customerNumber = customer.phone
+      -var orderInfo = order.total
+      -var businessInfo = business.name
+      script(
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"
+        data-image=""
+        data-name=businessInfo
+        data-description="2 widgets"
+        data-amount=orderInfo
+        data-locale="auto"
+        data-shipping-address=true)
