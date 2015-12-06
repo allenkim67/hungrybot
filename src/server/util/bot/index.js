@@ -1,4 +1,4 @@
-var ai       = require('../ai');
+var nlp      = require('../nlp');
 var Business = require('../../model/Business');
 var Customer = require('../../model/Customer');
 var bot      = require('./bot');
@@ -9,10 +9,10 @@ module.exports.phoneBot = async function(phoneData) {
     Business.findOne({botPhone: phoneData.To}).exec()
   ]);
 
-  var aiResponse = await ai.query(phoneData.Body, business._id.toString());
+  var nlpResponse = await nlp.query(phoneData.Body, business._id.toString());
   var botInput = {
     models: {customer: customer, business: business},
-    aiData: aiResponse,
+    nlpData: nlpResponse,
     options: {br: '\n'}
   };
   return await bot(botInput);
@@ -29,10 +29,10 @@ module.exports.serverBot = options => async (req, res) => {
 
   res.cookie('demoCustomer', customer._id);
 
-  var aiResponse = await ai.query(req.query.message, business._id.toString());
+  var nlpResponse = await nlp.query(req.query.message, business._id.toString());
   var botInput = {
     models: {customer: customer, business: business},
-    aiData: aiResponse,
+    nlpData: nlpResponse,
     options: {br: '<br/>'}
   };
   res.send(await bot(botInput));
