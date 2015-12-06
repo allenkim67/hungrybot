@@ -44,9 +44,9 @@ orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
          var quantity = Math.min(existingOrder.quantity, parseInt(params.number));
          existingOrder.quantity -= quantity;
          order.total -= menu.price * quantity;
-       }
-       if (existingOrder.quantity === 0) {
-         order.items = _.without(order.items, existingOrder);
+         if (existingOrder.quantity === 0) {
+           order.items = _.without(order.items, existingOrder);
+         }
        }
        if (order.items.length === 0) {
          order.remove(function() {resolve(null);});
