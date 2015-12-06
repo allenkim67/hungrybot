@@ -17,6 +17,7 @@ router.post('/create', authMiddleware, async function(req, res){
     var menu = await Menu.create({
       businessId: req.session._id,
       name: req.body.name,
+      synonyms: req.body.synonyms,
       description: req.body.description,
       price: req.body.price * 100
     });
