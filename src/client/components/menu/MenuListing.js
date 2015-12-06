@@ -25,7 +25,7 @@ module.exports = React.createClass({
       <div className="menu-item-list" key={this.props.menuItem._id}>
         <ul className="menu-item">
           <li><strong>Name: </strong>{this.props.menuItem.name}</li>
-          <li><strong>Synonyms: </strong><br/>{this.props.menuItem.synonyms.join(', ')}</li>
+          <li><strong>Synonyms: </strong><br/>{this.props.menuItem.synonyms ? this.props.menuItem.synonyms.join(', ') : '(none)'}</li>
           <li><strong>Description: </strong><br/>{this.props.menuItem.description}</li>
           <li><strong>Price: </strong>{(this.props.menuItem.price/100).toFixed(2)}</li>
         </ul>

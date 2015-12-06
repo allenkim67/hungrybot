@@ -46,7 +46,9 @@ module.exports = React.createClass({
   createMenuItem: function(evt) {
     evt.preventDefault();
     var menuData = serialize(evt.target, {hash: true});
-    menuData.synonyms = R.map(R.trim, menuData.synonyms.split(','));
+    menuData.synonyms = menuData.synonyms ?
+      R.map(R.trim, menuData.synonyms.split(',')) :
+      null;
     axios.post('/menu/create', serialize(evt.target))
       .then(res => {
         this.props.addMenu(res.data);
