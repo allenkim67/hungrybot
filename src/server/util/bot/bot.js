@@ -9,7 +9,7 @@ module.exports = async function(input) {
   console.log('INPUT:\n', input);
 
   var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
-  var transition = transitions.find(transition => sift(transition.state)(input.convoState));
+  var transition = transitions.find(R.partialRight(input));
   if (!transition) transition = transitionTable.NO_MATCH[0];
   var output = await applyOutputFns(transition.output, input);
 
@@ -17,6 +17,16 @@ module.exports = async function(input) {
 
   return output.message;
 };
+
+function filterByState(transition, input) {
+  if (typeof transition.state === 'object') {
+    return sift(transition.state)(input.convoState);
+  } else if (typeof transition.state === 'function') {
+    return transition.state(input);
+  } else {
+    if (process.env.NODE_ENV !== 'production') throw new Error('State filter must be a function or an object.');
+  }
+}
 
 async function applyOutputFns(outputFns, input) {
   return R.isArrayLike(outputFns) ?
