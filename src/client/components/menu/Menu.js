@@ -23,7 +23,8 @@ module.exports = React.createClass({
         <div className="menu-listing"> 
           {this.state.menuItems.length ? null : '(You have no menu items yet.)'}
           {this.state.menuItems.map(menuItem => {
-            return <MenuListing menuItem={menuItem}
+            return <MenuListing key={menuItem._id}
+                                menuItem={menuItem}
                                 toggleEditMode={this.toggleEditMode}
                                 removeMenu={this.removeMenu}
                                 replaceMenu={this.replaceMenu}/>

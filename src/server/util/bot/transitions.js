@@ -3,91 +3,106 @@ var socket  = require('../socket');
 var Menu    = require('../../model/Menu');
 var Order   = require('../../model/Order');
 
-module.exports = [
-  {
-    state: {order: {$exists: false}},
-    transitions: [
-      {intent: 'showCurrentOrders', output: 'You have no current orders.'},
-      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
-    ]
-  },
-  {
-    state: {order: {$exists: true}},
-    transitions: [
-      {intent: 'showCurrentOrders', output: currentOrdersMessage},
-      {intent: 'removeOrder', output: [removeOrder, currentOrdersMessage]}
-    ]
-  },
-  {
-    status: 'pending',
-    state: {customer: {address: {$exists: false}, cc: {$exists: false}}},
-    transitions: [
-      {intent: 'confirm', output: "What's your address?", updateStatus: 'waitingForAddress'}
-    ]
-  },
-  {
-    status: 'pending',
-    state: {customer: {address: {$exists: true}, cc: {$exists: true}}},
-    transitions: [
-      {intent: 'confirm', output: confirmSavedInfo, updateStatus: 'confirmingSavedInfo'}
-    ]
-  },
-  {
-    status: 'pending',
-    transitions: [
-      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'},
-      {intent: 'deny', output: 'What else would you like?', updateStatus: 'waitingForNextOrder'}
-    ]
-  },
-  {
-    status: 'waitingForNextOrder',
-    transitions: [
-      {intent: 'order', output: [addOrder, confirmOrderPlacement], updateStatus: 'pending'}
-    ]
-  },
-  {
-    status: 'waitingForAddress',
-    transitions: [
-      {intent: 'address', output: [saveAddress, "What's your payment info?"], updateStatus: 'waitingForPaymentInfo'}
-    ]
-  },
-  {
-    status: 'waitingPaymentInfo',
-    transitions: [
-      {intent: 'get_cc', output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']}
-    ]
-  },
-  {
-    status: 'confirmingSavedInfo',
-    transitions: [
-      {intent: 'confirm', output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']}
-    ]
-  },
-  {
-    state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
-    transitions: [
-      {intent: 'clearOrder', output: [clearOrders, "Okay, we've cleared your orders.  What would you like to order instead?"]}
-    ]
-  },
-  {
-    state: {},
-    transitions: [
-      {intent: 'greet',       output: "Hello, feel free to order from the menu or type 'show menu'."},
-      {intent: 'showMenu',    output: showMenu},
-      {intent: 'payTest',     output: paymentLink},
-      {intent: 'clearOrder',  output: "You have no orders to cancel.  What would you like to order?"},
-      {intent: 'moreInfo',    output: `You can see the menu by replying "menu", or start ordering by asking for what you would like. For example, "I would like one ____", or "Can I see the menu?"`},
-      {intent: '_default',    output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."}
-    ]
-  }
-];
+module.exports = {
+  address: [
+    {
+      state: {order: {status: 'waitingForAddress'}},
+      output: [saveAddress, orderStatus('waitingForPaymentInfo'), "what's your payment info?"]
+    }
+  ],
+  clearOrder: [
+    {
+      state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
+      output: [clearOrders, "Okay we've cleared your orders. What would you like to order instead?"]
+    },
+    {
+      state: {},
+      output: ['You have no orders to cancel. What would you like to order?']
+    }
+  ],
+  confirm: [
+    {
+      state: {order: {status: 'pending'}, customer: {address: {$exists: false}, cc: {$exists: false}}},
+      output: [orderStatus('waitingForAddress'), "What's your address?"]
+    },
+    {
+      state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [orderStatus('confirmingSavedInfo'), confirmSavedInfo]
+    },
+    {
+      state: {order: {status: 'confirmingSavedInfo'}},
+      output: [makePayment, completeOrders, trackOrder, 'Thank you come again']
+    }
+  ],
+  deny: [
+    {
+      state: {order: {status: 'pending'}},
+      output: [orderStatus('waitingForNextOrder'), 'What else would you like?']
+    }
+  ],
+  get_cc: [
+    {
+      state: {order: {status: 'waitingPaymentInfo'}},
+      output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']
+    }
+  ],
+  greet: [
+    {
+      state: {},
+      output: "Hello, feel free to order from the menu or type 'show menu'."
+    }
+  ],
+  moreInfo: [
+    {
+      state: {},
+      output: `You can see the menu by replying "menu", or start ordering by asking for what you would like. For example, "I would like one ____", or "Can I see the menu?"`
+    }
+  ],
+  order: [
+    {
+      state: {order: {$exists: false}},
+      output: [addOrder, orderStatus('pending'), orderMessage]
+    },
+    {
+      state: {order: {status: 'pending'}},
+      output: [addOrder, orderStatus('pending'), orderMessage]
+    },
+    {
+      state: {order: {status: 'waitingForNextOrder'}},
+      output: [orderStatus('pending'), addOrder, orderMessage]
+    }
+  ],
+  removeOrder: [
+    {
+      state: {order: {$exists: true}},
+      output: [removeOrder, currentOrdersMessage]
+    }
+  ],
+  showCurrentOrders: [
+    {
+      state: {order: {$exists: false}},
+      output: 'You have no current orders.'
+    },
+    {
+      state: {order: {$exists: true}},
+      output: currentOrdersMessage
+    }
+  ],
+  showMenu: [
+    {
+      state: {},
+      output: showMenu
+    }
+  ],
+  NO_MATCH: [
+    {
+      state: {},
+      output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."
+    }
+  ]
+};
 
 //RESPONSE OUTPUT
-function greet(input) {
-  input.message = "Hello.  How may I help you today?  To see the menu reply with 'menu'.";
-  return input;
-}
-
 async function showMenu(input) {
   var br = input.options.br;
   var menuItems = await Menu.find({businessId: input.business._id}).exec();
@@ -105,7 +120,7 @@ async function showMenu(input) {
   return input;
 }
 
-async function confirmOrderPlacement(input) {
+async function orderMessage(input) {
   var br = input.options.br;
   var total = '$' + (input.convoState.order.total / 100).toFixed(2);
   var totalOrder = input.convoState.order.items.reduce(function (string, order) {
@@ -156,30 +171,39 @@ function paymentLink(input) {
 //   }
 // }
 
+
 //SIDE EFFECTS
+function orderStatus(status) {
+  return function(input) {
+    input.convoState.order.status = status;
+    input.convoState.order.save();
+    return input;
+  }
+}
+
 async function addOrder(input) {
   var menu = await Menu.findOne({
     businessId: input.business._id,
-    name: input.aiData.entities.food}
+    name: input.nlpData.entities.food}
   ).exec();
-  input.convoState.order = await Order.addOrder(input.business._id, input.convoState.customer._id, input.aiData.entities, menu);
+  input.convoState.order = await Order.addOrder(input.business._id, input.convoState.customer._id, input.nlpData.entities, menu);
   return input;
 }
 
  async function removeOrder(input) {
    var menu = await Menu.findOne({
      businessId: input.business._id,
-     name: input.aiData.entities.food
+     name: input.nlpData.entities.food
    }).exec();
-   input.convoState.order = await Order.removeItem(input.business._id, input.convoState.customer._id, input.aiData.entities, menu);
+   input.convoState.order = await Order.removeItem(input.business._id, input.convoState.customer._id, input.nlpData.entities, menu);
    return input;
  }
 
 async function saveAddress(input) {
   input.convoState.customer.address = {
-    street: input.aiData.entities.address,
-    city: input.aiData.entities['geo-city-us'],
-    state: input.aiData.entities['geo-state-us']
+    street: input.nlpData.entities.address,
+    city: input.nlpData.entities['geo-city-us'],
+    state: input.nlpData.entities['geo-state-us']
   };
   return input;
 }
@@ -190,7 +214,7 @@ async function makePayment(input) {
     customerId: input.convoState.customer._id,
     status: 'pending'
   });
-  var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.aiData.entities, input.convoState.customer);
+  var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.nlpData.entities, input.convoState.customer);
   await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, input.business);
   return input;
 }

@@ -4,6 +4,7 @@ var findOrCreate = require('mongoose-findorcreate');
 var menuSchema = mongoose.Schema({
   businessId: mongoose.Schema.Types.ObjectId,
   name: String,
+  synonyms: [String],
   description: String,
   price: Number
 });

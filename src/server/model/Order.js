@@ -17,14 +17,15 @@ orderSchema.plugin(timestamps);
 orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
   return new Promise(function(resolve, reject) { 
     this.findOrCreate({businessId: businessId, customerId: customerId, status: 'pending'}, function(err, order){
-      order.total += menu.price * params.number;
+      var quantity = params.number ? parseInt(params.number) : 1;
+      order.total += menu.price * quantity;
       var existingOrder = _.find(order.items, function(order) {
         return order.item === params.food;
       });
       if(existingOrder) {
-        existingOrder.quantity += parseInt(params.number);
+        existingOrder.quantity += quantity;
       } else {
-        order.items.push({item: params.food, quantity: params.number});
+        order.items.push({item: params.food, quantity: quantity});
       }
       order.save(function(err, order) { 
         resolve(order); 
@@ -43,9 +44,9 @@ orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
          var quantity = Math.min(existingOrder.quantity, parseInt(params.number));
          existingOrder.quantity -= quantity;
          order.total -= menu.price * quantity;
-       }
-       if (existingOrder.quantity === 0) {
-         order.items = _.without(order.items, existingOrder);
+         if (existingOrder.quantity === 0) {
+           order.items = _.without(order.items, existingOrder);
+         }
        }
        if (order.items.length === 0) {
          order.remove(function() {resolve(null);});

@@ -8,11 +8,10 @@ module.exports = async function(input) {
 
   console.log('INPUT:\n', input);
 
-  var transitionGroup = getTransitionGroup(transitionTable, input);
-  var transition = getTransition(transitionGroup, input);
+  var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
+  var transition = transitions.find(transition => sift(transition.state)(input.convoState));
+  if (!transition) transition = transitionTable.NO_MATCH[0];
   var output = await applyOutputFns(transition.output, input);
-
-  saveStatus(transition, input);
 
   console.log('OUTPUT:\n', output);
 
@@ -41,40 +40,7 @@ async function parseInput(input) {
   return {
     convoState: {customer: input.models.customer, order: order},
     business: input.models.business,
-    aiData: input.aiData,
+    nlpData: input.nlpData,
     options: input.options
   };
-}
-
-function getTransitionGroup(transitionTable, input) {
-  return transitionTable.find(transitionGroup => {
-    var statusMatches = transitionGroup.status ?
-      (input.convoState.order ?
-      transitionGroup.status === input.convoState.order.status :
-        false) :
-      true;
-
-    var stateMatches = transitionGroup.state ?
-      sift(transitionGroup.state)(input.convoState) :
-      true;
-
-    var transitionMatches = transitionGroup.transitions.find(transition => {
-      return transition.intent === input.aiData.intent || transition.intent === '_default';
-    });
-
-    return statusMatches && stateMatches && transitionMatches;
-  });
-}
-
-function getTransition(transitionGroup, input) {
-  return transitionGroup.transitions.find(transition => {
-    return transition.intent === input.aiData.intent || transition.intent === '_default';
-  });
-}
-
-async function saveStatus(transition, input) {
-  if (transition.updateStatus) {
-    input.convoState.order.status = transition.updateStatus;
-    return await input.convoState.order.save();
-  }
 }

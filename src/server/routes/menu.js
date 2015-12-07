@@ -3,7 +3,7 @@ var validators          = require('../validators');
 var authMiddleware      = require('../authMiddleware');
 var Business            = require('../model/Business');
 var Menu                = require('../model/Menu');
-var refreshUserEntities = require('../util/ai').refreshUserEntities;
+var refreshUserEntities = require('../util/nlp').refreshUserEntities;
 
 router.get('/', authMiddleware, function(req, res) {
   Menu.find({businessId: req.session._id},function (err, menuItems) {
@@ -17,6 +17,7 @@ router.post('/create', authMiddleware, async function(req, res){
     var menu = await Menu.create({
       businessId: req.session._id,
       name: req.body.name,
+      synonyms: req.body.synonyms,
       description: req.body.description,
       price: req.body.price * 100
     });

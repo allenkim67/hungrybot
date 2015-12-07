@@ -1,9 +1,8 @@
 var React       = require('react');
 var axios       = require('axios');
 var serialize   = require('form-serialize');
-var _           = require('underscore');
 var update      = require('react-addons-update');
-var MenuListing = require('./MenuListing');
+var R           = require('ramda');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -34,7 +33,11 @@ module.exports = React.createClass({
               <label>Price:</label><br/>
               <input className="chat-form form-control" name="price" placeholder="0.00"/>
             </div>
-            <button>Create</button>
+            <div className="create-menu-synonyms">
+              <label>Synonyms</label>
+              <input className="form-control" name="synonyms" placeholder="separate names with a comma"/>
+            </div>
+            <button className="create-menu-button">Create</button>
           </form>
         </div>
       </div>
@@ -42,6 +45,10 @@ module.exports = React.createClass({
   },
   createMenuItem: function(evt) {
     evt.preventDefault();
+    var menuData = serialize(evt.target, {hash: true});
+    menuData.synonyms = menuData.synonyms ?
+      R.map(R.trim, menuData.synonyms.split(',')) :
+      null;
     axios.post('/menu/create', serialize(evt.target))
       .then(res => {
         this.props.addMenu(res.data);
