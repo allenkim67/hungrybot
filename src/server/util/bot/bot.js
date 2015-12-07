@@ -9,7 +9,7 @@ module.exports = async function(input) {
   console.log('INPUT:\n', input);
 
   var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
-  var transition = transitions.find(R.partialRight(input));
+  var transition = transitions.find(R.partial(filterByState, [input]));
   if (!transition) transition = transitionTable.NO_MATCH[0];
   var output = await applyOutputFns(transition.output, input);
 
@@ -18,7 +18,7 @@ module.exports = async function(input) {
   return output.message;
 };
 
-function filterByState(transition, input) {
+function filterByState(input, transition) {
   if (typeof transition.state === 'object') {
     return sift(transition.state)(input.convoState);
   } else if (typeof transition.state === 'function') {
