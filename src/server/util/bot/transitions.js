@@ -80,6 +80,12 @@ module.exports = {
       output: [orderStatus('pending'), addOrder, orderMessage]
     }
   ],
+  paymentConfirm: [
+    {
+      state: {},
+      output: [orderStatus('paid'), "Thanks your order is on its way!"]
+    }
+  ],
   removeOrder: [
     {
       state: {order: {$exists: true}},

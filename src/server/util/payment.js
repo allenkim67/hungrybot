@@ -49,8 +49,3 @@ module.exports.makePaymentWithCustomerId = async function(amount, customerId, bu
     stripe_account: business.stripeAccount
   });
 };
-
-module.exports.customerPaymentConfirmed = async function(order) {
-  order.status = 'paymentConfirmed'
-  order.save();
-}
