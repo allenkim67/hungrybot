@@ -49,7 +49,7 @@ module.exports = {
   greet: [
     {
       state: {},
-      output: "Hello, feel free to order from the menu or type 'show menu'."
+      output: greetMessage
     }
   ],
   moreInfo: [
@@ -103,6 +103,11 @@ module.exports = {
 };
 
 //RESPONSE OUTPUT
+function greetMessage(input) {
+  input.message = `Welcome to ${input.business.name}! How can we help you? Text "menu" to see the menu.`;
+  return input;
+}
+
 async function showMenu(input) {
   var br = input.options.br;
   var menuItems = await Menu.find({businessId: input.business._id}).exec();
