@@ -5,9 +5,11 @@ var customerSchema = mongoose.Schema({
   stripeId: String,
   address: {
     type: {
-      street: String,
+      street1: String,
+      street2: String,
       city: String,
-      state: String
+      state: String,
+      zip: String
     },
     default: null
   },

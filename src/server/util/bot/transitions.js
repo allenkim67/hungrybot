@@ -22,30 +22,38 @@ module.exports = {
   ],
   confirm: [
     {
+      state: minOrderNotMet,
+      output: minOrderNotMetResponse
+    },
+    {
       state: {order: {status: 'pending'}, customer: {address: {$exists: false}, cc: {$exists: false}}},
-      output: [orderStatus('waitingForAddress'), "What's your address?"]
+      output: [orderStatus('paymentPending'), sendPaymentLink]
     },
     {
-      state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: [orderStatus('confirmingSavedInfo'), confirmSavedInfo]
+      state: {order: {status: 'confirmOrder'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [orderStatus('pendingConfirmPayment'), paymentInfoExists]
     },
     {
-      state: {order: {status: 'confirmingSavedInfo'}},
-      output: [makePayment, completeOrders, trackOrder, 'Thank you come again']
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: ['Thank you come again!']
     }
   ],
   deny: [
     {
       state: {order: {status: 'pending'}},
       output: [orderStatus('waitingForNextOrder'), 'What else would you like?']
-    }
-  ],
-  get_cc: [
+    },
     {
-      state: {order: {status: 'waitingPaymentInfo'}},
-      output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [orderStatus('paymentPending'), sendPaymentLink]
     }
   ],
+  // get_cc: [
+  //   {
+  //     state: {order: {status: 'waitingPaymentInfo'}},
+  //     output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']
+  //   }
+  // ],
   greet: [
     {
       state: {},
@@ -157,9 +165,23 @@ function currentOrdersMessage(input) {
   return input;
 }
 
-function paymentLink(input) {
+function minOrderNotMetResponse(input) {
+  var minOrder = '$' + (input.business.minimumOrder / 100).toFixed(2);
+  input.message = `The minimum order is ${minOrder}.`;
+  return input;
+}
+
+function sendPaymentLink(input) {
   var orderId = input.convoState.order._id;
+  var br = input.options.br;
   input.message = `All fees are included! Just use this link to complete this order: text-delivery.com/payment/${orderId} localhost:3001/payment/${orderId}`;
+  return input;
+}
+
+function paymentInfoExists(input) {
+  var br = input.options.br;  
+  var address = `Address: ${br} ${input.convoState.customer.street1} ${br} ${input.convoState.customer.city}, ${input.convoState.customer.state}, ${input.convoState.customer.zip}`;
+  input.message = `Send to: ${br} ${address} ${br} Credit card ending in **** ${br} Does this look correct?`;
   return input;
 }
 
@@ -220,7 +242,7 @@ async function makePayment(input) {
     status: 'pending'
   });
   var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.nlpData.entities, input.convoState.customer);
-  await payment.makePaymentWithCardInfo(order.total, stripeCustomerId, input.business);
+  await payment.makePaymentWithCustomerId(order.total, stripeCustomerId, input.business);
   return input;
 }
 
@@ -243,4 +265,9 @@ async function clearOrders(input) {
   await input.convoState.order.remove();
   input.convoState.order = null;
   return input;
+}
+
+//STATE FILTERS
+function minOrderNotMet(input) {
+  return (input.convoState.order.status === 'confirmOrder' || input.convoState.order.status === 'pending') && (input.convoState.order.total < input.business.minimumOrder);
 }

@@ -18,6 +18,7 @@ var businessSchema = mongoose.Schema({
     zipCode: Number
   },
   contactPhone: String,
+  minimumOrder: Number,
   site: String,
   hours: {
     mon: {start: String, end: String, working: Boolean},

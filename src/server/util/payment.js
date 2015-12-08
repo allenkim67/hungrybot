@@ -22,7 +22,23 @@ module.exports.createCustomerId = async function(params, mongoCustomer) {
   return stripeCustomer.id;
 };
 
-module.exports.makePaymentWithCardInfo = async function(amount, customerId, business) {
+module.exports.saveStripeCustomer = async function(customerInfo, mongoCustomer) {
+  var stripeCustomer = await createStripeCustomer({source: customerInfo.stripeToken});
+
+  mongoCustomer.stripeId = stripeCustomer.id;
+  mongoCustomer.address = {
+    street1: customerInfo.stripeShippingAddressLine1,
+    city: customerInfo.stripeShippingCity,
+    zip: customerInfo.stripeShippingZip
+  };
+
+  mongoCustomer.cc = stripeCustomer.sources.data.last4;
+  mongoCustomer.save();
+
+  return stripeCustomer.id;
+};
+
+module.exports.makePaymentWithCustomerId = async function(amount, customerId, business) {
   var token = await createStripeToken({customer: customerId}, {stripe_account: business.stripeAccount});
   return await createStripeCharge({
     amount: amount,
@@ -33,3 +49,8 @@ module.exports.makePaymentWithCardInfo = async function(amount, customerId, busi
     stripe_account: business.stripeAccount
   });
 };
+
+module.exports.customerPaymentConfirmed = async function(order) {
+  order.status = 'paymentConfirmed'
+  order.save();
+}

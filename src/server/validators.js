@@ -73,3 +73,18 @@ module.exports.login = function(req, business) {
     name: _.any(errors, function(error) {return error.param === 'email'}) ? '' : req.body.email
   } : null;
 };
+
+module.exports.profile = async function(req) {
+  req.checkBody('address[street1]', 'Street cannot be blank').notEmpty();
+  req.checkBody('address[city]', 'City cannot be blank').notEmpty();
+  req.checkBody('address[zipCode]', 'Zip Code cannot be blank.').notEmpty();
+  req.checkBody('minimumOrder', 'Please enter a valid amount').isCurrency({allow_negatives: false});
+
+  try {
+    await req.asyncValidationErrors(true);
+  } catch (errors) {
+    throw {
+      errors: _.values(errors),
+    }
+  }
+};

@@ -14,8 +14,15 @@ router.get('/', authMiddleware, async function(req, res) {
 });
 
 router.put('/', authMiddleware, async function(req, res) {
-  var business = await Business.update({_id: req.session._id}, req.body).exec();
-  res.send(business);
+  try {
+    await validators.profile(req);
+    var businessData = Object.assign(req.body, {minimumOrder: req.body.minimumOrder*100});
+    var business = await Business.update({_id: req.session._id}, businessData).exec();
+
+    res.send(business);
+  } catch (errors) {
+    res.status(400).send(errors);
+  }
 });
 
 router.post('/create', async function(req, res){

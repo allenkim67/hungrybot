@@ -4,10 +4,11 @@ html(lang="en")
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous")
     link(rel='stylesheet', href='/styles/payment.css')
   body
-    form(action="/charge" method="POST")
-      -var customerNumber = customer.phone
-      -var orderInfo = order.total
-      -var businessInfo = business.name
+    -var customerNumber = customer.phone
+    -var orderInfo = order.total
+    -var businessInfo = business.name
+    form(action="/payment" method="POST")
+      input(type="hidden" name="orderId" value=order._id)
       script(
         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
         data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"

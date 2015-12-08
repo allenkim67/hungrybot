@@ -52,9 +52,11 @@ module.exports = React.createClass({
             </tbody>
           </table>
           <br/>
+          <label>Minimum Delivery Order:</label>
+          <input name="minimumOrder" defaultValue={business.minimumOrder ? (business.minimumOrder/100).toFixed(2) : null} placeholder="0.00"/>         
           <br/>
           <label>Site</label>
-          <input name="site" value={business.site}/>
+          <input name="site" defaultValue={business.site ? business.site : null}/>
           <br/>
           <br/>
           <button>Save</button>{this.state.saveSuccess ? "You saved!" : null}
