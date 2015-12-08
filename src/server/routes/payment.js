@@ -19,7 +19,6 @@ router.post('/', async function(req, res) {
   var customer = await Customer.findById(order.customerId).exec();
   var customerInfo = req.body;
   var customerStripeId = await payment.saveStripeCustomer(customerInfo, customer);
-
   await payment.makePaymentWithCustomerId(order.total, customerStripeId, business);
 
   var botInput = {
@@ -37,5 +36,9 @@ router.post('/', async function(req, res) {
     res.send('yay you paid!');
   });
 });
+
+router.post('/exist', async function(req, res) {
+  
+})
 
 module.exports = router;

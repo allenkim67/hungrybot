@@ -30,12 +30,12 @@ module.exports = {
       output: [orderStatus('paymentPending'), sendPaymentLink]
     },
     {
-      state: {order: {status: 'confirmOrder'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
       output: [orderStatus('pendingConfirmPayment'), paymentInfoExists]
     },
     {
       state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: ['Thank you come again!']
+      output: [makePayment, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
     }
   ],
   deny: [
@@ -48,12 +48,6 @@ module.exports = {
       output: [orderStatus('paymentPending'), sendPaymentLink]
     }
   ],
-  // get_cc: [
-  //   {
-  //     state: {order: {status: 'waitingPaymentInfo'}},
-  //     output: [makePayment, completeOrders, trackOrder, 'Thank you come again!']
-  //   }
-  // ],
   greet: [
     {
       state: {},
@@ -186,8 +180,8 @@ function sendPaymentLink(input) {
 
 function paymentInfoExists(input) {
   var br = input.options.br;  
-  var address = `Address: ${br} ${input.convoState.customer.street1} ${br} ${input.convoState.customer.city}, ${input.convoState.customer.state}, ${input.convoState.customer.zip}`;
-  input.message = `Send to: ${br} ${address} ${br} Credit card ending in **** ${br} Does this look correct?`;
+  var address = `Address: ${br} ${input.convoState.customer.address.street1} ${br} ${input.convoState.customer.address.city}, ${input.convoState.customer.address.zip}`;
+  input.message = `Send to: ${br} ${address} ${br} Credit card ending in ${input.convoState.customer.cc} ${br} Does this look correct?`;
   return input;
 }
 
@@ -242,13 +236,7 @@ async function saveAddress(input) {
 }
 
 async function makePayment(input) {
-  var order = await Order.findOne({
-    businessId: input.business._id,
-    customerId: input.convoState.customer._id,
-    status: 'pending'
-  });
-  var stripeCustomerId = input.convoState.customer.stripeId || await payment.createCustomerId(input.nlpData.entities, input.convoState.customer);
-  await payment.makePaymentWithCustomerId(order.total, stripeCustomerId, input.business);
+  await payment.makePaymentWithCustomerId(input.convoState.order.total, input.convoState.customer.stripeId, input.business);
   return input;
 }
 
