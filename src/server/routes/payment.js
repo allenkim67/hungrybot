@@ -19,7 +19,6 @@ router.post('/', async function(req, res) {
   var customer = await Customer.findById(order.customerId).exec();
   var customerInfo = req.body;
   var customerStripeId = await payment.saveStripeCustomer(customerInfo, customer);
-
   await payment.makePaymentWithCustomerId(order.total, customerStripeId, business);
 
   var botInput = {

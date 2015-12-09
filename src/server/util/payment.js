@@ -1,9 +1,9 @@
 var stripe    = require("stripe")(process.env.STRIPE_SECRET_KEY);
 var promisify = require("es6-promisify");
 
-var createStripeToken    = promisify(stripe.tokens.create.bind(stripe.tokens));
-var createStripeCustomer = promisify(stripe.customers.create.bind(stripe.customers));
-var createStripeCharge   = promisify(stripe.charges.create.bind(stripe.charges));
+var createStripeToken     = promisify(stripe.tokens.create.bind(stripe.tokens));
+var createStripeCustomer  = promisify(stripe.customers.create.bind(stripe.customers));
+var createStripeCharge    = promisify(stripe.charges.create.bind(stripe.charges));
 
 module.exports.createCustomerId = async function(params, mongoCustomer) {
   var card = {
@@ -22,17 +22,18 @@ module.exports.createCustomerId = async function(params, mongoCustomer) {
   return stripeCustomer.id;
 };
 
-module.exports.saveStripeCustomer = async function(customerInfo, mongoCustomer) {
-  var stripeCustomer = await createStripeCustomer({source: customerInfo.stripeToken});
+module.exports.saveStripeCustomer = async function(customerStripeInfo, mongoCustomer) {
+  var stripeCustomer = await createStripeCustomer({source: customerStripeInfo.stripeToken});
 
+  mongoCustomer.email = customerStripeInfo.stripeEmail;
   mongoCustomer.stripeId = stripeCustomer.id;
   mongoCustomer.address = {
-    street1: customerInfo.stripeShippingAddressLine1,
-    city: customerInfo.stripeShippingCity,
-    zip: customerInfo.stripeShippingZip
+    street1: stripeCustomer.sources.data[0].address_line1,
+    city: stripeCustomer.sources.data[0].address_city,
+    zip: stripeCustomer.sources.data[0].address_zip
   };
 
-  mongoCustomer.cc = stripeCustomer.sources.data.last4;
+  mongoCustomer.cc = stripeCustomer.sources.data[0].last4
   mongoCustomer.save();
 
   return stripeCustomer.id;
