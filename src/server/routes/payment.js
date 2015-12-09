@@ -1,10 +1,11 @@
-var router    = require('express').Router();
-var Customer  = require('../model/Customer');
-var Business  = require('../model/Business');
-var Order     = require('../model/Order');
-var payment   = require('../util/payment');
-var bot       = require('../util/bot/bot');
-var client   = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+var router      = require('express').Router();
+var Customer    = require('../model/Customer');
+var Business    = require('../model/Business');
+var Order       = require('../model/Order');
+var payment     = require('../util/payment');
+var geolocation = require('../util/geolocation');
+var bot         = require('../util/bot/bot');
+var client      = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 router.get('/:id', async function(req, res) {
   var order = await Order.findById(req.params.id).exec();
@@ -19,22 +20,40 @@ router.post('/', async function(req, res) {
   var customer = await Customer.findById(order.customerId).exec();
   var customerInfo = req.body;
   var customerStripeId = await payment.saveStripeCustomer(customerInfo, customer);
-  await payment.makePaymentWithCustomerId(order.total, customerStripeId, business);
+  var distanceRequirement = await geolocation.geoCoder(business, customer);
 
-  var botInput = {
-    models: {customer: customer, business: business},
-    nlpData: {intent: 'paymentConfirm'},
-    options: {br: '<br/>'}
-  };
-  var botResponse = await bot(botInput);
+  if(distanceRequirement) {
+    await payment.makePaymentWithCustomerId(order.total, customerStripeId, business);
+    var botInput = {
+      models: {customer: customer, business: business},
+      nlpData: {intent: 'paymentConfirm'},
+      options: {br: '<br/>'}
+    };
+    var botResponse = await bot(botInput);
 
-  client.messages.create({
-    to: customer.phone,
-    from: business.botPhone,
-    body: botResponse
-  }, function(err, message) {
-    res.send('yay you paid!');
-  });
+    client.messages.create({
+      to: customer.phone,
+      from: business.botPhone,
+      body: botResponse
+    }, function(err, message) {
+      res.send('yay you paid!');
+    });
+  } else {
+    var botInput = {
+      models: {customer: customer, business: business},
+      nlpData: {intent: 'pending'},
+      options: {br: '<br/>'}
+    };
+    var botResponse = await bot(botInput);
+
+    client.messages.create({
+      to: customer.phone,
+      from: business.botPhone,
+      body: botResponse
+    }, function(err, message) {
+      res.send(`Sorry your'e out of our delivery reach!`);
+    });
+  }
 });
 
 module.exports = router;

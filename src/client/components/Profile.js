@@ -25,10 +25,10 @@ module.exports = React.createClass({
           <br/>
           <br/>
           <label>Address</label>
-          <input name="address[street1]" defaultValue={business.address ? business.address.street1 : null}/>
+          <input name="address[street]" defaultValue={business.address ? business.address.street : null}/>
           <br/>
-          <label>Address (line 2)</label>
-          <input name="address[stree2]" defaultValue={business.address ? business.address.street2 : null}/>
+          <label>Apt/Suite:</label>
+          <input name="address[suite]" defaultValue={business.suite ? business.address.suite : null}/>
           <br/>
           <label>City</label>
           <input name="address[city]" defaultValue={business.address ? business.address.city : null}/>
@@ -43,6 +43,9 @@ module.exports = React.createClass({
           <label>Phone Number</label>
           <input name="contactPhone" defaultValue={business.contactPhone}/>
           <br/>
+          <label>Delivery Radius(Miles):</label>
+          <input name="deliveryRadius" defaultValue={business.deliveryRadius ? business.deliveryRadius : null} placeholder="0.0"/>         
+          <br/>          
           <br/>
           <label>Open Hours</label>
           <br/>

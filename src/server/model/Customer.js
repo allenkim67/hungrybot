@@ -6,7 +6,7 @@ var customerSchema = mongoose.Schema({
   stripeId: String,
   address: {
     type: {
-      street1: String,
+      street: String,
       city: String,
       state: String,
       zip: String

@@ -1,7 +1,9 @@
-var payment = require('../payment');
-var socket  = require('../socket');
-var Menu    = require('../../model/Menu');
-var Order   = require('../../model/Order');
+var payment     = require('../payment');
+var geolocation = require('../geolocation');
+var socket      = require('../socket');
+var Menu        = require('../../model/Menu');
+var Order       = require('../../model/Order');
+var Business    = require('../../model/Business');
 
 module.exports = {
   address: [
@@ -30,8 +32,8 @@ module.exports = {
       output: [orderStatus('paymentPending'), sendPaymentLink]
     },
     {
-      state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: [orderStatus('pendingConfirmPayment'), paymentInfoExists]
+      state: distanceRequirementNotMet,
+      output: [`Sorry your'e out of our delivery reach!`]
     },
     {
       state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
@@ -264,4 +266,12 @@ async function clearOrders(input) {
 //STATE FILTERS
 function minOrderNotMet(input) {
   return (input.convoState.order.status === 'confirmOrder' || input.convoState.order.status === 'pending') && (input.convoState.order.total < input.business.minimumOrder);
+}
+
+async function distanceRequirementNotMet(input) {
+  var business = await Business.findOne({_id: input.business._id});
+  var customer = input.convoState.customer;
+  var distance = await geolocation.geoCoder(business, customer);
+
+  return (input.convoState.order.status === 'pending' && input.convoState.customer.address && input.convoState.customer.cc && !distance)
 }
