@@ -5,7 +5,7 @@ var NLP_URL = 'http://localhost:3000';
 
 module.exports.refreshUserEntities = async function(sessionId){
   var menu = await Menu.find({businessId: sessionId}).exec();
-  var food = menu.map(function(item) {return {id: item.name, synonyms: item.synonyms.concat(item.name)};});
+  var food = menu.map(item => [item.name].concat(item.synonyms));
   return await axios.post(`${NLP_URL}/userEntities/${sessionId}`, {food: food});
 };
 

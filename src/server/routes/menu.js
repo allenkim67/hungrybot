@@ -14,13 +14,10 @@ router.get('/', authMiddleware, function(req, res) {
 router.post('/create', authMiddleware, async function(req, res){
   try {
     await validators.menu(req);
-    var menu = await Menu.create({
+    var menu = await Menu.create(Object.assign(req.body, {
       businessId: req.session._id,
-      name: req.body.name,
-      synonyms: req.body.synonyms,
-      description: req.body.description,
       price: req.body.price * 100
-    });
+    }));
     await refreshUserEntities(req.session._id);
     res.send(menu);
   } catch (errors) {
@@ -46,11 +43,8 @@ router.put('/update/:id', authMiddleware, async function(req, res){
 
 router.delete('/delete/:id', authMiddleware, async function(req, res){
   await Menu.findOneAndRemove({_id: req.params.id, businessId: req.session._id}).exec();
+  await refreshUserEntities(req.session._id);
   res.status(200).end();
-});
-
-router.get('/refresh', authMiddleware, async function(req, res) {
-  res.send(await refreshUserEntities(req.session._id));
 });
 
 module.exports = router;
