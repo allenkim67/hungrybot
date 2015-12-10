@@ -11,12 +11,13 @@ var businessSchema = mongoose.Schema({
   last: String,
   name: String,
   address: {
-    street1: String,
-    street2: String,
+    street: String,
+    suite: String,
     city: String,
     state: String,
     zipCode: Number
   },
+  deliveryRadius: Number,
   contactPhone: String,
   minimumOrder: Number,
   site: String,

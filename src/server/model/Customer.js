@@ -2,11 +2,11 @@ var mongoose = require('mongoose');
 
 var customerSchema = mongoose.Schema({
   phone: String,
+  email: String,
   stripeId: String,
   address: {
     type: {
-      street1: String,
-      street2: String,
+      street: String,
       city: String,
       state: String,
       zip: String

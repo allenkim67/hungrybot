@@ -33,6 +33,7 @@
     "express": "^4.13.3",
     "express-validator": "^2.18.0",
     "form-serialize": "^0.7.0",
+    "geolib": "^2.0.18",
     "history": "^1.13.1",
     "jade": "^1.11.0",
     "js-combinatorics": "^0.5.0",

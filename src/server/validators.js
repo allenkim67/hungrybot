@@ -75,7 +75,7 @@ module.exports.login = function(req, business) {
 };
 
 module.exports.profile = async function(req) {
-  req.checkBody('address[street1]', 'Street cannot be blank').notEmpty();
+  req.checkBody('address[street]', 'Street cannot be blank').notEmpty();
   req.checkBody('address[city]', 'City cannot be blank').notEmpty();
   req.checkBody('address[zipCode]', 'Zip Code cannot be blank.').notEmpty();
   req.checkBody('minimumOrder', 'Please enter a valid amount').isCurrency({allow_negatives: false});
