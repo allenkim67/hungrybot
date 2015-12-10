@@ -28,7 +28,7 @@ module.exports.saveStripeCustomer = async function(customerStripeInfo, mongoCust
   mongoCustomer.email = customerStripeInfo.stripeEmail;
   mongoCustomer.stripeId = stripeCustomer.id;
   mongoCustomer.address = {
-    street1: stripeCustomer.sources.data[0].address_line1,
+    street: stripeCustomer.sources.data[0].address_line1,
     city: stripeCustomer.sources.data[0].address_city,
     zip: stripeCustomer.sources.data[0].address_zip
   };
