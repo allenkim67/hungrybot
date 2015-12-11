@@ -45,7 +45,7 @@ module.exports = React.createClass({
               <input className="chat-form form-control" name="name" defaultValue={this.props.menuItem.name}/>
             </li>
             <li><strong>Synonyms: </strong>
-              <input className="chat-form form-control" name="synonyms" defaultValue={this.props.menuItem.synonyms.join(', ')}/>
+              <input className="chat-form form-control" name="synonyms[]" defaultValue={this.props.menuItem.synonyms.join(', ')}/>
             </li>
             <li><strong>Description: </strong>
               <input className="chat-form form-control" name="description" defaultValue={this.props.menuItem.description}/>
@@ -69,7 +69,7 @@ module.exports = React.createClass({
   },
   saveEdit: function(evt) {
     evt.preventDefault();
-    axios.put('/menu/update/' + this.props.menuItem._id, serialize(evt.target))
+    axios.put('/menu/update/' + this.props.menuItem._id, serialize(evt.target, {hash: true}))
       .then(res => {
         this.props.replaceMenu(this.props.menuItem, res.data);
         this.setState({errors: []});
