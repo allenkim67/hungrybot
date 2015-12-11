@@ -137,9 +137,9 @@ async function showMenu(input) {
 
 async function orderMessage(input) {
   var br = input.options.br;
-  var total = '$' + (input.convoState.order.total / 100).toFixed(2);
-  var totalOrder = input.convoState.order.items.reduce(function (string, order) {
-    return string + br + order.quantity + ' ' + order.item;
+  var total = '$' + input.convoState.order.displayTotal();
+  var totalOrder = input.convoState.order.items.reduce(function (accString, order) {
+    return accString + br + order.quantity + ' ' + order.name;
   }, '');
   input.message = `So you would like: ${totalOrder} ${br} The total will be ${total}. Does that complete your order?`;
   return input;
@@ -160,7 +160,7 @@ function currentOrdersMessage(input) {
     var br = input.options.br;
     var total = '$' + (input.convoState.order.total / 100).toFixed(2);
     var totalOrder = input.convoState.order.items.reduce(function (string, order) {
-      return string + br + order.quantity + ' ' + order.item;
+      return string + br + order.quantity + ' ' + order.name;
     }, '');
     input.message = `Currently you have: ${totalOrder} ${br} The subtotal is ${total}.`;
   }
@@ -187,20 +187,6 @@ function paymentInfoExists(input) {
   return input;
 }
 
-// async function removeItemMessage(input) {
-
-//   if() {
-
-//   } else {
-//     var total = '$' + (input.models.order.total / 100).toFixed(2);
-//     var totalOrder = input.models.order.orders.reduce(function (string, order) {
-//       return string + input.br + order.quantity + ' ' + order.item;
-//     }, '');
-//     return `Here is your updated order: ${totalOrder} ${input.br} The total will be ${total}. Does that complete your order?`;
-//   }
-// }
-
-
 //SIDE EFFECTS
 function orderStatus(status) {
   return function(input) {
@@ -211,20 +197,22 @@ function orderStatus(status) {
 }
 
 async function addOrder(input) {
-  var menu = await Menu.findOne({
+  var newOrderData = {
     businessId: input.business._id,
-    name: input.nlpData.entities.food}
-  ).exec();
-  input.convoState.order = await Order.addOrder(input.business._id, input.convoState.customer._id, input.nlpData.entities, menu);
+    customerId: input.convoState.customer._id,
+    orders: input.nlpData.entities.orders
+  };
+  input.convoState.order = await Order.addOrder(newOrderData);
   return input;
 }
 
  async function removeOrder(input) {
-   var menu = await Menu.findOne({
+   var removeOrderData = {
      businessId: input.business._id,
-     name: input.nlpData.entities.food
-   }).exec();
-   input.convoState.order = await Order.removeItem(input.business._id, input.convoState.customer._id, input.nlpData.entities, menu);
+     customerId: input.convoState.customer._id,
+     orders: input.nlpData.entities.orders
+   };
+   input.convoState.order = await Order.removeItem(removeOrderData);
    return input;
  }
 
@@ -265,13 +253,15 @@ async function clearOrders(input) {
 
 //STATE FILTERS
 function minOrderNotMet(input) {
-  return (input.convoState.order.status === 'confirmOrder' || input.convoState.order.status === 'pending') && (input.convoState.order.total < input.business.minimumOrder);
+  var status = input.convoState.order.status;
+  return (status === 'confirmOrder' || status === 'pending') &&
+    input.convoState.order.total < input.business.minimumOrder;
 }
 
 async function distanceRequirementNotMet(input) {
-  var business = await Business.findOne({_id: input.business._id});
+  var business = await Business.findById(input.business._id);
   var customer = input.convoState.customer;
   var distance = await geolocation.geoCoder(business, customer);
 
-  return (input.convoState.order.status === 'pending' && input.convoState.customer.address && input.convoState.customer.cc && !distance)
+  return (input.convoState.order.status === 'pending' && customer.address && customer.cc && !distance)
 }

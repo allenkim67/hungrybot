@@ -1,63 +1,72 @@
 var mongoose     = require('mongoose');
-var findOrCreate = require('mongoose-findorcreate');
+var findOrCreate = require('../util/findOrCreatePlugin');
 var timestamps   = require('mongoose-timestamp');
+var Menu         = require('./Menu');
 var _            = require('underscore');
 
 var orderSchema = mongoose.Schema({
   businessId: mongoose.Schema.Types.ObjectId,
   customerId: mongoose.Schema.Types.ObjectId,
   total: {type: Number, default: 0},
-  items: [{item: String, quantity: Number}],
+  items: [{name: String, quantity: Number}],
   status: {type: String, default: 'pending'}
 });
 
 orderSchema.plugin(findOrCreate);
 orderSchema.plugin(timestamps);
 
-orderSchema.statics.addOrder = function(businessId, customerId, params, menu) {
-  return new Promise(function(resolve, reject) { 
-    this.findOrCreate({businessId: businessId, customerId: customerId, status: 'pending'}, function(err, order){
-      var quantity = params.number ? parseInt(params.number) : 1;
-      order.total += menu.price * quantity;
-      var existingOrder = _.find(order.items, function(order) {
-        return order.item === params.food;
-      });
-      if(existingOrder) {
-        existingOrder.quantity += quantity;
-      } else {
-        order.items.push({item: params.food, quantity: quantity});
-      }
-      order.save(function(err, order) { 
-        resolve(order); 
-      });
-    });
-  }.bind(this));
-}
+orderSchema.methods.displayTotal = function() {
+  return (this.total / 100).toFixed(2);
+};
 
- orderSchema.statics.removeItem = function(businessId, customerId, params, menu) {
-   return new Promise(function(resolve, reject) {
-     this.findOne({businessId: businessId, customerId: customerId, status: 'pending'}, function(err, order){
-       var existingOrder = _.find(order.items, function(order) {
-         return order.item === params.food;
-       });
-       if (existingOrder) {
-         var quantity = Math.min(existingOrder.quantity, parseInt(params.number));
-         existingOrder.quantity -= quantity;
-         order.total -= menu.price * quantity;
-         if (existingOrder.quantity === 0) {
-           order.items = _.without(order.items, existingOrder);
-         }
-       }
-       if (order.items.length === 0) {
-         order.remove(function() {resolve(null);});
-       } else {
-         order.save(function(err, order) {
-           if (err) { reject(err); }
-           resolve(order);
-         });
-       }
-     });
-   }.bind(this));
- }
+orderSchema.statics.addOrder = async function({businessId, customerId, orders}) {
+  var menuItems = await Menu.find({
+    businessId,
+    $or: orders.map(order => { return {name: order.food} })
+  }).exec();
+
+  var dbOrder = await this.findOrCreate({businessId, customerId, status: 'pending'});
+
+  orders.forEach(order => {
+    var menuItem = menuItems.find(menuItem => menuItem.name === order.food);
+    var quantity = order.number ? parseInt(order.number) : 1;
+    var existingMenuItem = dbOrder.items.find(item => item.name === order.food);
+
+    existingMenuItem ?
+      existingMenuItem.quantity += quantity :
+      dbOrder.items.push({name: order.food, quantity: quantity});
+
+    dbOrder.total += menuItem.price * quantity;
+  });
+
+  return await dbOrder.save();
+};
+
+orderSchema.statics.removeItem = async function({businessId, customerId, orders}) {
+  var menuItems = await Menu.find({
+    businessId,
+    $or: orders.map(order => {
+      return {name: order.food}
+    })
+  }).exec();
+
+  var dbOrder = await this.findOne({businessId, customerId, status: 'pending'}).exec();
+
+  orders.forEach(order => {
+    var menuItem = menuItems.find(menuItem => menuItem.name === order.food);
+    var existingMenuItem = dbOrder.items.find(item => item.name === order.food);
+
+    if (existingMenuItem) {
+      var quantity = Math.min(existingMenuItem.quantity, parseInt(order.number));
+      existingMenuItem.quantity -= quantity;
+      if (existingMenuItem.quantity < 1) {
+        dbOrder.items = _.without(dbOrder.items, existingMenuItem);
+      }
+      dbOrder.total -= menuItem.price * quantity;
+    }
+  });
+
+  return dbOrder.items.length < 1 ? await dbOrder.remove() : await dbOrder.save();
+};
 
 module.exports = mongoose.model('Order', orderSchema);
