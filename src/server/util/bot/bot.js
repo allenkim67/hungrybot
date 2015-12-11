@@ -2,7 +2,7 @@ var R               = require('ramda');
 var sift            = require('sift');
 var transitionTable = require('./transitions');
 var Order           = require('../../model/Order');
-var asyncFind       = require('../util');
+var {asyncFind}     = require('../util');
 
 module.exports = async function(input) {
   input = await parseInput(input);
@@ -10,7 +10,7 @@ module.exports = async function(input) {
   console.log('INPUT:\n', input);
 
   var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
-  var transition = await asyncFind(transitions, filterByState);
+  var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
   if (!transition) transition = transitionTable.NO_MATCH[0];
   var output = await applyOutputFns(transition.output, input);
 
