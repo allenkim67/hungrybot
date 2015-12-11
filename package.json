@@ -41,7 +41,6 @@
     "json-web-token": "^1.5.3",
     "jsonwebtoken": "^5.4.1",
     "mongoose": "^4.2.2",
-    "mongoose-findorcreate": "^0.1.2",
     "mongoose-timestamp": "^0.4.0",
     "nodemailer": "^1.10.0",
     "ramda": "^0.18.0",

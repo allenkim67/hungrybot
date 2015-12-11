@@ -1,5 +1,5 @@
 var mongoose     = require('mongoose');
-var findOrCreate = require('mongoose-findorcreate');
+var findOrCreate = require('../util/findOrCreatePlugin');
 
 var businessSchema = mongoose.Schema({
   email: String,

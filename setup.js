@@ -11,7 +11,7 @@ mongoose.connection.on('open', function () {
   var businessData = {
     email: 'hungryDemoBusiness@hungrybot.io'
   };
-  Business.findOrCreate(businessData, function(err, business) {
+  Business.findOrCreate(businessData).then(function(business) {
     var menu1 = {
       businessId: business._id,
       name: 'Krabby Patty',
