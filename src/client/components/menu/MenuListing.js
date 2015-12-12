@@ -1,6 +1,7 @@
 var React     = require('react');
 var axios     = require('axios');
 var serialize = require('form-serialize');
+var R         = require('ramda');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -29,10 +30,10 @@ module.exports = React.createClass({
           <li><strong>Description: </strong><br/>{this.props.menuItem.description}</li>
           <li><strong>Price: </strong>{(this.props.menuItem.price/100).toFixed(2)}</li>
         </ul>
-      <div className="menu-btns"> 
-        <button className="btn btn-default menu-btn" onClick={this.toggleEditMode}>Edit</button>
-        <button className="btn btn-default menu-btn" onClick={this.deleteMenu}>Delete</button>
-      </div>
+        <div className="menu-btns">
+          <button className="btn btn-default menu-btn" onClick={this.toggleEditMode}>Edit</button>
+          <button className="btn btn-default menu-btn" onClick={this.deleteMenu}>Delete</button>
+        </div>
       </div>
     );
   },
@@ -45,7 +46,7 @@ module.exports = React.createClass({
               <input className="chat-form form-control" name="name" defaultValue={this.props.menuItem.name}/>
             </li>
             <li><strong>Synonyms: </strong>
-              <input className="chat-form form-control" name="synonyms[]" defaultValue={this.props.menuItem.synonyms.join(', ')}/>
+              <input className="chat-form form-control" name="synonyms" defaultValue={this.props.menuItem.synonyms.join(', ')}/>
             </li>
             <li><strong>Description: </strong>
               <input className="chat-form form-control" name="description" defaultValue={this.props.menuItem.description}/>
@@ -69,7 +70,11 @@ module.exports = React.createClass({
   },
   saveEdit: function(evt) {
     evt.preventDefault();
-    axios.put('/menu/update/' + this.props.menuItem._id, serialize(evt.target, {hash: true}))
+    var menuData = serialize(evt.target, {hash: true});
+    menuData.synonyms = menuData.synonyms ?
+      R.map(R.trim, menuData.synonyms.split(',')) :
+      null;
+    axios.put('/menu/update/' + this.props.menuItem._id, menuData)
       .then(res => {
         this.props.replaceMenu(this.props.menuItem, res.data);
         this.setState({errors: []});
