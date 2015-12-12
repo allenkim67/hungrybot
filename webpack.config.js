@@ -5,7 +5,7 @@ var prod = process.env.NODE_ENV === 'production';
 module.exports = {
   entry: './src/client/client.js',
   output: {
-    filename: prod ? './static/js/bundle.min.js' : './static/js/bundle.js'
+    filename: './static/js/bundle.js'
   },
   module: {
     loaders: [
