@@ -8,7 +8,7 @@ module.exports = async function(input) {
   input = await parseInput(input);
 
   console.log('INPUT:\n', input);
-  console.log('0', transitionTable);
+  
   var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
   var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
   if (!transition) transition = transitionTable.NO_MATCH[0];
