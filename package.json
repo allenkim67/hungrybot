@@ -28,6 +28,7 @@
     "babel-preset-stage-0": "^6.1.18",
     "bcrypt": "^0.8.5",
     "body-parser": "^1.14.1",
+    "compression": "^1.6.0",
     "cookie-parser": "^1.4.0",
     "cookies-js": "^1.2.2",
     "es6-promisify": "^3.0.0",

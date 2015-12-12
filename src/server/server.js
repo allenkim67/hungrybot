@@ -4,6 +4,7 @@ var server           = require('http').Server(app);
 var bodyParser       = require('body-parser');
 var mongoose         = require('mongoose');
 var cookieParser     = require('cookie-parser');
+var compress         = require('compression');
 var fs               = require('fs');
 var path             = require('path');
 var jwt              = require('jsonwebtoken');
@@ -32,6 +33,7 @@ mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 //Middleware + View Engine
 app.set('view engine', 'jade');
 app.set('views', './src/server/views');
+app.use(compress());
 app.use(express.static('static'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
