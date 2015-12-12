@@ -10,7 +10,9 @@ module.exports = async function(input) {
   console.log('INPUT:\n', input);
 
   var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
+  console.log('1', transitions);
   var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
+  console.log('4', transition);
   if (!transition) transition = transitionTable.NO_MATCH[0];
   var output = await applyOutputFns(transition.output, input);
 
@@ -20,6 +22,8 @@ module.exports = async function(input) {
 };
 
 async function filterByState(input, transition) {
+  console.log('2', input);
+  console.log('3', transition);
   if (typeof transition.state === 'object') {
     return sift(transition.state)(input.convoState);
   } else if (typeof transition.state === 'function') {
