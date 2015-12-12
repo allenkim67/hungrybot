@@ -5,113 +5,6 @@ var Menu        = require('../../model/Menu');
 var Order       = require('../../model/Order');
 var Business    = require('../../model/Business');
 
-module.exports = {
-  address: [
-    {
-      state: {order: {status: 'waitingForAddress'}},
-      output: [saveAddress, orderStatus('waitingForPaymentInfo'), "what's your payment info?"]
-    }
-  ],
-  clearOrder: [
-    {
-      state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
-      output: [clearOrders, "Okay we've cleared your orders. What would you like to order instead?"]
-    },
-    {
-      state: {},
-      output: ['You have no orders to cancel. What would you like to order?']
-    }
-  ],
-  confirm: [
-    {
-      state: minOrderNotMet,
-      output: minOrderNotMetResponse
-    },
-    {
-      state: {order: {status: 'pending'}, customer: {address: {$exists: false}, cc: {$exists: false}}},
-      output: [orderStatus('paymentPending'), sendPaymentLink]
-    },
-    {
-      state: distanceRequirementNotMet,
-      output: [`Sorry your'e out of our delivery reach!`]
-    },
-    {
-      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: [makePayment, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
-    }
-  ],
-  deny: [
-    {
-      state: {order: {status: 'pending'}},
-      output: [orderStatus('waitingForNextOrder'), 'What else would you like?']
-    },
-    {
-      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: [orderStatus('paymentPending'), sendPaymentLink]
-    }
-  ],
-  greet: [
-    {
-      state: {},
-      output: greetMessage
-    }
-  ],
-  moreInfo: [
-    {
-      state: {},
-      output: `You can see the menu by replying "menu", or start ordering by asking for what you would like. For example, "I would like one ____", or "Can I see the menu?"`
-    }
-  ],
-  order: [
-    {
-      state: {order: {$exists: false}},
-      output: [addOrder, orderStatus('pending'), orderMessage]
-    },
-    {
-      state: {order: {status: 'pending'}},
-      output: [addOrder, orderStatus('pending'), orderMessage]
-    },
-    {
-      state: {order: {status: 'waitingForNextOrder'}},
-      output: [orderStatus('pending'), addOrder, orderMessage]
-    }
-  ],
-  paymentConfirm: [
-    {
-      state: {},
-      output: [orderStatus('paid'), "Thanks your order is on its way!"]
-    }
-  ],
-  removeOrder: [
-    {
-      state: {order: {$exists: true}},
-      output: [removeOrder, currentOrdersMessage]
-    }
-  ],
-  showCurrentOrders: [
-    {
-      state: {order: {$exists: false}},
-      output: 'You have no current orders.'
-    },
-    {
-      state: {order: {$exists: true}},
-      output: currentOrdersMessage
-    }
-  ],
-  showMenu: [
-    {
-      state: {},
-      output: showMenu
-    }
-  ],
-  NO_MATCH: [
-    {
-      state: {},
-      output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."
-    }
-  ]
-};
-
 //RESPONSE OUTPUT
 function greetMessage(input) {
   input.message = `Welcome to ${input.business.name}! How can we help you? Text "menu" to see the menu.`;
@@ -265,3 +158,110 @@ async function distanceRequirementNotMet(input) {
 
   return (input.convoState.order.status === 'pending' && customer.address && customer.cc && !distance)
 }
+
+module.exports = {
+  address: [
+    {
+      state: {order: {status: 'waitingForAddress'}},
+      output: [saveAddress, orderStatus('waitingForPaymentInfo'), "what's your payment info?"]
+    }
+  ],
+  clearOrder: [
+    {
+      state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
+      output: [clearOrders, "Okay we've cleared your orders. What would you like to order instead?"]
+    },
+    {
+      state: {},
+      output: ['You have no orders to cancel. What would you like to order?']
+    }
+  ],
+  confirm: [
+    {
+      state: minOrderNotMet,
+      output: minOrderNotMetResponse
+    },
+    {
+      state: {order: {status: 'pending'}, customer: {address: {$exists: false}, cc: {$exists: false}}},
+      output: [orderStatus('paymentPending'), sendPaymentLink]
+    },
+    {
+      state: distanceRequirementNotMet,
+      output: [`Sorry your'e out of our delivery reach!`]
+    },
+    {
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [makePayment, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
+    }
+  ],
+  deny: [
+    {
+      state: {order: {status: 'pending'}},
+      output: [orderStatus('waitingForNextOrder'), 'What else would you like?']
+    },
+    {
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [orderStatus('paymentPending'), sendPaymentLink]
+    }
+  ],
+  greet: [
+    {
+      state: {},
+      output: greetMessage
+    }
+  ],
+  moreInfo: [
+    {
+      state: {},
+      output: `You can see the menu by replying "menu", or start ordering by asking for what you would like. For example, "I would like one ____", or "Can I see the menu?"`
+    }
+  ],
+  order: [
+    {
+      state: {order: {$exists: false}},
+      output: [addOrder, orderStatus('pending'), orderMessage]
+    },
+    {
+      state: {order: {status: 'pending'}},
+      output: [addOrder, orderStatus('pending'), orderMessage]
+    },
+    {
+      state: {order: {status: 'waitingForNextOrder'}},
+      output: [orderStatus('pending'), addOrder, orderMessage]
+    }
+  ],
+  paymentConfirm: [
+    {
+      state: {},
+      output: [orderStatus('paid'), "Thanks your order is on its way!"]
+    }
+  ],
+  removeOrder: [
+    {
+      state: {order: {$exists: true}},
+      output: [removeOrder, currentOrdersMessage]
+    }
+  ],
+  showCurrentOrders: [
+    {
+      state: {order: {$exists: false}},
+      output: 'You have no current orders.'
+    },
+    {
+      state: {order: {$exists: true}},
+      output: currentOrdersMessage
+    }
+  ],
+  showMenu: [
+    {
+      state: {},
+      output: showMenu
+    }
+  ],
+  NO_MATCH: [
+    {
+      state: {},
+      output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."
+    }
+  ]
+};
