@@ -37,6 +37,7 @@ router.put('/update/:id', authMiddleware, async function(req, res){
     };
     var menu = await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, updateData, {new: true}).exec();
     res.send(menu);
+    await refreshUserEntities(req.session._id);
   } catch (errors) {
     res.status(400).send(errors);
   }
