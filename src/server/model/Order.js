@@ -50,8 +50,8 @@ orderSchema.statics.removeItem = async function({businessId, customerId, orders}
     })
   }).exec();
 
-  var dbOrder = await this.findOne({businessId, customerId, status: {$ne: 'paid'}}, {businessId, customerId}).exec();
-
+  var dbOrder = await this.findOne({businessId, customerId, status: {$ne: 'paid'}}).exec();
+  
   orders.forEach(order => {
     var menuItem = menuItems.find(menuItem => menuItem.name === order.food);
     var existingMenuItem = dbOrder.items.find(item => item.name === order.food);
