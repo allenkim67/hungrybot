@@ -1,6 +1,6 @@
-$("#guest-message-demo").on('submit', function(evt) {
+$(".js-chat-demo-form").on('submit', function(evt) {
   evt.preventDefault();
-  var guestMessage = $("#chat-box").val();
+  var guestMessage = evt.target.querySelector('input').value;
   var chatDiv = $(".chat-div");
   $(".chat-text").append('<div class="clear chat"></div><div class="from-me chat"><p>' + guestMessage + '</p></div>');
   $("#chat-box").val(''); 
