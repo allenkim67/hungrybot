@@ -37,7 +37,7 @@ async function applyOutputFns(outputFns, input) {
 
 async function applyOutputFn(input, outputFn) {
   return typeof outputFn === 'string' ?
-    R.assoc('message', outputFn, input) :
+    R.assoc('message', outputFn, await input) :
     await outputFn(await input);
 }
 

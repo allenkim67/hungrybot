@@ -261,7 +261,7 @@ module.exports = {
   NO_MATCH: [
     {
       state: {},
-      output: "Reply with 'menu' to see the menu, or you can let us know what you would like to order."
+      output: "I don't understand that. Can you try again?"
     }
   ]
 };
