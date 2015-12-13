@@ -10,6 +10,9 @@ mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/hungrybot');
 
 mongoose.connection.on('open', function () {
   var businessData = {
+    first: "allen",
+    last: "kim",
+    password: "$2a$08$66ZA3aMsj49drL5u6FJweuE0WX351gze/U0pAXQC.nAwwGNpy8Bfq",
     email: 'hungryDemoBusiness@hungrybot.io',
     name: 'Krusty Krab'
   };
@@ -18,30 +21,35 @@ mongoose.connection.on('open', function () {
       var menu1 = {
         businessId: business._id,
         name: 'Krabby Patty',
+        synonyms: ['classic', 'patty', 'krabby'],
         description: 'The classic!',
         price: 200
       };
       var menu2 = {
         businessId: business._id,
         name: 'Krusty Combo',
+        synonyms: ['combo'],
         description: 'Now you can have it all',
         price: 399
       };
       var menu3 = {
         businessId: business._id,
         name: 'Krusty Deluxe',
+        synonyms: ['deluxe'],
         description: 'Pure decadence',
         price: 300
       };
       var menu4 = {
         businessId: business._id,
         name: 'Seaweed Salad',
+        synonyms: ['salad', 'seaweed'],
         description: 'For the health conscious sea-dweller',
         price: 200
       };
       var menu5 = {
         businessId: business._id,
         name: 'Coral Bits',
+        synonyms: ['coral', 'bits'],
         description: 'A delicious side dish',
         price: 200
       };
