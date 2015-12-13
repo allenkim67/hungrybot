@@ -3,20 +3,26 @@ var sift            = require('sift');
 var transitionTable = require('./transitions');
 var Order           = require('../../model/Order');
 var {asyncFind}     = require('../util');
+var log             = require('../logger');
 
 module.exports = async function(input) {
-  input = await parseInput(input);
+  try {
+    input = await parseInput(input);
 
-  console.log('INPUT:\n', input);
-  
-  var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
-  var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
-  if (!transition) transition = transitionTable.NO_MATCH[0];
-  var output = await applyOutputFns(transition.output, input);
+    console.log('INPUT:\n', input);
 
-  console.log('OUTPUT:\n', output);
+    var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
+    var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
+    var output = await applyOutputFns(transition.output, input);
 
-  return output.message;
+    console.log('OUTPUT:\n', output);
+
+    return output.message;
+  } catch (err) {
+    console.log(err.stack);
+    log('ERROR: ' + err.stack);
+    log('ERROR_INPUT: ' + JSON.stringify(R.pick(['convoState', 'nlpData'], input), null, 2));
+  }
 };
 
 async function filterByState(input, transition) {

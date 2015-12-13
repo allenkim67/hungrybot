@@ -1,6 +1,7 @@
 var payment     = require('../payment');
 var geolocation = require('../geolocation');
 var socket      = require('../socket');
+var log         = require('../logger');
 var Menu        = require('../../model/Menu');
 var Order       = require('../../model/Order');
 var Business    = require('../../model/Business');
@@ -144,6 +145,11 @@ async function clearOrders(input) {
   return input;
 }
 
+function logInput(input) {
+  log(JSON.stringify(input.nlpData));
+  return input;
+}
+
 //STATE FILTERS
 function minOrderNotMet(input) {
   var status = input.convoState.order.status;
@@ -230,6 +236,7 @@ module.exports = {
       output: [orderStatus('pending'), addOrder, orderMessage]
     }
   ],
+
   paymentConfirm: [
     {
       state: {},
@@ -261,7 +268,7 @@ module.exports = {
   NO_MATCH: [
     {
       state: {},
-      output: "I don't understand that. Can you try again?"
+      output: [logInput, "I don't understand that. Can you try again?"]
     }
   ]
 };
