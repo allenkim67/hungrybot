@@ -31,7 +31,7 @@ router.post('/create', async function(req, res){
     var business = await Business.create({
       first: req.body.first,
       last: req.body.last,
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, 8)
     });
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
