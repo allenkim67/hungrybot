@@ -140,12 +140,6 @@ async function distanceRequirementNotMet(input) {
 }
 
 module.exports = {
-  address: [
-    {
-      state: {order: {status: 'waitingForAddress'}},
-      output: [saveAddress, orderStatus('waitingForPaymentInfo'), "what's your payment info?"]
-    }
-  ],
   clearOrder: [
     {
       state: {order: {$exists: true, items: {$where: 'this.length > 0'}}},
@@ -212,13 +206,6 @@ module.exports = {
     {
       state: {order: {status: 'waitingForNextOrder'}},
       output: [orderStatus('pending'), addOrder, orderMessage]
-    }
-  ],
-
-  paymentConfirm: [
-    {
-      state: {},
-      output: [orderStatus('paid'), "Thanks your order is on its way!"]
     }
   ],
   removeOrder: [
