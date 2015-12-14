@@ -12,7 +12,7 @@ module.exports = async function(input) {
     console.log('INPUT:\n', input);
 
     var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
-    var transition = await asyncFind(transitions, R.partial(filterByState, [input]));
+    var transition = await asyncFind(transitions, R.partial(filterByState, [input])) || transitionTable.NO_MATCH[0];
     var output = await applyOutputFns(transition.output, input);
 
     console.log('OUTPUT:\n', output);
