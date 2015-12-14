@@ -19,6 +19,8 @@ module.exports = React.createClass({
       <div>
         {this.state.loaded ? (<div>
         <h2>Profile</h2>
+          <label>Bot Number: </label>
+          <span>{business.botPhone ? business.botPhone : 'No Registered Number.'}</span>
         <form onSubmit={this.submitHandler}>
           <label>Name</label>
           <input name="name" defaultValue={business.name || null}/>
