@@ -42,7 +42,7 @@ async function orderMessage(input) {
 function confirmSavedInfo(input) {
   var br = input.options.br;
   var ca = input.convoState.customer.address;
-  var address = `${ca.street}${br}${ca.city}, ${ca.state}`;
+  var address = `${ca.street}${br}${ca.city}`;
   input.message = `Send to: ${br} ${address} ${br} Bill to: ${br} **** **** **** ${input.convoState.customer.cc} ${br} Is this correct?`;
   return input;
 }
@@ -70,14 +70,7 @@ function minOrderNotMetResponse(input) {
 function sendPaymentLink(input) {
   var orderId = input.convoState.order._id;
   var br = input.options.br;
-  input.message = `All fees are included! Just use this link to complete this order: text-delivery.com/payment/${orderId} localhost:3001/payment/${orderId}`;
-  return input;
-}
-
-function paymentInfoExists(input) {
-  var br = input.options.br;  
-  var address = `Address: ${br} ${input.convoState.customer.address.street1} ${br} ${input.convoState.customer.address.city}, ${input.convoState.customer.address.zip}`;
-  input.message = `Send to: ${br} ${address} ${br} Credit card ending in ${input.convoState.customer.cc} ${br} Does this look correct?`;
+  input.message = `All fees are included! Just use this link to complete this order: text-delivery.com/payment/${orderId}`;
   return input;
 }
 
@@ -110,27 +103,8 @@ async function addOrder(input) {
    return input;
  }
 
-async function saveAddress(input) {
-  input.convoState.customer.address = {
-    street: input.nlpData.entities.address,
-    city: input.nlpData.entities['geo-city-us'],
-    state: input.nlpData.entities['geo-state-us']
-  };
-  return input;
-}
-
 async function makePayment(input) {
   await payment.makePaymentWithCustomerId(input.convoState.order.total, input.convoState.customer.stripeId, input.business);
-  return input;
-}
-
-async function completeOrders(input) {
-  input.convoState.order = await Order.findOneAndUpdate({
-    businessId: input.business._id,
-    customerId: input.convoState.customer._id,
-    status: 'pending'
-  }, {status: 'paid'}, {new: true});
-
   return input;
 }
 
