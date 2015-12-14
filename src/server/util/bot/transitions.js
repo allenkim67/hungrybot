@@ -197,6 +197,10 @@ module.exports = {
     },
     {
       state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      output: [confirmSavedInfo, orderStatus('pendingConfirmPayment')]
+    },    
+    {
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
       output: [makePayment, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
     }
   ],
@@ -206,7 +210,7 @@ module.exports = {
       output: [orderStatus('waitingForNextOrder'), 'What else would you like?']
     },
     {
-      state: {order: {status: 'pending'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
+      state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
       output: [orderStatus('paymentPending'), sendPaymentLink]
     }
   ],
