@@ -48,7 +48,8 @@ router.get('/signup', function(req, res) {
 
 router.post('/addphone', authMiddleware, function (req, res) {
   client.incomingPhoneNumbers.create({
-    phoneNumber: req.body.phone
+    phoneNumber: req.body.phone,
+    SmsUrl: "http://immense-meadow-3128.herokuapp.com/phone"
   }, function(err, purchasedNumber) {
     if(!err){
       Business.findOne({name: req.session.name}, function(err, business){
