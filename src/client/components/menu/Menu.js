@@ -5,6 +5,7 @@ var _           = require('underscore');
 var update      = require('react-addons-update');
 var NewMenuForm = require('./NewMenuForm');
 var MenuListing = require('./MenuListing');
+var MenuUpload  = require('./MenuUpload');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -18,6 +19,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div>
+        <MenuUpload />
         <NewMenuForm addMenu={this.addMenu}/>
         <h2 className="menu-header">Menu:</h2>
         <div className="menu-listing"> 
@@ -60,4 +62,5 @@ module.exports = React.createClass({
       menuItems: this.state.menuItems.concat(menuItem)
     });
   }
+
 });

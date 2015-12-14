@@ -4,6 +4,13 @@ var authMiddleware      = require('../authMiddleware');
 var Business            = require('../model/Business');
 var Menu                = require('../model/Menu');
 var refreshUserEntities = require('../util/nlp').refreshUserEntities;
+var multer              = require('multer');
+
+var upload = multer({ dest: 'static/img/' })
+
+router.post('/upload', upload.array('menuImage', 12), function(req, res) {
+  console.log(req.files);
+});
 
 router.get('/', authMiddleware, function(req, res) {
   Menu.find({businessId: req.session._id},function (err, menuItems) {
