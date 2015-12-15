@@ -94,7 +94,7 @@ async function addOrder(input) {
   var newOrderData = {
     businessId: input.business._id,
     customerId: input.convoState.customer._id,
-    orders: input.nlpData.entities.orders
+    orders: input.nlpData.entities
   };
   input.convoState.order = await Order.addOrder(newOrderData);
   return input;
@@ -104,7 +104,7 @@ async function addOrder(input) {
    var removeOrderData = {
      businessId: input.business._id,
      customerId: input.convoState.customer._id,
-     orders: input.nlpData.entities.orders
+     orders: input.nlpData.entities
    };
    input.convoState.order = await Order.removeItem(removeOrderData);
    return input;
