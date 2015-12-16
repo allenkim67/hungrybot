@@ -7,8 +7,7 @@ var _            = require('underscore');
 var orderSchema = mongoose.Schema({
   businessId: mongoose.Schema.Types.ObjectId,
   customerId: mongoose.Schema.Types.ObjectId,
-  total: {type: Number, default: 0},
-  items: [{name: String, quantity: Number}],
+  items: [{name: String, quantity: Number, total: Number}],
   status: {type: String, default: 'pending'}
 });
 
@@ -16,7 +15,14 @@ orderSchema.plugin(findOrCreate);
 orderSchema.plugin(timestamps);
 
 orderSchema.methods.displayTotal = function() {
-  return (this.total / 100).toFixed(2);
+  console.log(this.total());
+  return (this.total() / 100).toFixed(2);
+};
+
+orderSchema.methods.total = function() {
+  return this.items.reduce(function(total, item) {
+    return total + item.total;
+  }, 0);
 };
 
 orderSchema.statics.addOrder = async function({businessId, customerId, orders}) {
@@ -32,11 +38,14 @@ orderSchema.statics.addOrder = async function({businessId, customerId, orders}) 
     var quantity = order.number ? parseInt(order.number) : 1;
     var existingMenuItem = dbOrder.items.find(item => item.name === order.food);
 
-    existingMenuItem ?
-      existingMenuItem.quantity += quantity :
-      dbOrder.items.push({name: order.food, quantity: quantity});
-
-    dbOrder.total += menuItem.price * quantity;
+    if (existingMenuItem) {
+      existingMenuItem.quantity = order.intentAugment === 'increase' ?
+        existingMenuItem.quantity + quantity :
+        quantity;
+      existingMenuItem.total = menuItem.price * existingMenuItem.quantity;
+    } else {
+      dbOrder.items.push({name: order.food, quantity: quantity, total: menuItem.price * quantity});
+    }
   });
 
   return await dbOrder.save();
