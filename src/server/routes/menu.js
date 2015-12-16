@@ -5,11 +5,23 @@ var Business            = require('../model/Business');
 var Menu                = require('../model/Menu');
 var refreshUserEntities = require('../util/nlp').refreshUserEntities;
 var multer              = require('multer');
+var s3                  = require('../util/s3');
 
-var upload = multer({ dest: 'static/img/' })
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'static/img/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now());
+  }
+});
+var upload = multer({storage: storage});
+var menuSave = upload.fields([{name: 'menuImage', maxCount: 12, }])
 
-router.post('/upload', upload.array('menuImage', 12), function(req, res) {
-  console.log(req.files);
+router.post('/upload', authMiddleware, menuSave, function(req, res) {
+  Business.findOneAndUpdate({_id: req.session._id}, {$push: {menuImages: {$each: req.files.menuImage.map(image => image.filename)}}}).exec();
+  req.files.menuImage.forEach(image => s3.upload(image.path, 'img/' + image.filename));
+  res.status(200).end();
 });
 
 router.get('/', authMiddleware, function(req, res) {
@@ -18,7 +30,7 @@ router.get('/', authMiddleware, function(req, res) {
   })
 });
 
-router.post('/create', authMiddleware, async function(req, res){
+router.post('/create', authMiddleware, async function(req, res) {
   try {
     await validators.menu(req);
     var menu = await Menu.create(Object.assign(req.body, {
@@ -32,7 +44,7 @@ router.post('/create', authMiddleware, async function(req, res){
   }
 });
 
-router.put('/update/:id', authMiddleware, async function(req, res){
+router.put('/update/:id', authMiddleware, async function(req, res) {
   try {
     await validators.menu(req);
 
@@ -50,7 +62,7 @@ router.put('/update/:id', authMiddleware, async function(req, res){
   }
 });
 
-router.delete('/delete/:id', authMiddleware, async function(req, res){
+router.delete('/delete/:id', authMiddleware, async function(req, res) {
   await Menu.findOneAndRemove({_id: req.params.id, businessId: req.session._id}).exec();
   await refreshUserEntities(req.session._id);
   res.status(200).end();

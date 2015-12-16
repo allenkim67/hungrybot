@@ -29,7 +29,8 @@ var businessSchema = mongoose.Schema({
     fri: {start: String, end: String, working: Boolean},
     sat: {start: String, end: String, working: Boolean},
     sun: {start: String, end: String, working: Boolean}
-  }
+  },
+  menuImages: [String]
 });
 
 businessSchema.set('toJSON', {
