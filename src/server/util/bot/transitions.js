@@ -48,11 +48,11 @@ function confirmSavedInfo(input) {
 }
 
 function currentOrdersMessage(input) {
-  if (!input.convoState.order) {
+  if (!input.convoState.order || input.convoState.order.items.length === 0) {
     input.message = 'You have no current orders. Subtotal is $0.00.';
   } else {
     var br = input.options.br;
-    var total = '$' + (input.convoState.order.total / 100).toFixed(2);
+    var total = '$' + input.convoState.order.displayTotal();
     var totalOrder = input.convoState.order.items.reduce(function (string, order) {
       return string + br + order.quantity + ' ' + order.name;
     }, '');
