@@ -19,13 +19,13 @@ module.exports = React.createClass({
       axios.get('/user')
       ])
     .then(axios.spread(function(menu, business) {
-      console.log(menu.data, business.data)
-      return that.setState({menuItems: menu.data, businessMenuImages: business.data})
+      return that.setState({menuItems: menu.data, businessMenuImages: business.data.menuImages})
     }));
   },
   render: function() {
     return (
       <div>
+        <MenuImages businessMenuImages={this.state.businessMenuImages}/>
         <MenuUpload />
         <NewMenuForm addMenu={this.addMenu}/>
         <h2 className="menu-header">Menu:</h2>
