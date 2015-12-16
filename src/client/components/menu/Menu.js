@@ -6,15 +6,22 @@ var update      = require('react-addons-update');
 var NewMenuForm = require('./NewMenuForm');
 var MenuListing = require('./MenuListing');
 var MenuUpload  = require('./MenuUpload');
+var MenuImages  = require('./MenuImages');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {menuItems: []}
+    return {menuItems: [], businessMenuImages: []}
   },
   componentDidMount: function() {
-    axios.get('/menu').then(res => {
-      this.setState({menuItems: res.data});
-    });
+    var that = this;
+    axios.all([
+      axios.get('/menu'),
+      axios.get('/user')
+      ])
+    .then(axios.spread(function(menu, business) {
+      console.log(menu.data, business.data)
+      return that.setState({menuItems: menu.data, businessMenuImages: business.data})
+    }));
   },
   render: function() {
     return (
