@@ -67,7 +67,7 @@ app.get('/stripe', authMiddleware, function(req, res){
     }).then(function(response) {
       business.stripeAccount = response.data.stripe_user_id;
       business.save(function(){
-        res.redirect('/user/upgrade');
+        res.redirect('/#/upgrade');
       });
     }).catch(function(err) {console.log(err.stack)});
   });

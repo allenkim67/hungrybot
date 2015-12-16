@@ -15,7 +15,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login', async function(req, res){
-    var business = await Business.findOne({email: req.body.email}).exec();
+    var business = await Business.findOne({email: req.body.email.toLowerCase()}).exec();
     var errors = validators.login(req, business);
     res.clearCookie('demoCustomer');
     if (errors) {

@@ -31,7 +31,7 @@ router.post('/create', async function(req, res){
     var business = await Business.create({
       first: req.body.first,
       last: req.body.last,
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, 8)
     });
     res.cookie('session', jwt.sign(business, process.env.JWT_SECRET_KEY));
@@ -48,7 +48,8 @@ router.get('/signup', function(req, res) {
 
 router.post('/addphone', authMiddleware, function (req, res) {
   client.incomingPhoneNumbers.create({
-    phoneNumber: req.body.phone
+    phoneNumber: req.body.phone,
+    SmsUrl: "http://immense-meadow-3128.herokuapp.com/phone"
   }, function(err, purchasedNumber) {
     if(!err){
       Business.findOne({name: req.session.name}, function(err, business){
