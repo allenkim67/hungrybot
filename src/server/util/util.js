@@ -6,3 +6,11 @@ module.exports.asyncFind = async function(array, predicate) {
   }
   return null;
 };
+
+module.exports.asyncMap = async function(array, f) {
+  var result = [];
+  for (var i = 0; i < array.length; i++) {
+    result.push(await f(array[i]));
+  }
+  return result;
+};
