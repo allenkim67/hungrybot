@@ -73,7 +73,7 @@ module.exports = React.createClass({
     var menuData = serialize(evt.target, {hash: true});
     menuData.synonyms = menuData.synonyms ?
       R.map(R.trim, menuData.synonyms.split(',')) :
-      null;
+      [];
     axios.put('/menu/update/' + this.props.menuItem._id, menuData)
       .then(res => {
         this.props.replaceMenu(this.props.menuItem, res.data);

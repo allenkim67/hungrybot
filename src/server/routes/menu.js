@@ -29,12 +29,7 @@ router.put('/update/:id', authMiddleware, async function(req, res){
   try {
     await validators.menu(req);
 
-    var updateData = {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price * 100,
-      synonyms: req.body.synonyms
-    };
+    var updateData = Object.assign(req.body, {price: req.body.price * 100});
     var menu = await Menu.findOneAndUpdate({_id: req.params.id, businessId: req.session._id}, updateData, {new: true}).exec();
     await refreshUserEntities(req.session._id);
     res.send(menu);
