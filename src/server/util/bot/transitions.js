@@ -208,6 +208,12 @@ module.exports = {
       output: [orderStatus('pending'), addOrder, orderMessage]
     }
   ],
+  paymentConfirm: [
+    { 
+      state: {},
+      output: [orderStatus('paid'), trackOrder, 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
+    }
+  ],
   removeOrder: [
     {
       state: {order: {$exists: true}},
