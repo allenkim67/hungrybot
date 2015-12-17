@@ -68,10 +68,10 @@ orderSchema.statics.removeItem = async function({businessId, customerId, orders}
         Math.min(existingMenuItem.quantity, parseInt(order.number) || 1) :
         existingMenuItem.quantity;
       existingMenuItem.quantity -= quantity;
+      existingMenuItem.total = menuItem.price * existingMenuItem.quantity;
       if (existingMenuItem.quantity < 1) {
         dbOrder.items = _.without(dbOrder.items, existingMenuItem);
       }
-      dbOrder.total -= menuItem.price * quantity;
     }
   });
   return dbOrder.items.length < 1 ? await dbOrder.remove() : await dbOrder.save();

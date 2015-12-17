@@ -23,7 +23,7 @@ router.post('/', async function(req, res) {
   var distanceRequirement = await geolocation.geoCoder(business, customer);
 
   if(distanceRequirement) {
-    await payment.makePaymentWithCustomerId(order.total, customerStripeId, business);
+    await payment.makePaymentWithCustomerId(order.total(), customerStripeId, business);
     var botInput = {
       models: {customer: customer, business: business},
       nlpData: {intent: 'paymentConfirm'},

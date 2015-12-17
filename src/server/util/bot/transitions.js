@@ -104,7 +104,7 @@ async function removeOrder(input) {
 }
 
 async function makePayment(input) {
-  await payment.makePaymentWithCustomerId(input.convoState.order.total, input.convoState.customer.stripeId, input.business);
+  await payment.makePaymentWithCustomerId(input.convoState.order.total(), input.convoState.customer.stripeId, input.business);
   return input;
 }
 
@@ -128,7 +128,7 @@ function logInput(input) {
 function minOrderNotMet(input) {
   var status = input.convoState.order.status;
   return (status === 'confirmOrder' || status === 'pending') &&
-    input.convoState.order.total < input.business.minimumOrder;
+    input.convoState.order.total() < input.business.minimumOrder;
 }
 
 async function distanceRequirementNotMet(input) {
