@@ -7,7 +7,6 @@ var Customer = require('../model/Customer');
 router.post('/', async function(req, res) {
   await Customer.createByPhoneIfNotExist(req.body.From);
   var botResponse = await bot(req.body);
-  res.set('Content-Type', 'text/xml');
   var twimlMessage = botResponse.message ? `<Body>${botResponse.message}</Body>` : '';
   var twimlImage = botResponse.image ? `<Media>${botResponse.image}</Media>` : '';
   var twiml =
@@ -18,6 +17,7 @@ router.post('/', async function(req, res) {
          ${twimlImage}
        </Message>
      </Response>`;
+  res.set('Content-Type', 'text/xml');
   res.send(twiml);
 });
 
