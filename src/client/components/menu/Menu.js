@@ -13,13 +13,12 @@ module.exports = React.createClass({
     return {menuItems: [], businessMenuImages: []}
   },
   componentDidMount: function() {
-    var that = this;
     axios.all([
       axios.get('/menu'),
       axios.get('/user')
       ])
-    .then(axios.spread(function(menu, business) {
-      return that.setState({menuItems: menu.data, businessMenuImages: business.data.menuImages})
+    .then(axios.spread((menu, business)=> {
+      this.setState({menuItems: menu.data, businessMenuImages: business.data.menuImages})
     }));
   },
   render: function() {
