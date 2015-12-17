@@ -15,6 +15,7 @@ router.post('/', async function(req, res) {
        <Message>
          ${twimlMessage}
          ${twimlImage}
+         ${twimlImage}
        </Message>
      </Response>`;
   res.set('Content-Type', 'text/xml');
