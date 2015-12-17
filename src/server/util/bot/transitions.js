@@ -87,21 +87,21 @@ async function addOrder(input) {
   var newOrderData = {
     businessId: input.business._id,
     customerId: input.convoState.customer._id,
-    orders: input.nlpData.orders
+    orders: input.nlpData.entities
   };
   input.convoState.order = await Order.addOrder(newOrderData);
   return input;
 }
 
- async function removeOrder(input) {
-   var removeOrderData = {
-     businessId: input.business._id,
-     customerId: input.convoState.customer._id,
-     orders: input.nlpData.orders
-   };
-   input.convoState.order = await Order.removeItem(removeOrderData);
-   return input;
- }
+async function removeOrder(input) {
+  var removeOrderData = {
+    businessId: input.business._id,
+    customerId: input.convoState.customer._id,
+    orders: input.nlpData.entities
+  };
+  input.convoState.order = await Order.removeItem(removeOrderData);
+  return input;
+}
 
 async function makePayment(input) {
   await payment.makePaymentWithCustomerId(input.convoState.order.total, input.convoState.customer.stripeId, input.business);
