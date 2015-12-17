@@ -74,6 +74,14 @@ function sendPaymentLink(input) {
   return input;
 }
 
+
+async function textMenuImage(input) {
+  var business = await Business.findById(input.business._id);
+
+  input.image = `http://lionbeer.com/images/lion.png ${br} http://lionbeer.com/images/lion.png ${br} http://lionbeer.com/images/lion.png http://lionbeer.com/images/lion.png`; 
+  return input;
+}
+
 //SIDE EFFECTS
 function orderStatus(status) {
   return function(input) {
@@ -239,7 +247,7 @@ module.exports = {
   textImage: [
     {
       state: {},
-      output: function(input) { input.image = `https://i.ytimg.com/vi/45hM7iAkjk8/hqdefault.jpg`; return input;}
+      output: textMenuImage
     }
   ],
   NO_MATCH: [
