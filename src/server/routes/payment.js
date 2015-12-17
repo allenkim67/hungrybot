@@ -36,6 +36,7 @@ router.post('/', async function(req, res) {
       from: business.botPhone,
       body: botResponse
     }, function(err, message) {
+      console.log('TEXT ERROR: ',err);
       res.send('yay you paid!');
     });
   } else {
