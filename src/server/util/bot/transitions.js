@@ -77,8 +77,8 @@ function sendPaymentLink(input) {
 
 async function textMenuImage(input) {
   var business = await Business.findById(input.business._id);
-  var br = input.options.br;
-  input.image = `http://lionbeer.com/images/lion.png ${br} http://lionbeer.com/images/lion.png`; 
+  
+  input.image = `http://longstreet.typepad.com/.a/6a00d83542d51e69e2016766549ec3970b-800wi`; 
   return input;
 }
 
