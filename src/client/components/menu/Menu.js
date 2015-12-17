@@ -16,7 +16,7 @@ module.exports = React.createClass({
     axios.all([
       axios.get('/menu'),
       axios.get('/user')
-      ])
+    ])
     .then(axios.spread((menu, business)=> {
       this.setState({menuItems: menu.data, businessMenuImages: business.data.menuImages})
     }));
