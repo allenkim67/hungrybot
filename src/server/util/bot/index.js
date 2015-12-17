@@ -35,5 +35,6 @@ module.exports.serverBot = options => async (req, res) => {
     nlpData: nlpResponse,
     options: {br: '<br/>'}
   };
-  res.send(await bot(botInput));
+  var botResponse = (await bot(botInput));
+  res.send(botResponse.message);
 };
