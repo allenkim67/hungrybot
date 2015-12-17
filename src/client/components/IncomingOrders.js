@@ -22,7 +22,7 @@ module.exports = React.createClass({
           {this.state.orders.length ? (
             <ul>
               {this.state.orders.map(order => {
-                return this.renderOrderGroup(order);
+                return this.renderOrder(order);
               })}
             </ul>
           ) : null}
@@ -30,24 +30,24 @@ module.exports = React.createClass({
       </div>
     );
   },
-  renderOrderGroup: function(orderGroup) {
+  renderOrder: function(order) {
     return (
-        <div className="incoming-order">
-          <li key={orderGroup._id}>
+        <div className="incoming-order" key={order._id}>
+          <li>
             <label>Id: </label>
-            <span>{orderGroup._id}</span>
+            <span>{order._id}</span>
             <br/>
             <label>Status: </label>
-            <span> {orderGroup.status}</span>
+            <span> {order.status}</span>
             <br/>
             <label>Items: </label>
             <ul className="incoming-list">
-              {orderGroup.orders.map(function(order) {
-                return <li key={order._id}>{order.quantity} {order.item}</li>
+              {order.items.map(function(item) {
+                return <li key={item._id}>{item.quantity} {item.name}</li>
               })}
             </ul><br/>
             <label>Total: </label>
-            <span>${(orderGroup.total/100).toFixed(2)}</span>
+            <span>${order.total}</span>
           </li>
         </div>
     );

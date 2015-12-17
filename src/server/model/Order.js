@@ -77,4 +77,11 @@ orderSchema.statics.removeItem = async function({businessId, customerId, orders}
   return dbOrder.items.length < 1 ? await dbOrder.remove() : await dbOrder.save();
 };
 
+orderSchema.set('toJSON', {
+  transform: function(doc, ret) {
+    ret.total = doc.displayTotal();
+    return ret;
+  }
+});
+
 module.exports = mongoose.model('Order', orderSchema);
