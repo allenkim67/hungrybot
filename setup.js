@@ -61,7 +61,8 @@ mongoose.connection.on('open', function () {
         Menu.update(menu4, {$setOnInsert: menu4}, {upsert: true}).exec(),
         Menu.update(menu5, {$setOnInsert: menu5}, {upsert: true}).exec()
       ]).then(function() { return nlp.refreshUserEntities(business._id); })
-        .then(function() { process.exit(); });
+        .then(function() { process.exit(); })
+        .catch(function(err) { console.log(err.stack); });
     })
   });
 });
