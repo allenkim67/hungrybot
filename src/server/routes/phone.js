@@ -7,11 +7,18 @@ var Customer = require('../model/Customer');
 router.post('/', async function(req, res) {
   await Customer.createByPhoneIfNotExist(req.body.From);
   var botResponse = await bot(req.body);
-  var twiml = new twilio.TwimlResponse();
-  twiml.message(botResponse);
-
   res.set('Content-Type', 'text/xml');
-  res.send(twiml.toString());
+  var twimlMessage = botResponse.message ? `<Body>${botResponse.message}</Body>` : '';
+  var twimlImage = botResponse.image ? `<Media>${botResponse.image}</Media>` : '';
+  var twiml =
+    `<?xml version="1.0" encoding="UTF-8"?>
+     <Response>
+       <Message>
+         ${twimlMessage}
+         ${twimlImage}
+       </Message>
+     </Response>`;
+  res.send(twiml);
 });
 
 router.get('/available/:areacode', function(req, res) {

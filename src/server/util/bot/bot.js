@@ -17,7 +17,7 @@ module.exports = async function(input) {
 
     console.log('OUTPUT:\n', output);
 
-    return output.message;
+    return {message: output.message, image: output.image};
   } catch (err) {
     console.log(err.stack);
     log('ERROR: ' + err.stack);
