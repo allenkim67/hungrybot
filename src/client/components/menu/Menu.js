@@ -5,19 +5,27 @@ var _           = require('underscore');
 var update      = require('react-addons-update');
 var NewMenuForm = require('./NewMenuForm');
 var MenuListing = require('./MenuListing');
+var MenuUpload  = require('./MenuUpload');
+var MenuImages  = require('./MenuImages');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {menuItems: []}
+    return {menuItems: [], businessMenuImages: []}
   },
   componentDidMount: function() {
-    axios.get('/menu').then(res => {
-      this.setState({menuItems: res.data});
-    });
+    axios.all([
+      axios.get('/menu'),
+      axios.get('/user')
+    ])
+    .then(axios.spread((menu, business)=> {
+      this.setState({menuItems: menu.data, businessMenuImages: business.data.menuImages})
+    }));
   },
   render: function() {
     return (
       <div>
+        <MenuImages businessMenuImages={this.state.businessMenuImages}/>
+        <MenuUpload />
         <NewMenuForm addMenu={this.addMenu}/>
         <h2 className="menu-header">Menu:</h2>
         <div className="menu-listing"> 
@@ -60,4 +68,5 @@ module.exports = React.createClass({
       menuItems: this.state.menuItems.concat(menuItem)
     });
   }
+
 });
