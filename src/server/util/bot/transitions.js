@@ -169,7 +169,7 @@ module.exports = {
     },    
     {
       state: {order: {status: 'pendingConfirmPayment'}, customer: {address: {$exists: true}, cc: {$exists: true}}},
-      output: [makePayment, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
+      output: [makePayment, trackOrder, orderStatus('paid'), 'Thank you for your payment.  Expect your delivery within 40-50 minutes']
     }
   ],
   deny: [
