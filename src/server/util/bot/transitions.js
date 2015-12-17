@@ -236,6 +236,12 @@ module.exports = {
       output: showMenu
     }
   ],
+  textImage: [
+    {
+      state: {},
+      output: function(input) { input.image = `https://i.ytimg.com/vi/45hM7iAkjk8/hqdefault.jpg`; return input;}
+    }
+  ],
   NO_MATCH: [
     {
       state: {},
