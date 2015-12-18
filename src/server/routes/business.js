@@ -52,7 +52,7 @@ router.post('/addphone', authMiddleware, function (req, res) {
     SmsUrl: "http://immense-meadow-3128.herokuapp.com/phone"
   }, function(err, purchasedNumber) {
     if(!err){
-      Business.findOne({name: req.session.name}, function(err, business){
+      Business.findById(req.session._id, function(err, business){
         business.botPhone = purchasedNumber.phoneNumber;
         business.save();
         res.redirect('/');
