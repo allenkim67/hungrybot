@@ -74,6 +74,14 @@ function sendPaymentLink(input) {
   return input;
 }
 
+
+async function textMenuImage(input) {
+  var business = await Business.findById(input.business._id);
+  
+  input.image = `http://longstreet.typepad.com/.a/6a00d83542d51e69e2016766549ec3970b-800wi`; 
+  return input;
+}
+
 //SIDE EFFECTS
 function orderStatus(status) {
   return function(input) {
@@ -239,7 +247,7 @@ module.exports = {
   textImage: [
     {
       state: {},
-      output: function(input) { input.image = `https://i.ytimg.com/vi/45hM7iAkjk8/hqdefault.jpg`; return input;}
+      output: textMenuImage
     }
   ],
   NO_MATCH: [
