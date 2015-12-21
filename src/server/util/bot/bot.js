@@ -4,6 +4,7 @@ var transitionTable = require('./transitions');
 var Order           = require('../../model/Order');
 var {asyncFind}     = require('../util');
 var log             = require('../logger');
+var Conversation    = require('../../model/Conversation');
 
 module.exports = async function(input) {
   try {
@@ -16,6 +17,8 @@ module.exports = async function(input) {
     var output = await applyOutputFns(transition.output, input);
 
     console.log('OUTPUT:\n', output);
+
+    await Conversation.recordChat(input, output);
 
     return {message: output.message, image: output.image};
   } catch (err) {
