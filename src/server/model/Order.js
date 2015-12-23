@@ -35,7 +35,7 @@ orderSchema.statics.addOrder = async function({businessId, customerId, orders}) 
     $or: orders.map(order => { return {name: order.food} })
   }).exec();
 
-  var dbOrder = await this.createOrFindOrder({businessId, customerId});
+  var dbOrder = await this.findOrCreate({businessId, customerId, status: {$ne: 'paid'}}, {businessId, customerId});
 
   orders.forEach(order => {
     var menuItem = menuItems.find(menuItem => menuItem.name === order.food);
