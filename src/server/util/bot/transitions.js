@@ -140,9 +140,11 @@ function minOrderNotMet(input) {
 }
 
 async function distanceRequirementNotMet(input) {
-  var business = await Business.findById(input.business._id);
-  var customer = input.convoState.customer;
-  var distance = await geolocation.geoCoder(business, customer);
+  if(input.convoState.customer.address && input.convoState.customer.cc) {
+    var business = await Business.findById(input.business._id);
+    var customer = input.convoState.customer;
+    var distance = await geolocation.geoCoder(business, customer);
+  }
 
   return (input.convoState.order.status === 'pending' && customer.address && customer.cc && !distance)
 }
