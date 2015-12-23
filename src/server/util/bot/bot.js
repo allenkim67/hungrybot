@@ -4,7 +4,7 @@ var transitionTable = require('./transitions');
 var Order           = require('../../model/Order');
 var {asyncFind}     = require('../util');
 var log             = require('../logger');
-var Conversation    = require('../../model/Conversation');
+var Message         = require('../../model/Message');
 
 module.exports = async function(input) {
   try {
@@ -18,7 +18,9 @@ module.exports = async function(input) {
 
     console.log('OUTPUT:\n', output);
 
-    await Conversation.recordChat(input, output);
+    var orderData = {businessId: input.business._id, customerId: input.convoState.customer._id};
+    var order = await Order.createOrFindOrder(orderData); 
+    await Message.recordMessage(input, output, order._id); 
 
     return {message: output.message, image: output.image};
   } catch (err) {
