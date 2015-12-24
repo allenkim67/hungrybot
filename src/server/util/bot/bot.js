@@ -9,13 +9,13 @@ module.exports = async function(input) {
   try {
     input = await parseInput(input);
 
-    console.log('INPUT:\n', input);
+    console.log('INPUT:\n', JSON.stringify(input, null, 2));
 
     var transitions = transitionTable[input.nlpData.intent] || transitionTable.NO_MATCH;
     var transition = await asyncFind(transitions, R.partial(filterByState, [input])) || transitionTable.NO_MATCH[0];
     var output = await applyOutputFns(transition.output, input);
 
-    console.log('OUTPUT:\n', output);
+    console.log('OUTPUT:\n', JSON.stringify(output, null, 2));
 
     return {message: output.message, image: output.image};
   } catch (err) {
