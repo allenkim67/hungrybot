@@ -12,11 +12,11 @@ var messageSchema = mongoose.Schema({
 messageSchema.plugin(findOrCreate);
 messageSchema.plugin(timestamps);
 
-messageSchema.statics.recordMessage = async function(input, output, order) {
+messageSchema.statics.recordMessage = async function(input, output) {
   var message = await this.create({
-    orderId: order,
-    messageBot: 'bot: ' + output.message,
-    message: input.convoState.customer.phone + ': ' +  input.nlpData.message,
+    orderId: input.convoState.order._id,
+    messageBot: output.message,
+    message: input.nlpData.message,
     nlpData: {intent: output.nlpData.intent, entities: output.nlpData.entities}
   });
 

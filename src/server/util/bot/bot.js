@@ -17,10 +17,8 @@ module.exports = async function(input) {
     var output = await applyOutputFns(transition.output, input);
 
     console.log('OUTPUT:\n', output);
-
-    var orderData = {businessId: input.business._id, customerId: input.convoState.customer._id};
-    var order = await Order.createOrFindOrder(orderData); 
-    await Message.recordMessage(input, output, order._id); 
+    
+    await Message.recordMessage(input, output); 
 
     return {message: output.message, image: output.image};
   } catch (err) {
@@ -53,10 +51,9 @@ async function applyOutputFn(input, outputFn) {
 }
 
 async function parseInput(input) {
-  var order = await Order.findOne({
+  var order = await Order.createOrFindOrder({
     businessId: input.models.business._id,
-    customerId: input.models.customer._id,
-    status: {$nin: 'paid'}
+    customerId: input.models.customer._id
   });
 
   return {
