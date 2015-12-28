@@ -3,9 +3,9 @@ var findOrCreate = require('../util/findOrCreatePlugin');
 var timestamps   = require('mongoose-timestamp');
 
 var messageSchema = mongoose.Schema({
-  orderId: mongoose.Schema.Types.ObjectId,
-  messageBot: String,
-  message: String,
+  orderId: String,
+  messageOutput: String,
+  messageInput: String,
   nlpData: {intent: String, entities: String}
 });
 
@@ -13,10 +13,12 @@ messageSchema.plugin(findOrCreate);
 messageSchema.plugin(timestamps);
 
 messageSchema.statics.recordMessage = async function(input, output) {
+  var order = await input.convoState.order ? input.convoState.order._id : 'noId';
+
   var message = await this.create({
-    orderId: input.convoState.order._id,
-    messageBot: output.message,
-    message: input.nlpData.message,
+    orderId: order,
+    messageOutput: output.message,
+    messageInput: input.nlpData.message,
     nlpData: {intent: output.nlpData.intent, entities: output.nlpData.entities}
   });
 

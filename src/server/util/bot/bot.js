@@ -17,10 +17,10 @@ module.exports = async function(input) {
     var output = await applyOutputFns(transition.output, input);
 
     console.log('OUTPUT:\n', output);
-    
+
     await Message.recordMessage(input, output); 
 
-    return {message: output.message, image: output.image};
+    return await {message: output.message, image: output.image};
   } catch (err) {
     console.log(err.stack);
     log('ERROR: ' + err.stack);
