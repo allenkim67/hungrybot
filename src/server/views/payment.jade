@@ -7,14 +7,19 @@ html(lang="en")
     -var customerNumber = customer.phone
     -var orderInfo = order.total()
     -var businessInfo = business.name
-    form(action="/payment" method="POST")
-      input(type="hidden" name="orderId" value=order._id)
-      script(
-        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-        data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"
-        data-image=""
-        data-name=businessInfo
-        data-description="2 widgets"
-        data-amount=orderInfo
-        data-locale="auto"
-        data-shipping-address=true)
+    div(class="container")
+      p(class="header") Proceed if the number below is correct:
+      div(class="phone-number")
+        p= customerNumber
+      div(class="stripe-form")  
+        form(action="/payment" method="POST")
+          input(type="hidden" name="orderId" value=order._id)
+          script(
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_UICcVWhfeiJxkMnH1LyHNG5R"
+            data-image=""
+            data-name=businessInfo
+            data-description="2 widgets"
+            data-amount=orderInfo
+            data-locale="auto"
+            data-shipping-address=true)

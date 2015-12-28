@@ -1,39 +1,28 @@
-h2 {
-  font-family: "Helvetica";
+.container {
+    margin: auto;
+    margin-top: 20%;
+    width: 30%;
+    border: 2px solid #0B93F6;
+    padding: 2%;
+    border-radius: 5px;
+
 }
 
 p {
-  font-size: 16px;
-  font-weight: thin;
+  text-align: center;
 }
 
-.input-email {
-  height: 28px;
-  width: 210px;
-  margin-bottom: 10px;
-}
-
-.input-card  {
-  height: 28px;
-  width: 210px;
-  margin-bottom: 10px;
-}
-
-.input-exp  {
-  height: 28px;
-  width: 105px;
-  margin-bottom: 10px;
-}
-
-.input-cvc  {
-  height: 28px;
-  width: 105px;
-  margin-bottom: 10px;
-}
-
-.create-btn {
-  width: 210px;
-  height: 34px;
-  font-size: 16px;
+.header {
+  margin: auto;
+  font-size: 24px;
   font-family: "Helvetica";
+}
+
+.phone-number {
+  font-size: 36px;  
+  font-family: "Helevtica";
+}
+
+.stripe-form {
+  text-align: center;
 }
