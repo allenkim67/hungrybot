@@ -3,7 +3,7 @@ h1 {
   font-size: 56px;
   font-weight: bold;
   color: white;
-   text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .header-text {
@@ -17,13 +17,20 @@ body {
   overflow: hidden;
 }
 
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: -1;
+}
+
 .landing-container {
-    position: relative;
-    top: -300px;
-    width: 767px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  position: relative;
+  margin-top: -300px;
+  width: 767px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .phone-container {
@@ -31,40 +38,40 @@ body {
 }
 
 .chat-container {
-    position: absolute;
-    top: 23px;
-    left: 12px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: 595px;
+  position: absolute;
+  top: 23px;
+  left: 12px;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 595px;
 }
 
 .chat-div {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    text-align: center;
-    height: 303px;
-    padding: 0 31px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-align: center;
+  height: 303px;
+  padding: 0 31px;
 }
 
 .chat-input {
-    width: 90%;
-    float: left;
-    border-radius: 0px 0px 0px 5px;
+  width: 90%;
+  float: left;
+  border-radius: 0px 0px 0px 5px;
 }
 
 .chat-button {
-    width: 10%;
-    float: right;
-    font-weight: bold;
-    border-radius: 0px 0px 5px 0;
+  width: 10%;
+  float: right;
+  font-weight: bold;
+  border-radius: 0px 0px 5px 0;
 }
 
 .login-button {
-    float: right;
-    font-weight: bold;
-    box-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+  float: right;
+  font-weight: bold;
+  box-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .subscribed-msg-div {
@@ -79,105 +86,107 @@ body {
 }
 
 .subscribe-form {
-    width: 596px;
-    margin: auto;
+  width: 596px;
+  margin: auto;
 }
 
 .subscribe-form input {
-    width: 90%;
-    margin-top: 7px;
-    margin-left: 5px;
+  width: 90%;
+  margin-top: 7px;
+  margin-left: 5px;
+  box-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .subscribe-button {
-    margin-top: 5px;
-    margin-left: 5px;
-    float: left;
-    font-weight: bold;
+  margin-top: 5px;
+  margin-left: 5px;
+  float: left;
+  font-weight: bold;
+  box-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 /*chat div*/
 .chat-text {
-    font-family: "Helvetica Neue" ;
-    font-size: 20px;
-    font-weight: normal;
+  font-family: "Helvetica Neue" ;
+  font-size: 20px;
+  font-weight: normal;
 }
 
 .chat {
-    max-width: 1000px;
-    word-wrap: break-word;
-    margin-bottom: 10px;
-    line-height: 24px;
+  max-width: 1000px;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+  line-height: 24px;
 }
 
 .clear {clear: both}
 
 .from-me{
-    position:relative;
-    padding:10px 20px;
-    color:white;
-    background:#0B93F6;
-    border-radius:25px;
-    float: right;
+  position:relative;
+  padding:10px 20px;
+  color:white;
+  background:#0B93F6;
+  border-radius:25px;
+  float: right;
 }
 
 .from-me:before {
-    content:"";
-    position:absolute;
-    z-index:2;
-    bottom:-2px;
-    right:-7px;
-    height:20px;
-    border-right:20px solid #0B93F6;
-    border-bottom-left-radius: 16px 14px;
-    -webkit-transform:translate(0, -2px);
+  content:"";
+  position:absolute;
+  z-index:2;
+  bottom:-2px;
+  right:-7px;
+  height:20px;
+  border-right:20px solid #0B93F6;
+  border-bottom-left-radius: 16px 14px;
+  -webkit-transform:translate(0, -2px);
 }
 
 .from-me:after {
-    content:"";
-    position:absolute;
-    z-index:2;
-    bottom:-1.5px;
-    right:-55.6px;
-    width:26px;
-    height:20px;
-    background:white;
-    border-bottom-left-radius: 10px;
-    -webkit-transform:translate(-30px, -2px);
+  content:"";
+  position:absolute;
+  z-index:2;
+  bottom:-1.5px;
+  right:-55.6px;
+  width:26px;
+  height:20px;
+  background:white;
+  border-bottom-left-radius: 10px;
+  -webkit-transform:translate(-30px, -2px);
 }
 
 .from-them {
-    position:relative;
-    padding:10px 20px;
-    background:#E5E5EA;
-    border-radius:25px;
-    color: black;
-    float: left;
+  position:relative;
+  padding:10px 20px;
+  background:#E5E5EA;
+  border-radius:25px;
+  color: black;
+  float: left;
 }
 
 .from-them:before {
-    content:"";
-    position:absolute;
-    z-index:2;
-    bottom:-2px;
-    left:-7px;
-    height:20px;
-    border-left:20px solid #E5E5EA;
-    border-bottom-right-radius: 16px 14px;
-    -webkit-transform:translate(0, -2px);
+  content:"";
+  position:absolute;
+  z-index:2;
+  bottom:-2px;
+  left:-7px;
+  height:20px;
+  border-left:20px solid #E5E5EA;
+  border-bottom-right-radius: 16px 14px;
+  -webkit-transform:translate(0, -2px);
 }
 
 .from-them:after {
-    content:"";
-    position:absolute;
-    z-index:3;
-    bottom:-2px;
-    left:4px;
-    width:26px;
-    height:20px;
-    background:white;
-    border-bottom-right-radius: 10px;
-    -webkit-transform:translate(-30px, -2px);
+  content:"";
+  position:absolute;
+  z-index:3;
+  bottom:-2px;
+  left:4px;
+  width:26px;
+  height:20px;
+  background:white;
+  border-bottom-right-radius: 10px;
+  -webkit-transform:translate(-30px, -2px);
 }
 
 /*Clouds*/

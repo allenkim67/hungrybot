@@ -25,3 +25,4 @@ $(".js-subscribe-form").on('submit', function(evt) {
   var subscribedDiv = $(".js-subscribed-msg");
   subscribedDiv.append('<h2 class="subscribed-msg">Thanks for signing up!</h2>');
 });
+
