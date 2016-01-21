@@ -37,7 +37,7 @@ router.post('/', async function(req, res) {
       body: botResponse
     }, function(err, message) {
       console.log('TEXT ERROR: ',err);
-      res.send('yay you paid!');
+      res.redirect("www.text-delivery.com");
     });
   } else {
     var botInput = {
