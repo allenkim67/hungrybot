@@ -23,6 +23,12 @@ orderSchema.methods.displayTotal = function() {
   return (total / 100).toFixed(2);
 };
 
+orderSchema.statics.createOrFindOrder = async function ({businessId, customerId}) {
+  var dbOrder = await this.findOrCreate({businessId, customerId, status: {$ne: 'paid'}}, {businessId, customerId});
+  
+  return await dbOrder.save();
+}
+
 orderSchema.statics.addOrder = async function({businessId, customerId, orders}) {
   var menuItems = await Menu.find({
     businessId,

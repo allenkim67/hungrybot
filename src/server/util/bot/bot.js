@@ -4,6 +4,7 @@ var transitionTable = require('./transitions');
 var Order           = require('../../model/Order');
 var {asyncFind}     = require('../util');
 var log             = require('../logger');
+var Message         = require('../../model/Message');
 
 module.exports = async function(input) {
   try {
@@ -17,7 +18,9 @@ module.exports = async function(input) {
 
     console.log('OUTPUT:\n', JSON.stringify(output, null, 2));
 
-    return {message: output.message, image: output.image};
+    await Message.recordMessage(input, output); 
+
+    return await {message: output.message, image: output.image};
   } catch (err) {
     console.log(err.stack);
     log('ERROR: ' + err.stack);
@@ -48,10 +51,9 @@ async function applyOutputFn(input, outputFn) {
 }
 
 async function parseInput(input) {
-  var order = await Order.findOne({
+  var order = await Order.createOrFindOrder({
     businessId: input.models.business._id,
-    customerId: input.models.customer._id,
-    status: {$nin: 'paid'}
+    customerId: input.models.customer._id
   });
 
   return {
